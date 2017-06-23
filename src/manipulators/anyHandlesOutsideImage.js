@@ -1,33 +1,27 @@
-(function($, cornerstone, cornerstoneMath, cornerstoneTools) {
+import * as cornerstoneMath from 'cornerstone-math';
 
-    'use strict';
+export default function (renderData, handles) {
+  const image = renderData.image;
+  const imageRect = {
+    left: 0,
+    top: 0,
+    width: image.width,
+    height: image.height
+  };
 
-    function anyHandlesOutsideImage(renderData, handles) {
-        var image = renderData.image;
-        var imageRect = {
-            left: 0,
-            top: 0,
-            width: image.width,
-            height: image.height
-        };
+  let handleOutsideImage = false;
 
-        var handleOutsideImage = false;
+  Object.keys(handles).forEach(function (name) {
+    const handle = handles[name];
 
-        Object.keys(handles).forEach(function(name) {
-            var handle = handles[name];
-            if (handle.allowedOutsideImage === true) {
-                return;
-            }
-
-            if (cornerstoneMath.point.insideRect(handle, imageRect) === false) {
-                handleOutsideImage = true;
-            }
-        });
-
-        return handleOutsideImage;
+    if (handle.allowedOutsideImage === true) {
+      return;
     }
 
-    // module/private exports
-    cornerstoneTools.anyHandlesOutsideImage = anyHandlesOutsideImage;
+    if (cornerstoneMath.point.insideRect(handle, imageRect) === false) {
+      handleOutsideImage = true;
+    }
+  });
 
-})($, cornerstone, cornerstoneMath, cornerstoneTools);
+  return handleOutsideImage;
+}

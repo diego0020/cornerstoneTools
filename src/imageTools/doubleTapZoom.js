@@ -1,20 +1,22 @@
-(function($, cornerstone, cornerstoneTools) {
+import * as cornerstone from 'cornerstone-core';
+import doubleTapTool from './doubleTapTool.js';
 
-    'use strict';
+function fitToWindowStrategy (eventData) {
+  cornerstone.fitToWindow(eventData.element);
+}
 
-    function fitToWindowStrategy(eventData) {
-        cornerstone.fitToWindow(eventData.element);
-    }
+function doubleTapCallback (e, eventData) {
+  doubleTapZoom.strategy(eventData);
 
-    function doubleTapCallback(e, eventData) {
-        cornerstoneTools.doubleTapZoom.strategy(eventData);
-        return false; // false = causes jquery to preventDefault() and stopPropagation() this event
-    }
+  return false; // False = causes jquery to preventDefault() and stopPropagation() this event
+}
 
-    cornerstoneTools.doubleTapZoom = cornerstoneTools.doubleTapTool(doubleTapCallback);
-    cornerstoneTools.doubleTapZoom.strategies = {
-        default: fitToWindowStrategy
-    };
-    cornerstoneTools.doubleTapZoom.strategy = fitToWindowStrategy;
+const doubleTapZoom = doubleTapTool(doubleTapCallback);
 
-})($, cornerstone, cornerstoneTools);
+doubleTapZoom.strategies = {
+  default: fitToWindowStrategy
+};
+
+doubleTapZoom.strategy = fitToWindowStrategy;
+
+export default doubleTapZoom;

@@ -1,7 +1,5 @@
-(function($, cornerstone, cornerstoneTools) {
+import * as cornerstone from 'cornerstone-core';
 
-    'use strict';
+const metaData = cornerstone.metaData;
 
-    // module/private exports
-    cornerstoneTools.metaData = cornerstone.metaData;
-})($, cornerstone, cornerstoneTools);
+export default metaData;
