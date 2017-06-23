@@ -1,16 +1,9 @@
-(function(cornerstoneMath, cornerstoneTools) {
+import * as cornerstoneMath from 'cornerstone-math';
 
-    'use strict';
+export default function (handle, coords) {
+  if (!handle.boundingBox) {
+    return;
+  }
 
-    function pointInsideBoundingBox(handle, coords) {
-        if (!handle.boundingBox) {
-            return;
-        }
-
-        return cornerstoneMath.point.insideRect(coords, handle.boundingBox);
-    }
-
-    // module exports
-    cornerstoneTools.pointInsideBoundingBox = pointInsideBoundingBox;
-
-})(cornerstoneMath, cornerstoneTools);
+  return cornerstoneMath.point.insideRect(coords, handle.boundingBox);
+}
