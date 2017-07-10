@@ -122,6 +122,7 @@ export { default as imageStats } from './imageTools/imageStats';
 export { default as keyboardTool } from './imageTools/keyboardTool';
 export { length, lengthTouch } from './imageTools/length';
 export { magnify, magnifyTouchDrag } from './imageTools/magnify';
+export { magnify2, magnify2TouchDrag } from './imageTools/magnify2';
 export { default as mouseButtonRectangleTool } from './imageTools/mouseButtonRectangleTool';
 export { default as mouseButtonTool } from './imageTools/mouseButtonTool';
 export { default as mouseWheelTool } from './imageTools/mouseWheelTool';
