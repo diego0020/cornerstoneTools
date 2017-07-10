@@ -105,6 +105,7 @@ export { default as touchInput } from './inputSources/touchInput';
 
 
 export { angle, angleTouch } from './imageTools/angleTool';
+export { angleXen, angleXenTouch } from './imageTools/angleToolXen';
 export { arrowAnnotate, arrowAnnotateTouch } from './imageTools/arrowAnnotate';
 export { crosshairs, crosshairsTouch } from './imageTools/crosshairs';
 export { default as displayTool } from './imageTools/displayTool';
@@ -129,6 +130,7 @@ export { default as orientationMarkers } from './imageTools/orientationMarkers';
 export { pan, panTouchDrag } from './imageTools/pan';
 export { default as panMultiTouch } from './imageTools/panMultiTouch';
 export { probe, probeTouch } from './imageTools/probe';
+export { probex, probexTouch } from './imageTools/probex';
 export { rectangleRoi, rectangleRoiTouch } from './imageTools/rectangleRoi';
 export { rotate, rotateTouchDrag } from './imageTools/rotate';
 export { default as rotateTouch } from './imageTools/rotateTouch';
