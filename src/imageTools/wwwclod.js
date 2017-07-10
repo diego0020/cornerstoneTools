@@ -1,323 +1,349 @@
-(function ($, cornerstone, cornerstoneTools) {
+import * as cornerstone from 'cornerstone-core';
+import simpleMouseButtonTool from './simpleMouseButtonTool.js';
+import touchDragTool from './touchDragTool.js';
+import isMouseButtonEnabled from '../util/isMouseButtonEnabled.js';
 
+let toolData = null;
+let interactingMode = false;
+let lastSession = null;
 
-  let tool_data = null;
-  let interacting_mode = false;
-  let last_session = null;
+function mouseUpCallback (e, eventData) {
+  if (interactingMode === false) {
+    return;
+  }
 
-  function mouseUpCallback (e, eventData) {
-    if (interacting_mode === false) {
+  $(eventData.element).off('CornerstoneToolsMouseDrag', mouseDragCallback);
+  $(eventData.element).off('CornerstoneToolsMouseUp', mouseUpCallback);
+  $(eventData.element).off('CornerstoneToolsMouseClick', mouseUpCallback);
+  interactionEnd(e, eventData);
+        // Reactivate mouseDownCallbacks
+  interactingMode = false;
+  lastSession = Date.now();
+}
+
+function mouseDownCallback (e, eventData) {
+  if (isMouseButtonEnabled(eventData.which, e.data.mouseButtonMask)) {
+            // Disable further mouseDownCallbacks
+    const ts = Date.now();
+
+    if (interactingMode === true) {
+                // Sanity check, should not happen
       return;
     }
 
-    $(eventData.element).off('CornerstoneToolsMouseDrag', mouseDragCallback);
-    $(eventData.element).off('CornerstoneToolsMouseUp', mouseUpCallback);
-    $(eventData.element).off('CornerstoneToolsMouseClick', mouseUpCallback);
-    interactionEnd(e, eventData);
-        // Reactivate mouseDownCallbacks
-    interacting_mode = false;
-    last_session = Date.now();
-  }
-
-  function mouseDownCallback (e, eventData) {
-    if (cornerstoneTools.isMouseButtonEnabled(eventData.which, e.data.mouseButtonMask)) {
-            // Disable further mouseDownCallbacks
-      const ts = Date.now();
-
-      if (interacting_mode === true) {
-                // Sanity check, should not happen
-        return;
-      }
-
-      if (last_session !== null && (ts - last_session < 100)) {
+    if (lastSession !== null && (ts - lastSession < 100)) {
                 // Rate limit to one session per 1/10 of second
-        return;
-      }
-
-      interacting_mode = true;
-      interactionStart(e, eventData);
-      $(eventData.element).on('CornerstoneToolsMouseDrag', mouseDragCallback);
-      $(eventData.element).on('CornerstoneToolsMouseUp', mouseUpCallback);
-      $(eventData.element).on('CornerstoneToolsMouseClick', mouseUpCallback);
-
-      return false; // False = causes jquery to preventDefault() and stopPropagation() this event
+      return;
     }
-  }
 
-  function touchEndCallback (e, eventData) {
-    $(eventData.element).off('CornerstoneToolsTouchDrag', dragCallback);
-    $(eventData.element).off('CornerstoneToolsTouchEnd', touchEndCallback);
-    $(eventData.element).off('CornerstoneToolsTap', touchEndCallback);
-    interactionEnd(e, eventData);
-  }
-
-  function touchStartCallback (e, eventData) {
+    interactingMode = true;
     interactionStart(e, eventData);
-    $(eventData.element).on('CornerstoneToolsTouchDrag', dragCallback);
-    $(eventData.element).on('CornerstoneToolsTouchEnd', touchEndCallback);
-    $(eventData.element).on('CornerstoneToolsTap', touchEndCallback);
+    $(eventData.element).on('CornerstoneToolsMouseDrag', mouseDragCallback);
+    $(eventData.element).on('CornerstoneToolsMouseUp', mouseUpCallback);
+    $(eventData.element).on('CornerstoneToolsMouseClick', mouseUpCallback);
 
     return false; // False = causes jquery to preventDefault() and stopPropagation() this event
   }
+}
 
-  function defaultStrategy (eventData) {
+function touchEndCallback (e, eventData) {
+  $(eventData.element).off('CornerstoneToolsTouchDrag', dragCallback);
+  $(eventData.element).off('CornerstoneToolsTouchEnd', touchEndCallback);
+  $(eventData.element).off('CornerstoneToolsTap', touchEndCallback);
+  interactionEnd(e, eventData);
+}
+
+function touchStartCallback (e, eventData) {
+  interactionStart(e, eventData);
+  $(eventData.element).on('CornerstoneToolsTouchDrag', dragCallback);
+  $(eventData.element).on('CornerstoneToolsTouchEnd', touchEndCallback);
+  $(eventData.element).on('CornerstoneToolsTap', touchEndCallback);
+
+  return false; // False = causes jquery to preventDefault() and stopPropagation() this event
+}
+
+function defaultStrategy (eventData) {
         // Here we normalize the ww/wc adjustments so the same number of on screen pixels
         // Adjusts the same percentage of the dynamic range of the image.  This is needed to
         // Provide consistency for the ww/wc tool regardless of the dynamic range (e.g. an 8 bit
         // Image will feel the same as a 16 bit image would)
-    const maxVOI = eventData.image.maxPixelValue * eventData.image.slope + eventData.image.intercept;
-    const minVOI = eventData.image.minPixelValue * eventData.image.slope + eventData.image.intercept;
-    const imageDynamicRange = maxVOI - minVOI;
-    const multiplier = imageDynamicRange / 1024;
+  const maxVOI = eventData.image.maxPixelValue * eventData.image.slope + eventData.image.intercept;
+  const minVOI = eventData.image.minPixelValue * eventData.image.slope + eventData.image.intercept;
+  const imageDynamicRange = maxVOI - minVOI;
+  const multiplier = imageDynamicRange / 1024;
 
-    const deltaX = eventData.deltaPoints.page.x * multiplier;
-    const deltaY = eventData.deltaPoints.page.y * multiplier;
+  const deltaX = eventData.deltaPoints.page.x * multiplier;
+  const deltaY = eventData.deltaPoints.page.y * multiplier;
 
-    eventData.viewport.voi.windowWidth += (deltaX);
-    eventData.viewport.voi.windowCenter += (deltaY);
+  eventData.viewport.voi.windowWidth += (deltaX);
+  eventData.viewport.voi.windowCenter += (deltaY);
+}
+
+function mouseDragCallback (e, eventData) {
+  wwwclod.strategy(eventData);
+  cornerstone.setViewport(eventData.element, eventData.viewport);
+
+  return false; // False = cases jquery to preventDefault() and stopPropagation() this event
+}
+
+function dragCallback (e, eventData) {
+  e.stopImmediatePropagation(); // Prevent CornerstoneToolsTouchStartActive from killing any press events
+  const dragData = eventData;
+
+  const maxVOI = dragData.image.maxPixelValue * dragData.image.slope + dragData.image.intercept;
+  const minVOI = dragData.image.minPixelValue * dragData.image.slope + dragData.image.intercept;
+  const imageDynamicRange = maxVOI - minVOI;
+  const multiplier = imageDynamicRange / 1024;
+  const deltaX = dragData.deltaPoints.page.x * multiplier;
+  const deltaY = dragData.deltaPoints.page.y * multiplier;
+
+  const config = wwwclod.getConfiguration();
+
+  if (config.orientation) {
+    if (config.orientation === 0) {
+      dragData.viewport.voi.windowWidth += (deltaX);
+      dragData.viewport.voi.windowCenter += (deltaY);
+    } else {
+      dragData.viewport.voi.windowWidth += (deltaY);
+      dragData.viewport.voi.windowCenter += (deltaX);
+    }
+  } else {
+    dragData.viewport.voi.windowWidth += (deltaX);
+    dragData.viewport.voi.windowCenter += (deltaY);
   }
 
-  function mouseDragCallback (e, eventData) {
-    cornerstoneTools.wwwclod.strategy(eventData);
-    cornerstone.setViewport(eventData.element, eventData.viewport);
+  cornerstone.setViewport(dragData.element, dragData.viewport);
+}
 
-    return false; // False = cases jquery to preventDefault() and stopPropagation() this event
+function interactionStart (e, eventData) {
+
+  const config = wwwclod.getConfiguration();
+  let targetWidth = 512;
+  let targetHeight = 512;
+  let origData;
+
+  if (config) {
+    if (config.targetWidth) {
+      targetWidth = config.targetWidth;
+    }
+
+    if (config.targetHeight) {
+      targetHeight = config.targetHeight;
+    }
   }
 
-  function dragCallback (e, eventData) {
-    cornerstoneTools.wwwclod.strategy(eventData);
-    cornerstone.setViewport(eventData.element, eventData.viewport);
-
-    return false; // False = cases jquery to preventDefault() and stopPropagation() this event
-  }
-
-  function interactionStart (e, eventData) {
-
-    const config = cornerstoneTools.wwwclod.getConfiguration();
-    let target_width = 256;
-    let target_height = 256;
-    let orig_data;
-
-    if (config) {
-      if (config.target_width) {
-        target_width = config.target_width;
-      }
-
-      if (config.target_height) {
-        target_height = config.target_height;
-      }
-    }
-
-    if ((eventData.image.height < (target_height * 1.5)) && (eventData.image.width < (target_width * 1.5))) {
-      orig_data = {
-        unchanged: true
-      };
-      tool_data = orig_data;
-
-      return;
-    }
-
-    const viewport = eventData.viewport;
-    const rotation = viewport.rotation;
-    const valid_rotations = [0, 90, 180, 270];
-
-    if (valid_rotations.indexOf(rotation) < 0) {
-      console.warn('Can\'t handle rotations which are not multiples of 90, falling back to standard mode');
-      orig_data = {
-        unchanged: true
-      };
-      tool_data = orig_data;
-
-      return;
-    }
-
-    const image = eventData.image;
-    const orig_viewport = $.extend(true, {}, viewport);
-
-    orig_data = {
-      image,
-      viewport: orig_viewport
+  if ((eventData.image.height < (targetHeight * 1.5)) && (eventData.image.width < (targetWidth * 1.5))) {
+    origData = {
+      unchanged: true
     };
-    tool_data = orig_data;
+    toolData = origData;
 
-    const enabledElement = cornerstone.getEnabledElement(eventData.element);
-    const canvas = $(eventData.element).find('canvas').get(0);
-    const canvas_width = canvas.width;
-    const canvas_height = canvas.height;
+    return;
+  }
 
-    const i_transform = cornerstone.internal.getTransform(enabledElement);
+  const viewport = eventData.viewport;
+  const rotation = viewport.rotation;
+  const validRotations = [0, 90, 180, 270];
 
-    i_transform.invert();
-    let bottom_right;
-    let top_left;
-
-    if (rotation === 0) {
-      bottom_right = i_transform.transformPoint(canvas_width, canvas_height);
-      top_left = i_transform.transformPoint(0, 0);
-    }else if (rotation === 270) {
-      bottom_right = i_transform.transformPoint(canvas_width, 0);
-      top_left = i_transform.transformPoint(0, canvas_height);
-    }else if (rotation === 180) {
-      bottom_right = i_transform.transformPoint(0, 0);
-      top_left = i_transform.transformPoint(canvas_width, canvas_height);
-    }else if (rotation === 90) {
-      bottom_right = i_transform.transformPoint(0, canvas_height);
-      top_left = i_transform.transformPoint(canvas_width, 0);
-    }
-
-    bottom_right.x = Math.min(bottom_right.x, image.width);
-    bottom_right.y = Math.min(bottom_right.y, image.height);
-
-    top_left.x = Math.max(0, top_left.x);
-    top_left.y = Math.max(0, top_left.y);
-
-    const down_image = downsample_image(image, target_width, target_height, top_left, bottom_right);
-
-    const relative_center = {
-      x: (top_left.x + bottom_right.x) / 2 - (image.width / 2),
-      y: (top_left.y + bottom_right.y) / 2 - (image.height / 2)
+  if (validRotations.indexOf(rotation) < 0) {
+    console.warn('Can\'t handle rotations which are not multiples of 90, falling back to standard mode');
+    origData = {
+      unchanged: true
     };
+    toolData = origData;
 
-    let translation2;
+    return;
+  }
+
+  const image = eventData.image;
+  const origViewport = $.extend(true, {}, viewport);
+
+  origData = {
+    image,
+    viewport: origViewport
+  };
+  toolData = origData;
+
+  const enabledElement = cornerstone.getEnabledElement(eventData.element);
+  const canvas = $(eventData.element).find('canvas').get(0);
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+
+  const iTransform = cornerstone.internal.getTransform(enabledElement);
+
+  iTransform.invert();
+  let bottomRight;
+  let topLeft;
+
+  if (rotation === 0) {
+    bottomRight = iTransform.transformPoint(canvasWidth, canvasHeight);
+    topLeft = iTransform.transformPoint(0, 0);
+  }else if (rotation === 270) {
+    bottomRight = iTransform.transformPoint(canvasWidth, 0);
+    topLeft = iTransform.transformPoint(0, canvasHeight);
+  }else if (rotation === 180) {
+    bottomRight = iTransform.transformPoint(0, 0);
+    topLeft = iTransform.transformPoint(canvasWidth, canvasHeight);
+  }else if (rotation === 90) {
+    bottomRight = iTransform.transformPoint(0, canvasHeight);
+    topLeft = iTransform.transformPoint(canvasWidth, 0);
+  }
+
+  bottomRight.x = Math.min(bottomRight.x, image.width);
+  bottomRight.y = Math.min(bottomRight.y, image.height);
+
+  topLeft.x = Math.max(0, topLeft.x);
+  topLeft.y = Math.max(0, topLeft.y);
+
+  const downImage = downsampleImage(image, targetWidth, targetHeight, topLeft, bottomRight);
+
+  const relativeCenter = {
+    x: (topLeft.x + bottomRight.x) / 2 - (image.width / 2),
+    y: (topLeft.y + bottomRight.y) / 2 - (image.height / 2)
+  };
+
+  let translation2;
         // Translation is applied after rotation
 
-    if (rotation === 0) {
-      translation2 = {
-        x: (viewport.translation.x + relative_center.x) / ((bottom_right.x - top_left.x) / (target_width)),
-        y: (viewport.translation.y + relative_center.y) / ((bottom_right.y - top_left.y) / (target_height))
-      };
-    }else if (rotation === 270) {
-      translation2 = {
-        x: (viewport.translation.x + relative_center.y) / ((bottom_right.y - top_left.y) / (target_height)),
-        y: (viewport.translation.y - relative_center.x) / ((bottom_right.x - top_left.x) / (target_width))
-      };
-    }else if (rotation === 180) {
-      translation2 = {
-        x: (viewport.translation.x - relative_center.x) / ((bottom_right.x - top_left.x) / (target_width)),
-        y: (viewport.translation.y - relative_center.y) / ((bottom_right.y - top_left.y) / (target_height))
-      };
-    }else if (rotation === 90) {
-      translation2 = {
-        x: (viewport.translation.x - relative_center.y) / ((bottom_right.y - top_left.y) / (target_height)),
-        y: (viewport.translation.y + relative_center.x) / ((bottom_right.x - top_left.x) / (target_width))
-      };
-    }
+  if (rotation === 0) {
+    translation2 = {
+      x: (viewport.translation.x + relativeCenter.x) / ((bottomRight.x - topLeft.x) / (targetWidth)),
+      y: (viewport.translation.y + relativeCenter.y) / ((bottomRight.y - topLeft.y) / (targetHeight))
+    };
+  }else if (rotation === 270) {
+    translation2 = {
+      x: (viewport.translation.x + relativeCenter.y) / ((bottomRight.y - topLeft.y) / (targetHeight)),
+      y: (viewport.translation.y - relativeCenter.x) / ((bottomRight.x - topLeft.x) / (targetWidth))
+    };
+  }else if (rotation === 180) {
+    translation2 = {
+      x: (viewport.translation.x - relativeCenter.x) / ((bottomRight.x - topLeft.x) / (targetWidth)),
+      y: (viewport.translation.y - relativeCenter.y) / ((bottomRight.y - topLeft.y) / (targetHeight))
+    };
+  }else if (rotation === 90) {
+    translation2 = {
+      x: (viewport.translation.x - relativeCenter.y) / ((bottomRight.y - topLeft.y) / (targetHeight)),
+      y: (viewport.translation.y + relativeCenter.x) / ((bottomRight.x - topLeft.x) / (targetWidth))
+    };
+  }
 
         // Viewport.translation = {x: 0, y:0};
-    viewport.translation = translation2;
-    if (down_image.rowPixelSpacing * target_width > down_image.columnPixelSpacing * target_height) {
-      viewport.scale *= ((bottom_right.x - top_left.x) / (target_width));
-    }else {
-      viewport.scale *= ((bottom_right.y - top_left.y) / (target_height));
-    }
-
-    cornerstone.displayImage(eventData.element, down_image, viewport);
-    cornerstone.setViewport(eventData.element, viewport);
-
-    return false; // False = cases jquery to preventDefault() and stopPropagation() this event
+  viewport.translation = translation2;
+  if (downImage.rowPixelSpacing * targetWidth > downImage.columnPixelSpacing * targetHeight) {
+    viewport.scale *= ((bottomRight.x - topLeft.x) / (targetWidth));
+  }else {
+    viewport.scale *= ((bottomRight.y - topLeft.y) / (targetHeight));
   }
 
-  function interactionEnd (e, eventData) {
-    const orig_data = tool_data;
+  cornerstone.displayImage(eventData.element, downImage, viewport);
+  cornerstone.setViewport(eventData.element, viewport);
 
-    if ((!orig_data) || ('unchanged' in orig_data)) {
-      cornerstoneTools.clearToolState(eventData.element, 'wwwclod');
+  return false; // False = cases jquery to preventDefault() and stopPropagation() this event
+}
 
-      return;
-    }
+function interactionEnd (e, eventData) {
+  const origData = toolData;
 
-    const modified_vieport = cornerstone.getViewport(eventData.element);
-    const orig_image = orig_data.image;
-    const viewport = orig_data.viewport;
-
-    viewport.voi = modified_vieport.voi;
-    cornerstone.setViewport(eventData.element, viewport);
-    cornerstone.displayImage(eventData.element, orig_image, viewport);
+  if ((!origData) || ('unchanged' in origData)) {
+    return;
   }
 
-  function downsample_image (image, target_width, target_height, top_left, bottom_right) {
-    const image_data = image.getPixelData();
-    const img_width = image.width;
-    const offset_y = top_left.y;
-    const offset_x = top_left.x;
-    const stride_y = (bottom_right.y - top_left.y) / target_height;
-    const stride_x = (bottom_right.x - top_left.x) / target_width;
-    let i, j, i2, j2, j2c;
+  const modifiedVieport = cornerstone.getViewport(eventData.element);
+  const origImage = origData.image;
+  const viewport = origData.viewport;
 
-    let pixels_array;
+  viewport.voi = modifiedVieport.voi;
+  cornerstone.setViewport(eventData.element, viewport);
+  cornerstone.displayImage(eventData.element, origImage, viewport);
+}
 
-    if (!image.color) {
-      pixels_array = new image_data.constructor(target_height * target_width);
-      j2c = new Array(target_width);
-      for (j = 0; j < target_width; j++) {
-        j2c[j] = Math.ceil(offset_x + (j + 0.5) * stride_x);
-      }
+function downsampleImage (image, targetWidth, targetHeight, topLeft, bottomRight) {
+  const imageData = image.getPixelData();
+  const imgWidth = image.width;
+  const offsetY = topLeft.y;
+  const offsetX = topLeft.x;
+  const strideY = (bottomRight.y - topLeft.y) / targetHeight;
+  const strideX = (bottomRight.x - topLeft.x) / targetWidth;
+  let i, j, i2, j2, j2c;
 
-      for (i = 0; i < target_height; i++) {
-        i2 = Math.ceil(offset_y + (i + 0.5) * stride_y);
-        for (j = 0; j < target_width; j++) {
-          j2 = j2c[j];
-          pixels_array[i * target_width + j] = image_data[i2 * img_width + j2];
-        }
-      }
-    } else {
-      pixels_array = new image_data.constructor(target_height * target_width * 4);
-      j2c = new Array(target_width);
-      for (j = 0; j < target_width; j++) {
-        j2c[j] = Math.ceil(offset_x + (j + 0.5) * stride_x);
-      }
+  let pixelsArray;
 
-      for (i = 0; i < target_height; i++) {
-        i2 = Math.ceil(offset_y + (i + 0.5) * stride_y);
-        for (j = 0; j < target_width; j++) {
-          j2 = j2c[j];
-          pixels_array[4 * (i * target_width + j) + 0] = image_data[4 * (i2 * img_width + j2) + 0];
-          pixels_array[4 * (i * target_width + j) + 1] = image_data[4 * (i2 * img_width + j2) + 1];
-          pixels_array[4 * (i * target_width + j) + 2] = image_data[4 * (i2 * img_width + j2) + 2];
-          pixels_array[4 * (i * target_width + j) + 3] = image_data[4 * (i2 * img_width + j2) + 3];
-        }
-      }
+  if (image.color === false) {
+    pixelsArray = new imageData.constructor(targetHeight * targetWidth);
+    j2c = new Array(targetWidth);
+    for (j = 0; j < targetWidth; j++) {
+      j2c[j] = Math.ceil(offsetX + (j + 0.5) * strideX);
     }
 
-    function get_pixels () {
-      return pixels_array;
+    for (i = 0; i < targetHeight; i++) {
+      i2 = Math.ceil(offsetY + (i + 0.5) * strideY);
+      for (j = 0; j < targetWidth; j++) {
+        j2 = j2c[j];
+        pixelsArray[i * targetWidth + j] = imageData[i2 * imgWidth + j2];
+      }
+    }
+  } else {
+    pixelsArray = new imageData.constructor(targetHeight * targetWidth * 4);
+    j2c = new Array(targetWidth);
+    for (j = 0; j < targetWidth; j++) {
+      j2c[j] = Math.ceil(offsetX + (j + 0.5) * strideX);
     }
 
-    const image_2 = {
-      imageId: `${image.imageId}_down`,
-      minPixelValue: image.minPixelValue,
-      maxPixelValue: image.maxPixelValue,
-      rows: target_height,
-      columns: target_width,
-      height: target_height,
-      width: target_width,
-      getPixelData: get_pixels,
-      color: image.color,
-      columnPixelSpacing: (image.columnPixelSpacing ? image.columnPixelSpacing : 1) / stride_y,
-      rowPixelSpacing: (image.rowPixelSpacing ? image.rowPixelSpacing : 1) / stride_x,
-      invert: false,
-      sizeInBytes: target_width * target_height * 2 * (image.color ? 1 : 4),
-      slope: image.slope,
-      intercept: image.intercept,
-      windowCenter: image.windowCenter,
-      windowWidth: image.windowWidth
-    };
+    for (i = 0; i < targetHeight; i++) {
+      i2 = Math.ceil(offsetY + (i + 0.5) * strideY);
+      for (j = 0; j < targetWidth; j++) {
+        j2 = j2c[j];
+        pixelsArray[4 * (i * targetWidth + j) + 0] = imageData[4 * (i2 * imgWidth + j2) + 0];
+        pixelsArray[4 * (i * targetWidth + j) + 1] = imageData[4 * (i2 * imgWidth + j2) + 1];
+        pixelsArray[4 * (i * targetWidth + j) + 2] = imageData[4 * (i2 * imgWidth + j2) + 2];
+        pixelsArray[4 * (i * targetWidth + j) + 3] = imageData[4 * (i2 * imgWidth + j2) + 3];
+      }
+    }
+  }
+
+  function getPixels () {
+    return pixelsArray;
+  }
+
+  const image2 = {
+    imageId: `${image.imageId}_down`,
+    minPixelValue: image.minPixelValue,
+    maxPixelValue: image.maxPixelValue,
+    rows: targetHeight,
+    columns: targetWidth,
+    height: targetHeight,
+    width: targetWidth,
+    getPixelData: getPixels,
+    color: image.color,
+    columnPixelSpacing: (image.columnPixelSpacing ? image.columnPixelSpacing : 1) / strideY,
+    rowPixelSpacing: (image.rowPixelSpacing ? image.rowPixelSpacing : 1) / strideX,
+    invert: false,
+    sizeInBytes: targetWidth * targetHeight * 2 * (image.color ? 1 : 4),
+    slope: image.slope,
+    intercept: image.intercept,
+    windowCenter: image.windowCenter,
+    windowWidth: image.windowWidth
+  };
         // Don´t use renderWebImage
 
-    if (image_2.color === true) {
-      image_2.render = cornerstone.renderColorImage;
-    }else {
-      image_2.render = cornerstone.renderGrayscaleImage;
-    }
-
-    return image_2;
+  if (image2.color === true) {
+    image2.render = cornerstone.renderColorImage;
+  }else {
+    image2.render = cornerstone.renderGrayscaleImage;
   }
 
-  cornerstoneTools.wwwclod = cornerstoneTools.simpleMouseButtonTool(mouseDownCallback);
-  cornerstoneTools.wwwclodTouchDrag = cornerstoneTools.touchDragTool(touchStartCallback);
-  cornerstoneTools.wwwclod.strategies = {
-    default: defaultStrategy
-  };
-  cornerstoneTools.wwwclod.strategy = defaultStrategy;
+  return image2;
+}
+const wwwclod = simpleMouseButtonTool(mouseDownCallback);
 
-})($, cornerstone, cornerstoneTools);
+wwwclod.strategies = {
+  default: defaultStrategy
+};
+wwwclod.strategy = defaultStrategy;
+
+const wwwclodTouchDrag = touchDragTool(touchStartCallback);
+
+export {
+    wwwclod,
+    wwwclodTouchDrag
+  };

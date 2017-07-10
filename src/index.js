@@ -146,6 +146,7 @@ export { default as touchDragTool } from './imageTools/touchDragTool';
 export { default as touchPinchTool } from './imageTools/touchPinchTool';
 export { default as touchTool } from './imageTools/touchTool';
 export { wwwc, wwwcTouchDrag } from './imageTools/wwwc';
+export { wwwclod, wwwclodTouchDrag } from './imageTools/wwwclod';
 export { wwwcRegion, wwwcRegionTouch } from './imageTools/wwwcRegion';
 export { zoom,
          zoomWheel,
