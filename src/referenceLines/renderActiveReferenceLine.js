@@ -13,8 +13,8 @@ export default function (context, eventData, targetElement, referenceElement) {
     return;
   }
 
-  const targetImagePlane = cornerstone.metaData.get('imagePlane', targetImage.imageId);
-  const referenceImagePlane = cornerstone.metaData.get('imagePlane', referenceImage.imageId);
+  const targetImagePlane = cornerstone.metaData.get('imagePlane', targetImage.imageId, targetElement);
+  const referenceImagePlane = cornerstone.metaData.get('imagePlane', referenceImage.imageId, referenceElement);
 
     // Make sure the target and reference actually have image plane metadata
   if (!targetImagePlane ||
