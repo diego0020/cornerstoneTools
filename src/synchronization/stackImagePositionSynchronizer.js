@@ -12,7 +12,7 @@ export default function (synchronizer, sourceElement, targetElement) {
   }
 
   const sourceImage = cornerstone.getEnabledElement(sourceElement).image;
-  const sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceImage.imageId, sourceElement);
+  const sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceImage.imageId);
   const sourceImagePosition = sourceImagePlane.imagePositionPatient;
 
   const stackToolDataSource = getToolState(targetElement, 'stack');
@@ -22,7 +22,7 @@ export default function (synchronizer, sourceElement, targetElement) {
   let newImageIdIndex = -1;
 
   $.each(stackData.imageIds, function (index, imageId) {
-    const imagePlane = cornerstone.metaData.get('imagePlane', imageId, targetElement);
+    const imagePlane = cornerstone.metaData.get('imagePlane', imageId);
     const imagePosition = imagePlane.imagePositionPatient;
     const distance = imagePosition.distanceToSquared(sourceImagePosition);
         // Console.log(index + '=' + distance);

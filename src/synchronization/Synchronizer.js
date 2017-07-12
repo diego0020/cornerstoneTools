@@ -39,7 +39,7 @@ function Synchronizer (event, handler) {
       }
 
       const sourceImageId = sourceEnabledElement.image.imageId;
-      const sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceImageId, sourceElement);
+      const sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceImageId);
 
       if (!sourceImagePlane || !sourceImagePlane.imagePositionPatient) {
         return;
@@ -78,7 +78,7 @@ function Synchronizer (event, handler) {
           return;
         }
 
-        const targetImagePlane = cornerstone.metaData.get('imagePlane', targetImageId, targetElement);
+        const targetImagePlane = cornerstone.metaData.get('imagePlane', targetImageId);
 
         if (!targetImagePlane || !targetImagePlane.imagePositionPatient) {
           return;

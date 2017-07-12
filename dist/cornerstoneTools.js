@@ -4705,8 +4705,8 @@ exports.default = function (context, eventData, targetElement, referenceElement)
     return;
   }
 
-  var targetImagePlane = cornerstone.metaData.get('imagePlane', targetImage.imageId, targetElement);
-  var referenceImagePlane = cornerstone.metaData.get('imagePlane', referenceImage.imageId, referenceElement);
+  var targetImagePlane = cornerstone.metaData.get('imagePlane', targetImage.imageId);
+  var referenceImagePlane = cornerstone.metaData.get('imagePlane', referenceImage.imageId);
 
   // Make sure the target and reference actually have image plane metadata
   if (!targetImagePlane || !referenceImagePlane || !targetImagePlane.rowCosines || !targetImagePlane.columnCosines || !targetImagePlane.imagePositionPatient || !referenceImagePlane.rowCosines || !referenceImagePlane.columnCosines || !referenceImagePlane.imagePositionPatient) {
@@ -14935,7 +14935,7 @@ function Synchronizer(event, handler) {
       }
 
       var sourceImageId = sourceEnabledElement.image.imageId;
-      var sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceImageId, sourceElement);
+      var sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceImageId);
 
       if (!sourceImagePlane || !sourceImagePlane.imagePositionPatient) {
         return;
@@ -14973,7 +14973,7 @@ function Synchronizer(event, handler) {
           return;
         }
 
-        var targetImagePlane = cornerstone.metaData.get('imagePlane', targetImageId, targetElement);
+        var targetImagePlane = cornerstone.metaData.get('imagePlane', targetImageId);
 
         if (!targetImagePlane || !targetImagePlane.imagePositionPatient) {
           return;
@@ -15332,7 +15332,7 @@ exports.default = function (synchronizer, sourceElement, targetElement, eventDat
   }
 
   var sourceEnabledElement = cornerstone.getEnabledElement(sourceElement);
-  var sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceEnabledElement.image.imageId, sourceElement);
+  var sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceEnabledElement.image.imageId);
   var sourceImagePosition = sourceImagePlane.imagePositionPatient;
 
   var stackToolDataSource = (0, _toolState.getToolState)(targetElement, 'stack');
@@ -15348,7 +15348,7 @@ exports.default = function (synchronizer, sourceElement, targetElement, eventDat
   var finalPosition = sourceImagePosition.clone().add(positionDifference);
 
   stackData.imageIds.forEach(function (imageId, index) {
-    var imagePlane = cornerstone.metaData.get('imagePlane', imageId, targetElement);
+    var imagePlane = cornerstone.metaData.get('imagePlane', imageId);
     var imagePosition = imagePlane.imagePositionPatient;
     var distance = finalPosition.distanceToSquared(imagePosition);
 
@@ -15433,7 +15433,7 @@ exports.default = function (synchronizer, sourceElement, targetElement) {
   }
 
   var sourceImage = cornerstone.getEnabledElement(sourceElement).image;
-  var sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceImage.imageId, sourceElement);
+  var sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceImage.imageId);
   var sourceImagePosition = sourceImagePlane.imagePositionPatient;
 
   var stackToolDataSource = (0, _toolState.getToolState)(targetElement, 'stack');
@@ -15443,7 +15443,7 @@ exports.default = function (synchronizer, sourceElement, targetElement) {
   var newImageIdIndex = -1;
 
   $.each(stackData.imageIds, function (index, imageId) {
-    var imagePlane = cornerstone.metaData.get('imagePlane', imageId, targetElement);
+    var imagePlane = cornerstone.metaData.get('imagePlane', imageId);
     var imagePosition = imagePlane.imagePositionPatient;
     var distance = imagePosition.distanceToSquared(sourceImagePosition);
     // Console.log(index + '=' + distance);

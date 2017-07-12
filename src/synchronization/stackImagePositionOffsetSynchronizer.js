@@ -15,7 +15,7 @@ export default function (synchronizer, sourceElement, targetElement, eventData, 
   }
 
   const sourceEnabledElement = cornerstone.getEnabledElement(sourceElement);
-  const sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceEnabledElement.image.imageId, sourceElement);
+  const sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceEnabledElement.image.imageId);
   const sourceImagePosition = sourceImagePlane.imagePositionPatient;
 
   const stackToolDataSource = getToolState(targetElement, 'stack');
@@ -31,7 +31,7 @@ export default function (synchronizer, sourceElement, targetElement, eventData, 
   const finalPosition = sourceImagePosition.clone().add(positionDifference);
 
   stackData.imageIds.forEach(function (imageId, index) {
-    const imagePlane = cornerstone.metaData.get('imagePlane', imageId, targetElement);
+    const imagePlane = cornerstone.metaData.get('imagePlane', imageId);
     const imagePosition = imagePlane.imagePositionPatient;
     const distance = finalPosition.distanceToSquared(imagePosition);
 
