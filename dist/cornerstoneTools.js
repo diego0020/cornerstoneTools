@@ -12457,7 +12457,7 @@ function mouseDoubleClick(e) {
   var lastPoints = (0, _copyPoints2.default)(startPoints);
   var eventData = {
     event: e,
-    which: e.which,
+    which: e.buttons,
     viewport: cornerstone.getViewport(element),
     image: cornerstone.getEnabledElement(element).image,
     element: element,
@@ -12499,7 +12499,7 @@ function mouseDown(e) {
   var lastPoints = (0, _copyPoints2.default)(startPoints);
   var eventData = {
     event: e,
-    which: e.which,
+    which: e.buttons,
     viewport: cornerstone.getViewport(element),
     image: cornerstone.getEnabledElement(element).image,
     element: element,
@@ -12524,7 +12524,7 @@ function mouseDown(e) {
     }
   }
 
-  var whichMouseButton = e.which;
+  var whichMouseButton = e.buttons;
 
   function onMouseMove(e) {
     // Calculate our current points in page and image coordinates
@@ -12649,7 +12649,7 @@ function mouseMove(e) {
 
   var lastPoints = (0, _copyPoints2.default)(startPoints);
 
-  var whichMouseButton = e.which;
+  var whichMouseButton = e.buttons;
 
   // Calculate our current points in page and image coordinates
   var currentPoints = {

@@ -33,7 +33,7 @@ function mouseDoubleClick (e) {
   const lastPoints = copyPoints(startPoints);
   const eventData = {
     event: e,
-    which: e.which,
+    which: e.buttons,
     viewport: cornerstone.getViewport(element),
     image: cornerstone.getEnabledElement(element).image,
     element,
@@ -75,7 +75,7 @@ function mouseDown (e) {
   let lastPoints = copyPoints(startPoints);
   const eventData = {
     event: e,
-    which: e.which,
+    which: e.buttons,
     viewport: cornerstone.getViewport(element),
     image: cornerstone.getEnabledElement(element).image,
     element,
@@ -100,7 +100,7 @@ function mouseDown (e) {
     }
   }
 
-  const whichMouseButton = e.which;
+  const whichMouseButton = e.buttons;
 
   function onMouseMove (e) {
         // Calculate our current points in page and image coordinates
@@ -225,7 +225,7 @@ function mouseMove (e) {
 
   let lastPoints = copyPoints(startPoints);
 
-  const whichMouseButton = e.which;
+  const whichMouseButton = e.buttons;
 
     // Calculate our current points in page and image coordinates
   const currentPoints = {
