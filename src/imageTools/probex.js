@@ -100,7 +100,7 @@ function onImageRendered (e, eventData) {
 
           // Draw the handles
     drawHandles(context, eventData, data.handles, color, {
-      handleRadius: 2
+      handleRadius: 1.5
     });
 
     const x = Math.round(data.handles.end.x);

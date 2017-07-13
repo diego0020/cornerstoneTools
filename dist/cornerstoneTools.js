@@ -1,4 +1,4 @@
-/*! cornerstone-tools - 0.9.0 - 2017-07-12 | (c) 2017 Chris Hafey | https://github.com/chafey/cornerstoneTools */
+/*! cornerstone-tools - 0.9.0 - 2017-07-13 | (c) 2017 Chris Hafey | https://github.com/chafey/cornerstoneTools */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("cornerstone-core"), require("cornerstone-math"), require("hammerjs"));
@@ -467,7 +467,16 @@ exports.default = function (mouseToolInterface) {
         $(element).on('CornerstoneToolsMouseDoubleClick', eventData, mouseToolInterface.mouseDoubleClickCallback);
       }
 
-      $(element).trigger('measurementAdded');
+      var eventType = 'CornerstoneToolsMeasurementFinished';
+
+      var endEventData = {
+        toolType: mouseToolInterface.toolType,
+        element: element,
+        measurementData: measurementData
+      };
+
+      $(element).trigger(eventType, endEventData);
+
       cornerstone.updateImage(element);
     }, preventHandleOutsideImage);
   }
@@ -7707,9 +7716,10 @@ function onImageRendered(e, eventData) {
 
     // Configurable shadow
     if (config && config.shadow) {
-      context.shadowColor = config.shadowColor || '#000000';
-      context.shadowOffsetX = config.shadowOffsetX || 1;
-      context.shadowOffsetY = config.shadowOffsetY || 1;
+      context.shadowColor = config.shadowColor === undefined ? '#000000' : config.shadowColor;
+      context.shadowOffsetX = config.shadowOffsetX === undefined ? 1 : config.shadowOffsetX;
+      context.shadowOffsetX = config.shadowOffsetY === undefined ? 1 : config.shadowOffsetY;
+      context.shadowBlur = config.shadowBlur === undefined ? 1 : config.shadowBlur;
     }
 
     var data = toolData.data[i];
@@ -9041,7 +9051,7 @@ function onImageRendered(e, eventData) {
 
     // Draw the handles
     (0, _drawHandles2.default)(context, eventData, data.handles, color, {
-      handleRadius: 2
+      handleRadius: 1.5
     });
 
     var x = Math.round(data.handles.end.x);

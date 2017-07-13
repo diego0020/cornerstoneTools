@@ -73,7 +73,16 @@ export default function (mouseToolInterface) {
         $(element).on('CornerstoneToolsMouseDoubleClick', eventData, mouseToolInterface.mouseDoubleClickCallback);
       }
 
-      $(element).trigger('measurementAdded');
+      const eventType = 'CornerstoneToolsMeasurementFinished';
+
+      const endEventData = {
+        toolType: mouseToolInterface.toolType,
+        element,
+        measurementData
+      };
+
+      $(element).trigger(eventType, endEventData);
+
       cornerstone.updateImage(element);
     }, preventHandleOutsideImage);
   }
