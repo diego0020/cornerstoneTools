@@ -2834,6 +2834,16 @@ function clearRequestStack(type, element) {
   });
 }
 
+function clearAll() {
+  var p = void 0;
+
+  for (p in requestPool) {
+    if (requestPool.hasOwnProperty(p)) {
+      requestPool[p] = [];
+    }
+  }
+}
+
 function startAgain() {
   if (!awake) {
     return;
@@ -2967,7 +2977,8 @@ exports.default = {
   addRequest: addRequest,
   clearRequestStack: clearRequestStack,
   startGrabbing: startGrabbing,
-  getRequestPool: getRequestPool
+  getRequestPool: getRequestPool,
+  clearAll: clearAll
 };
 
 /***/ }),
