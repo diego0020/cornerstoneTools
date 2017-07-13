@@ -251,7 +251,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var defaultColor = 'white',
     activeColor = 'greenyellow',
-    fillColor = 'transparent';
+    fillColor = 'transparent',
+    secondaryColor = 'grey';
 
 function setFillColor(color) {
   fillColor = color;
@@ -281,6 +282,14 @@ function getColorIfActive(active) {
   return active ? activeColor : defaultColor;
 }
 
+function setSecondaryColor(color) {
+  secondaryColor = color;
+}
+
+function getSecondaryColor() {
+  return secondaryColor;
+}
+
 var toolColors = {
   setFillColor: setFillColor,
   getFillColor: getFillColor,
@@ -288,7 +297,9 @@ var toolColors = {
   getToolColor: getToolColor,
   setActiveColor: setActiveColor,
   getActiveColor: getActiveColor,
-  getColorIfActive: getColorIfActive
+  getColorIfActive: getColorIfActive,
+  setSecondaryColor: setSecondaryColor,
+  getSecondaryColor: getSecondaryColor
 };
 
 exports.default = toolColors;
@@ -863,7 +874,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var defaultWidth = 1,
-    activeWidth = 2;
+    activeWidth = 2,
+    secondaryWidth = 1;
 
 function setToolWidth(width) {
   defaultWidth = width;
@@ -881,11 +893,21 @@ function getActiveWidth() {
   return activeWidth;
 }
 
+function setSecondaryWidth(width) {
+  secondaryWidth = width;
+}
+
+function getSecondaryWidth() {
+  return secondaryWidth;
+}
+
 var toolStyle = {
   setToolWidth: setToolWidth,
   getToolWidth: getToolWidth,
   setActiveWidth: setActiveWidth,
-  getActiveWidth: getActiveWidth
+  getActiveWidth: getActiveWidth,
+  setSecondaryWidth: setSecondaryWidth,
+  getSecondaryWidth: getSecondaryWidth
 };
 
 exports.default = toolStyle;
@@ -4748,7 +4770,7 @@ exports.default = function (context, eventData, targetElement, referenceElement)
   var refLineStartCanvas = cornerstone.pixelToCanvas(eventData.element, referenceLine.start);
   var refLineEndCanvas = cornerstone.pixelToCanvas(eventData.element, referenceLine.end);
 
-  var color = _toolColors2.default.getActiveColor();
+  var color = _toolColors2.default.getSecondaryColor();
   var lineWidth = _toolStyle2.default.getToolWidth();
 
   // Draw the referenceLines

@@ -1,5 +1,6 @@
 let defaultWidth = 1,
-  activeWidth = 2;
+  activeWidth = 2,
+  secondaryWidth = 1;
 
 function setToolWidth (width) {
   defaultWidth = width;
@@ -17,11 +18,21 @@ function getActiveWidth () {
   return activeWidth;
 }
 
+function setSecondaryWidth (width) {
+  secondaryWidth = width;
+}
+
+function getSecondaryWidth () {
+  return secondaryWidth;
+}
+
 const toolStyle = {
   setToolWidth,
   getToolWidth,
   setActiveWidth,
-  getActiveWidth
+  getActiveWidth,
+  setSecondaryWidth,
+  getSecondaryWidth
 };
 
 export default toolStyle;

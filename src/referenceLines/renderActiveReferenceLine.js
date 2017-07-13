@@ -52,7 +52,7 @@ export default function (context, eventData, targetElement, referenceElement) {
   const refLineStartCanvas = cornerstone.pixelToCanvas(eventData.element, referenceLine.start);
   const refLineEndCanvas = cornerstone.pixelToCanvas(eventData.element, referenceLine.end);
 
-  const color = toolColors.getActiveColor();
+  const color = toolColors.getSecondaryColor();
   const lineWidth = toolStyle.getToolWidth();
 
     // Draw the referenceLines

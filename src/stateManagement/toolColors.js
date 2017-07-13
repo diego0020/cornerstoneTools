@@ -1,7 +1,8 @@
 
 let defaultColor = 'white',
   activeColor = 'greenyellow',
-  fillColor = 'transparent';
+  fillColor = 'transparent',
+  secondaryColor = 'grey';
 
 function setFillColor (color) {
   fillColor = color;
@@ -31,6 +32,14 @@ function getColorIfActive (active) {
   return active ? activeColor : defaultColor;
 }
 
+function setSecondaryColor (color) {
+  secondaryColor = color;
+}
+
+function getSecondaryColor () {
+  return secondaryColor;
+}
+
 const toolColors = {
   setFillColor,
   getFillColor,
@@ -38,7 +47,9 @@ const toolColors = {
   getToolColor,
   setActiveColor,
   getActiveColor,
-  getColorIfActive
+  getColorIfActive,
+  setSecondaryColor,
+  getSecondaryColor
 };
 
 export default toolColors;
