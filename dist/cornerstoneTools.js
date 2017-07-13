@@ -329,11 +329,15 @@ exports.default = function (context, textLines, x, y, color, options) {
   var font = _textStyle2.default.getFont();
   var fontSize = _textStyle2.default.getFontSize();
   var backgroundColor = _textStyle2.default.getBackgroundColor();
+  var shadowColor = _textStyle2.default.getShadowColor();
+  var shadowBlur = _textStyle2.default.getShadowBlur();
 
   context.save();
   context.font = font;
   context.textBaseline = 'top';
   context.strokeStyle = color;
+  context.shadowColor = shadowColor;
+  context.shadowBlur = shadowBlur;
 
   // Find the longest text width in the array of text data
   var maxWidth = 0;
@@ -1464,15 +1468,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var defaultFontSize = 15,
-    defaultFont = defaultFontSize + 'px Arial',
-    defaultBackgroundColor = 'transparent';
+    defaultFont = 'Arial',
+    defaultBackgroundColor = 'transparent',
+    shadowColor = '#000000',
+    shadowBlur = 2;
 
 function setFont(font) {
   defaultFont = font;
 }
 
 function getFont() {
-  return defaultFont;
+  return defaultFontSize + 'px ' + defaultFont;
 }
 
 function setFontSize(fontSize) {
@@ -1491,13 +1497,33 @@ function getBackgroundColor() {
   return defaultBackgroundColor;
 }
 
+function setShadowColor(color) {
+  shadowColor = color;
+}
+
+function getShadowColor() {
+  return shadowColor;
+}
+
+function setShadowBlur(value) {
+  shadowBlur = value;
+}
+
+function getShadowBlur() {
+  return shadowBlur;
+}
+
 var textStyle = {
   setFont: setFont,
   getFont: getFont,
   setFontSize: setFontSize,
   getFontSize: getFontSize,
   setBackgroundColor: setBackgroundColor,
-  getBackgroundColor: getBackgroundColor
+  getBackgroundColor: getBackgroundColor,
+  setShadowColor: setShadowColor,
+  getShadowColor: getShadowColor,
+  setShadowBlur: setShadowBlur,
+  getShadowBlur: getShadowBlur
 };
 
 exports.default = textStyle;
@@ -5185,10 +5211,10 @@ function onImageRendered(e, eventData) {
 
     // Configurable shadow
     if (config && config.shadow) {
-      context.shadowColor = config.shadowColor || '#000000';
-      context.shadowOffsetX = config.shadowOffsetX || 1;
-      context.shadowOffsetY = config.shadowOffsetY || 1;
-      context.shadowBlur = 5;
+      context.shadowColor = config.shadowColor === undefined ? '#000000' : config.shadowColor;
+      context.shadowOffsetX = config.shadowOffsetX === undefined ? 1 : config.shadowOffsetX;
+      context.shadowOffsetX = config.shadowOffsetY === undefined ? 1 : config.shadowOffsetY;
+      context.shadowBlur = config.shadowBlur === undefined ? 1 : config.shadowBlur;
     }
 
     var data = toolData.data[i];
@@ -7707,13 +7733,10 @@ function createNewMeasurement(mouseEventData) {
 // /////// END ACTIVE TOOL ///////
 
 function pointNearTool(element, data, coords) {
-  var lineSegment = {
-    start: cornerstone.pixelToCanvas(element, data.handles.start),
-    end: cornerstone.pixelToCanvas(element, data.handles.end)
-  };
-  var distanceToPoint = cornerstoneMath.lineSegment.distanceToPoint(lineSegment, coords);
+  var dStart = cornerstoneMath.point.distanceSquared(cornerstone.pixelToCanvas(element, data.handles.start), coords);
+  var dEnd = cornerstoneMath.point.distanceSquared(cornerstone.pixelToCanvas(element, data.handles.end), coords);
 
-  return distanceToPoint < 25;
+  return dStart < 25 || dEnd < 25;
 }
 
 // /////// BEGIN IMAGE RENDERING ///////
@@ -9009,7 +9032,7 @@ function createNewMeasurement(mouseEventData) {
 function pointNearTool(element, data, coords) {
   var endCanvas = cornerstone.pixelToCanvas(element, data.handles.end);
 
-  return cornerstoneMath.point.distance(endCanvas, coords) < 5;
+  return cornerstoneMath.point.distanceSquared(endCanvas, coords) < 25;
 }
 
 function getValueStr(element, image, x, y) {
@@ -9064,6 +9087,14 @@ function onImageRendered(e, eventData) {
 
     context.save();
     var data = toolData.data[i];
+    var config = probex.getConfiguration();
+
+    if (config && config.shadow) {
+      context.shadowColor = config.shadowColor === undefined ? '#000000' : config.shadowColor;
+      context.shadowOffsetX = config.shadowOffsetX === undefined ? 1 : config.shadowOffsetX;
+      context.shadowOffsetX = config.shadowOffsetY === undefined ? 1 : config.shadowOffsetY;
+      context.shadowBlur = config.shadowBlur === undefined ? 1 : config.shadowBlur;
+    }
 
     if (data.active) {
       color = _toolColors2.default.getActiveColor();
@@ -10476,9 +10507,10 @@ function onImageRendered(e, eventData) {
     context.save();
 
     if (config && config.shadow) {
-      context.shadowColor = config.shadowColor || '#000000';
-      context.shadowOffsetX = config.shadowOffsetX || 1;
-      context.shadowOffsetY = config.shadowOffsetY || 1;
+      context.shadowColor = config.shadowColor === undefined ? '#000000' : config.shadowColor;
+      context.shadowOffsetX = config.shadowOffsetX === undefined ? 1 : config.shadowOffsetX;
+      context.shadowOffsetX = config.shadowOffsetY === undefined ? 1 : config.shadowOffsetY;
+      context.shadowBlur = config.shadowBlur === undefined ? 1 : config.shadowBlur;
     }
 
     var data = toolData.data[i];

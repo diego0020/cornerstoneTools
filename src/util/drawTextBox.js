@@ -9,11 +9,15 @@ export default function (context, textLines, x, y, color, options) {
   const font = textStyle.getFont();
   const fontSize = textStyle.getFontSize();
   const backgroundColor = textStyle.getBackgroundColor();
+  const shadowColor = textStyle.getShadowColor();
+  const shadowBlur = textStyle.getShadowBlur();
 
   context.save();
   context.font = font;
   context.textBaseline = 'top';
   context.strokeStyle = color;
+  context.shadowColor = shadowColor;
+  context.shadowBlur = shadowBlur;
 
     // Find the longest text width in the array of text data
   let maxWidth = 0;

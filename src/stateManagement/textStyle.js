@@ -1,13 +1,15 @@
 let defaultFontSize = 15,
-  defaultFont = `${defaultFontSize}px Arial`,
-  defaultBackgroundColor = 'transparent';
+  defaultFont = 'Arial',
+  defaultBackgroundColor = 'transparent',
+  shadowColor = '#000000',
+  shadowBlur = 2;
 
 function setFont (font) {
   defaultFont = font;
 }
 
 function getFont () {
-  return defaultFont;
+  return `${defaultFontSize}px ${defaultFont}`;
 }
 
 function setFontSize (fontSize) {
@@ -26,13 +28,33 @@ function getBackgroundColor () {
   return defaultBackgroundColor;
 }
 
+function setShadowColor (color) {
+  shadowColor = color;
+}
+
+function getShadowColor () {
+  return shadowColor;
+}
+
+function setShadowBlur (value) {
+  shadowBlur = value;
+}
+
+function getShadowBlur () {
+  return shadowBlur;
+}
+
 const textStyle = {
   setFont,
   getFont,
   setFontSize,
   getFontSize,
   setBackgroundColor,
-  getBackgroundColor
+  getBackgroundColor,
+  setShadowColor,
+  getShadowColor,
+  setShadowBlur,
+  getShadowBlur
 };
 
 export default textStyle;

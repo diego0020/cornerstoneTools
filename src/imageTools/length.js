@@ -45,14 +45,12 @@ function createNewMeasurement (mouseEventData) {
 // /////// END ACTIVE TOOL ///////
 
 function pointNearTool (element, data, coords) {
-  const lineSegment = {
-    start: cornerstone.pixelToCanvas(element, data.handles.start),
-    end: cornerstone.pixelToCanvas(element, data.handles.end)
-  };
-  const distanceToPoint = cornerstoneMath.lineSegment.distanceToPoint(lineSegment, coords);
+  const dStart = cornerstoneMath.point.distanceSquared(
+      cornerstone.pixelToCanvas(element, data.handles.start), coords);
+  const dEnd = cornerstoneMath.point.distanceSquared(
+      cornerstone.pixelToCanvas(element, data.handles.end), coords);
 
-
-  return (distanceToPoint < 25);
+  return (dStart < 25 || dEnd < 25);
 }
 
 // /////// BEGIN IMAGE RENDERING ///////

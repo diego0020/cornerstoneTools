@@ -35,9 +35,7 @@ function createNewMeasurement (mouseEventData) {
   // /////// BEGIN IMAGE RENDERING ///////
 function pointNearTool (element, data, coords) {
   const endCanvas = cornerstone.pixelToCanvas(element, data.handles.end);
-
-
-  return cornerstoneMath.point.distance(endCanvas, coords) < 5;
+  return cornerstoneMath.point.distanceSquared(endCanvas, coords) < 25;
 }
 
 function getValueStr (element, image, x, y) {
@@ -91,6 +89,14 @@ function onImageRendered (e, eventData) {
 
     context.save();
     const data = toolData.data[i];
+    const config = probex.getConfiguration();
+
+    if (config && config.shadow) {
+      context.shadowColor = config.shadowColor === undefined ? '#000000' : config.shadowColor;
+      context.shadowOffsetX = config.shadowOffsetX === undefined ? 1 : config.shadowOffsetX;
+      context.shadowOffsetX = config.shadowOffsetY === undefined ? 1 : config.shadowOffsetY;
+      context.shadowBlur = config.shadowBlur === undefined ? 1 : config.shadowBlur;
+    }
 
     if (data.active) {
       color = toolColors.getActiveColor();

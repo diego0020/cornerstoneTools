@@ -106,9 +106,10 @@ function onImageRendered (e, eventData) {
     context.save();
 
     if (config && config.shadow) {
-      context.shadowColor = config.shadowColor || '#000000';
-      context.shadowOffsetX = config.shadowOffsetX || 1;
-      context.shadowOffsetY = config.shadowOffsetY || 1;
+      context.shadowColor = config.shadowColor === undefined ? '#000000' : config.shadowColor;
+      context.shadowOffsetX = config.shadowOffsetX === undefined ? 1 : config.shadowOffsetX;
+      context.shadowOffsetX = config.shadowOffsetY === undefined ? 1 : config.shadowOffsetY;
+      context.shadowBlur = config.shadowBlur === undefined ? 1 : config.shadowBlur;
     }
 
     const data = toolData.data[i];
