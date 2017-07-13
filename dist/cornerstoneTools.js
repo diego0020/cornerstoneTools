@@ -2801,7 +2801,8 @@ function addRequest(element, imageId, type, preventCache, doneCallback, failCall
     imageId: imageId,
     preventCache: preventCache,
     doneCallback: doneCallback,
-    failCallback: failCallback
+    failCallback: failCallback,
+    element: element
   };
 
   // If this imageId is in the cache, resolve it immediately
@@ -2821,13 +2822,16 @@ function addRequest(element, imageId, type, preventCache, doneCallback, failCall
   requestPool[type].push(requestDetails);
 }
 
-function clearRequestStack(type) {
-  // Console.log('clearRequestStack');
+function clearRequestStack(type, element) {
+  console.log('clearRequestStack');
+  console.log(requestPool[type]);
   if (!requestPool.hasOwnProperty(type)) {
     throw new Error('Request type must be one of interaction, thumbnail, or prefetch');
   }
 
-  requestPool[type] = [];
+  requestPool[type] = requestPool[type].filter(function (requestDetails) {
+    return requestDetails.element !== element;
+  });
 }
 
 function startAgain() {
@@ -14138,7 +14142,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var toolType = 'stackPrefetch';
-var requestType = 'prefetch';
+var requestType = 'interaction';
 
 var configuration = {};
 

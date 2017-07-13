@@ -5,7 +5,7 @@ import { addToolState, getToolState } from '../stateManagement/toolState';
 import { setMaxSimultaneousRequests } from '../util/getMaxSimultaneousRequests';
 
 const toolType = 'stackPrefetch';
-const requestType = 'prefetch';
+const requestType = 'interaction';
 
 let configuration = {};
 

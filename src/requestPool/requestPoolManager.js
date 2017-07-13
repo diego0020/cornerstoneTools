@@ -37,7 +37,8 @@ function addRequest (element, imageId, type, preventCache, doneCallback, failCal
     imageId,
     preventCache,
     doneCallback,
-    failCallback
+    failCallback,
+    element
   };
 
       // If this imageId is in the cache, resolve it immediately
@@ -57,13 +58,16 @@ function addRequest (element, imageId, type, preventCache, doneCallback, failCal
   requestPool[type].push(requestDetails);
 }
 
-function clearRequestStack (type) {
-      // Console.log('clearRequestStack');
+function clearRequestStack (type, element) {
+  console.log('clearRequestStack');
+  console.log(requestPool[type]);
   if (!requestPool.hasOwnProperty(type)) {
     throw new Error('Request type must be one of interaction, thumbnail, or prefetch');
   }
 
-  requestPool[type] = [];
+  requestPool[type] = requestPool[type].filter(function (requestDetails) {
+    return requestDetails.element !== element;
+  });
 }
 
 function startAgain () {

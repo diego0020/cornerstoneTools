@@ -35,6 +35,8 @@ function createNewMeasurement (mouseEventData) {
   // /////// BEGIN IMAGE RENDERING ///////
 function pointNearTool (element, data, coords) {
   const endCanvas = cornerstone.pixelToCanvas(element, data.handles.end);
+
+
   return cornerstoneMath.point.distanceSquared(endCanvas, coords) < 25;
 }
 
