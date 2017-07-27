@@ -125,7 +125,7 @@ function prefetch (element) {
   }
 
     // Clear the requestPool of prefetch requests
-  requestPoolManager.clearRequestStack(requestType);
+  requestPoolManager.clearRequestStack(requestType, element);
 
     // Identify the nearest imageIdIndex to the currentImageIdIndex
   const nearest = nearestIndex(stackPrefetch.indicesToRequest, stack.currentImageIdIndex);
@@ -145,7 +145,7 @@ function prefetch (element) {
   const errorLoadingHandler = loadHandlerManager.getErrorLoadingHandler();
 
   function failCallback (error) {
-    console.log(`prefetch errored: ${error}`);
+    console.log('prefetch errored');
     if (errorLoadingHandler) {
       errorLoadingHandler(element, imageId, error, 'stackPrefetch');
     }

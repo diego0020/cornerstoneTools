@@ -1,4 +1,4 @@
-/*! cornerstone-tools - 0.9.0 - 2017-07-13 | (c) 2017 Chris Hafey | https://github.com/chafey/cornerstoneTools */
+/*! cornerstone-tools - 0.9.0 - 2017-07-27 | (c) 2017 Chris Hafey | https://github.com/chafey/cornerstoneTools */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("cornerstone-core"), require("cornerstone-math"), require("hammerjs"));
@@ -228,9 +228,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function (which, mouseButtonMask) {
-  var mouseButton = 1 << which - 1;
+  // Const mouseButton = (1 << (which - 1));
 
-  return (mouseButtonMask & mouseButton) !== 0;
+
+  // Return ((mouseButtonMask & mouseButton) !== 0);
+  return (which & mouseButtonMask) !== 0;
 };
 
 /***/ }),
@@ -2823,8 +2825,6 @@ function addRequest(element, imageId, type, preventCache, doneCallback, failCall
 }
 
 function clearRequestStack(type, element) {
-  console.log('clearRequestStack');
-  console.log(requestPool[type]);
   if (!requestPool.hasOwnProperty(type)) {
     throw new Error('Request type must be one of interaction, thumbnail, or prefetch');
   }
@@ -2950,8 +2950,20 @@ function startGrabbing() {
 }
 
 function getNextRequest() {
+  var cacheInfo = cornerstone.imageCache.getCacheInfo();
+
+  if (cacheInfo.cacheSizeInBytes >= 0.9 * cacheInfo.maximumSizeInBytes) {
+    // Stop if cache is full
+    return false;
+  }
+
   if (requestPool.interaction.length && numRequests.interaction < maxNumRequests.interaction) {
     return requestPool.interaction.shift();
+  }
+
+  if (cacheInfo.cacheSizeInBytes >= 0.7 * cacheInfo.maximumSizeInBytes) {
+    // Stop if cache is full
+    return false;
   }
 
   if (requestPool.thumbnail.length && numRequests.thumbnail < maxNumRequests.thumbnail) {
@@ -14276,7 +14288,7 @@ function prefetch(element) {
   }
 
   // Clear the requestPool of prefetch requests
-  _requestPoolManager2.default.clearRequestStack(requestType);
+  _requestPoolManager2.default.clearRequestStack(requestType, element);
 
   // Identify the nearest imageIdIndex to the currentImageIdIndex
   var nearest = nearestIndex(stackPrefetch.indicesToRequest, stack.currentImageIdIndex);
@@ -14296,7 +14308,7 @@ function prefetch(element) {
   var errorLoadingHandler = _loadHandlerManager2.default.getErrorLoadingHandler();
 
   function failCallback(error) {
-    console.log('prefetch errored: ' + error);
+    console.log('prefetch errored');
     if (errorLoadingHandler) {
       errorLoadingHandler(element, imageId, error, 'stackPrefetch');
     }

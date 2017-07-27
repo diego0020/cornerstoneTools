@@ -1,8 +1,9 @@
 /* eslint no-bitwise:0 */
 
 export default function (which, mouseButtonMask) {
-  const mouseButton = (1 << (which - 1));
+  // Const mouseButton = (1 << (which - 1));
 
 
-  return ((mouseButtonMask & mouseButton) !== 0);
+  // Return ((mouseButtonMask & mouseButton) !== 0);
+  return ((which & mouseButtonMask) !== 0);
 }

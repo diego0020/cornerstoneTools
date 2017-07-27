@@ -59,8 +59,6 @@ function addRequest (element, imageId, type, preventCache, doneCallback, failCal
 }
 
 function clearRequestStack (type, element) {
-  console.log('clearRequestStack');
-  console.log(requestPool[type]);
   if (!requestPool.hasOwnProperty(type)) {
     throw new Error('Request type must be one of interaction, thumbnail, or prefetch');
   }
@@ -188,13 +186,27 @@ function startGrabbing () {
 }
 
 function getNextRequest () {
+  const cacheInfo = cornerstone.imageCache.getCacheInfo();
+
+  if(cacheInfo.cacheSizeInBytes >= 0.9 * cacheInfo.maximumSizeInBytes) {
+    // Stop if cache is full
+    return false;
+  }
+
+
   if (requestPool.interaction.length && numRequests.interaction < maxNumRequests.interaction) {
     return requestPool.interaction.shift();
+  }
+
+  if(cacheInfo.cacheSizeInBytes >= 0.7 * cacheInfo.maximumSizeInBytes) {
+    // Stop if cache is full
+    return false;
   }
 
   if (requestPool.thumbnail.length && numRequests.thumbnail < maxNumRequests.thumbnail) {
     return requestPool.thumbnail.shift();
   }
+
 
   if (requestPool.prefetch.length && numRequests.prefetch < maxNumRequests.prefetch) {
     return requestPool.prefetch.shift();
