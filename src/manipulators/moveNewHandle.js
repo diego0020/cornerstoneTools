@@ -4,6 +4,7 @@ export default function (mouseEventData, toolType, data, handle, doneMovingCallb
   const element = mouseEventData.element;
 
   function moveCallback (e, eventData) {
+    handle.isMoving = true;
     handle.active = true;
     handle.x = eventData.currentPoints.image.x;
     handle.y = eventData.currentPoints.image.y;

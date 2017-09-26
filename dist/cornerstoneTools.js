@@ -1,4 +1,4 @@
-/*! cornerstone-tools - 0.9.0 - 2017-07-27 | (c) 2017 Chris Hafey | https://github.com/chafey/cornerstoneTools */
+/*! cornerstone-tools - 0.9.0 - 2017-09-26 | (c) 2017 Chris Hafey | https://github.com/chafey/cornerstoneTools */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("cornerstone-core"), require("cornerstone-math"), require("hammerjs"));
@@ -426,7 +426,9 @@ exports.default = function (mouseToolInterface) {
   // /////// BEGIN ACTIVE TOOL ///////
   function addNewMeasurement(mouseEventData) {
     var element = mouseEventData.element;
+    // Hide the mouse cursor, so the user can see better
 
+    document.body.style.cursor = 'none';
     var measurementData = mouseToolInterface.createNewMeasurement(mouseEventData);
 
     if (!measurementData) {
@@ -468,8 +470,11 @@ exports.default = function (mouseToolInterface) {
       preventHandleOutsideImage = false;
     }
 
+    measurementData.handles.end.isMoving = false;
     handleMover(mouseEventData, mouseToolInterface.toolType, measurementData, measurementData.handles.end, function () {
       measurementData.active = false;
+      // Re-enable the mouse cursor
+      document.body.style.cursor = 'default';
       measurementData.invalidated = true;
       if ((0, _anyHandlesOutsideImage2.default)(mouseEventData, measurementData.handles)) {
         // Delete the measurement
@@ -486,6 +491,7 @@ exports.default = function (mouseToolInterface) {
 
       var eventType = 'CornerstoneToolsMeasurementFinished';
 
+      measurementData.handles.end.isMoving = false;
       var endEventData = {
         toolType: mouseToolInterface.toolType,
         element: element,
@@ -559,6 +565,11 @@ exports.default = function (mouseToolInterface) {
     var element = eventData.element;
 
     function handleDoneMove() {
+      // Re-enable the mouse cursor
+      document.body.style.cursor = 'default';
+      for (var hk in data.handles) {
+        data.handles[hk].isMoving = false;
+      }
       data.invalidated = true;
       if ((0, _anyHandlesOutsideImage2.default)(eventData, data.handles)) {
         // Delete the measurement
@@ -598,6 +609,9 @@ exports.default = function (mouseToolInterface) {
       var handle = (0, _getHandleNearImagePoint2.default)(element, data.handles, coords, distance);
 
       if (handle) {
+        handle.isMoving = false;
+        // Hide the mouse cursor, so the user can see better
+        document.body.style.cursor = 'none';
         $(element).off('CornerstoneToolsMouseMove', mouseToolInterface.mouseMoveCallback || mouseMoveCallback);
         data.active = true;
         (0, _moveHandle2.default)(eventData, mouseToolInterface.toolType, data, handle, handleDoneMove, preventHandleOutsideImage);
@@ -817,6 +831,7 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = function (context, renderData, handles, color, options) {
   context.strokeStyle = color;
+  var radius = options.handleRadius === undefined ? handleRadius : options.handleRadius;
 
   Object.keys(handles).forEach(function (name) {
     var handle = handles[name];
@@ -826,6 +841,10 @@ exports.default = function (context, renderData, handles, color, options) {
     }
 
     if (options && options.drawHandlesIfActive === true && !handle.active) {
+      return;
+    }
+
+    if (options && options.hideHandlesIfMoved === true && handle.isMoving) {
       return;
     }
 
@@ -839,7 +858,7 @@ exports.default = function (context, renderData, handles, color, options) {
 
     var handleCanvasCoords = cornerstone.pixelToCanvas(renderData.element, handle);
 
-    context.arc(handleCanvasCoords.x, handleCanvasCoords.y, handleRadius, 0, 2 * Math.PI);
+    context.arc(handleCanvasCoords.x, handleCanvasCoords.y, radius, 0, 2 * Math.PI);
 
     if (options && options.fill) {
       context.fillStyle = options.fill;
@@ -2150,6 +2169,7 @@ exports.default = function (mouseEventData, toolType, data, handle, doneMovingCa
     if (handle.hasMoved === false) {
       handle.hasMoved = true;
     }
+    handle.isMoving = true;
 
     handle.active = true;
     handle.x = eventData.currentPoints.image.x + distanceFromTool.x;
@@ -2219,6 +2239,7 @@ exports.default = function (mouseEventData, toolType, data, handle, doneMovingCa
   var element = mouseEventData.element;
 
   function moveCallback(e, eventData) {
+    handle.isMoving = true;
     handle.active = true;
     handle.x = eventData.currentPoints.image.x;
     handle.y = eventData.currentPoints.image.y;
@@ -7811,7 +7832,8 @@ function onImageRendered(e, eventData) {
 
     // Draw the handles
     var handleOptions = {
-      drawHandlesIfActive: config && config.drawHandlesOnHover
+      drawHandlesIfActive: config && config.drawHandlesOnHover,
+      hideHandlesIfMoved: config && config.hideHandlesIfMoved
     };
 
     (0, _drawHandles2.default)(context, eventData, data.handles, color, handleOptions);
@@ -9123,6 +9145,8 @@ function onImageRendered(e, eventData) {
       context.shadowBlur = config.shadowBlur === undefined ? 1 : config.shadowBlur;
     }
 
+    var handleRadius = config.handleRadius === undefined ? 1.5 : config.handleRadius;
+
     if (data.active) {
       color = _toolColors2.default.getActiveColor();
     } else {
@@ -9131,7 +9155,7 @@ function onImageRendered(e, eventData) {
 
     // Draw the handles
     (0, _drawHandles2.default)(context, eventData, data.handles, color, {
-      handleRadius: 1.5
+      handleRadius: handleRadius
     });
 
     var x = Math.round(data.handles.end.x);
@@ -12796,10 +12820,15 @@ function enable(element) {
   $(element).on('dblclick', mouseDoubleClick);
 }
 
+function resetCursor() {
+  document.body.style.cursor = 'default';
+}
+
 // Module exports
 var mouseInput = {
   enable: enable,
-  disable: disable
+  disable: disable,
+  resetCursor: resetCursor
 };
 
 exports.default = mouseInput;

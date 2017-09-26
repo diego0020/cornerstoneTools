@@ -100,6 +100,8 @@ function onImageRendered (e, eventData) {
       context.shadowBlur = config.shadowBlur === undefined ? 1 : config.shadowBlur;
     }
 
+    const handleRadius = config.handleRadius === undefined ? 1.5 : config.handleRadius;
+
     if (data.active) {
       color = toolColors.getActiveColor();
     } else {
@@ -108,7 +110,7 @@ function onImageRendered (e, eventData) {
 
           // Draw the handles
     drawHandles(context, eventData, data.handles, color, {
-      handleRadius: 1.5
+      handleRadius
     });
 
     const x = Math.round(data.handles.end.x);

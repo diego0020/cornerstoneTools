@@ -5,6 +5,7 @@ const handleRadius = 6;
 
 export default function (context, renderData, handles, color, options) {
   context.strokeStyle = color;
+  const radius = options.handleRadius === undefined ? handleRadius : options.handleRadius;
 
   Object.keys(handles).forEach(function (name) {
     const handle = handles[name];
@@ -14,6 +15,10 @@ export default function (context, renderData, handles, color, options) {
     }
 
     if (options && options.drawHandlesIfActive === true && !handle.active) {
+      return;
+    }
+
+    if (options && options.hideHandlesIfMoved === true && handle.isMoving) {
       return;
     }
 
@@ -27,7 +32,7 @@ export default function (context, renderData, handles, color, options) {
 
     const handleCanvasCoords = cornerstone.pixelToCanvas(renderData.element, handle);
 
-    context.arc(handleCanvasCoords.x, handleCanvasCoords.y, handleRadius, 0, 2 * Math.PI);
+    context.arc(handleCanvasCoords.x, handleCanvasCoords.y, radius, 0, 2 * Math.PI);
 
     if (options && options.fill) {
       context.fillStyle = options.fill;

@@ -11,6 +11,7 @@ export default function (mouseEventData, toolType, data, handle, doneMovingCallb
     if (handle.hasMoved === false) {
       handle.hasMoved = true;
     }
+    handle.isMoving = true;
 
     handle.active = true;
     handle.x = eventData.currentPoints.image.x + distanceFromTool.x;

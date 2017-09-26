@@ -15,7 +15,9 @@ export default function (mouseToolInterface) {
     // /////// BEGIN ACTIVE TOOL ///////
   function addNewMeasurement (mouseEventData) {
     const element = mouseEventData.element;
+    // Hide the mouse cursor, so the user can see better
 
+    document.body.style.cursor = 'none';
     const measurementData = mouseToolInterface.createNewMeasurement(mouseEventData);
 
     if (!measurementData) {
@@ -57,8 +59,11 @@ export default function (mouseToolInterface) {
       preventHandleOutsideImage = false;
     }
 
+    measurementData.handles.end.isMoving = false;
     handleMover(mouseEventData, mouseToolInterface.toolType, measurementData, measurementData.handles.end, function () {
       measurementData.active = false;
+      // Re-enable the mouse cursor
+      document.body.style.cursor = 'default';
       measurementData.invalidated = true;
       if (anyHandlesOutsideImage(mouseEventData, measurementData.handles)) {
                 // Delete the measurement
@@ -75,6 +80,7 @@ export default function (mouseToolInterface) {
 
       const eventType = 'CornerstoneToolsMeasurementFinished';
 
+      measurementData.handles.end.isMoving = false;
       const endEventData = {
         toolType: mouseToolInterface.toolType,
         element,
@@ -148,6 +154,11 @@ export default function (mouseToolInterface) {
     const element = eventData.element;
 
     function handleDoneMove () {
+      // Re-enable the mouse cursor
+      document.body.style.cursor = 'default';
+      for (const hk in data.handles) {
+        data.handles[hk].isMoving = false;
+      }
       data.invalidated = true;
       if (anyHandlesOutsideImage(eventData, data.handles)) {
                 // Delete the measurement
@@ -187,6 +198,9 @@ export default function (mouseToolInterface) {
       const handle = getHandleNearImagePoint(element, data.handles, coords, distance);
 
       if (handle) {
+        handle.isMoving = false;
+        // Hide the mouse cursor, so the user can see better
+        document.body.style.cursor = 'none';
         $(element).off('CornerstoneToolsMouseMove', mouseToolInterface.mouseMoveCallback || mouseMoveCallback);
         data.active = true;
         moveHandle(eventData, mouseToolInterface.toolType, data, handle, handleDoneMove, preventHandleOutsideImage);

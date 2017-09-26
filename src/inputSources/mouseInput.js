@@ -280,10 +280,15 @@ function enable (element) {
   $(element).on('dblclick', mouseDoubleClick);
 }
 
+function resetCursor () {
+  document.body.style.cursor = 'default';
+}
+
 // Module exports
 const mouseInput = {
   enable,
-  disable
+  disable,
+  resetCursor
 };
 
 export default mouseInput;
