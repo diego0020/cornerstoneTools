@@ -13,7 +13,7 @@ import { getToolState } from '../stateManagement/toolState.js';
 const toolType = 'angle';
 
 // /////// BEGIN ACTIVE TOOL ///////
-function createNewMeasurement(mouseEventData) {
+function createNewMeasurement (mouseEventData) {
   // Create the measurement data for this tool with the end handle activated
   const angleData = {
     visible: true,
@@ -58,7 +58,7 @@ function createNewMeasurement(mouseEventData) {
 }
 // /////// END ACTIVE TOOL ///////
 
-function pointNearTool(element, data, coords) {
+function pointNearTool (element, data, coords) {
   const lineSegment = {
     start: cornerstone.pixelToCanvas(element, data.handles.start),
     end: cornerstone.pixelToCanvas(element, data.handles.end)
@@ -79,7 +79,7 @@ function pointNearTool(element, data, coords) {
 }
 
 // /////// BEGIN IMAGE RENDERING ///////
-function onImageRendered(e, eventData) {
+function onImageRendered (e, eventData) {
 
   // If we have no toolData for this element, return immediately as there is nothing to do
   const toolData = getToolState(e.currentTarget, toolType);
@@ -180,7 +180,8 @@ function onImageRendered(e, eventData) {
     const textCoords = cornerstone.pixelToCanvas(eventData.element, data.handles.textBox);
 
     context.font = font;
-    const boundingBox = drawTextBox(context, text, textCoords.x, textCoords.y, color);
+    const boundingBox = drawTextBox(context, text, textCoords.x, textCoords.y, color, options);
+
     data.handles.textBox.boundingBox = boundingBox;
 
     if (data.handles.textBox.hasMoved) {
