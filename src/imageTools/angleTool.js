@@ -13,8 +13,8 @@ import { getToolState } from '../stateManagement/toolState.js';
 const toolType = 'angle';
 
 // /////// BEGIN ACTIVE TOOL ///////
-function createNewMeasurement (mouseEventData) {
-    // Create the measurement data for this tool with the end handle activated
+function createNewMeasurement(mouseEventData) {
+  // Create the measurement data for this tool with the end handle activated
   const angleData = {
     visible: true,
     active: true,
@@ -42,6 +42,14 @@ function createNewMeasurement (mouseEventData) {
         y: mouseEventData.currentPoints.image.y + 20,
         highlight: true,
         active: false
+      },
+      textBox: {
+        active: false,
+        hasMoved: false,
+        movesIndependently: false,
+        drawnIndependently: true,
+        allowedOutsideImage: true,
+        hasBoundingBox: true
       }
     }
   };
@@ -50,7 +58,7 @@ function createNewMeasurement (mouseEventData) {
 }
 // /////// END ACTIVE TOOL ///////
 
-function pointNearTool (element, data, coords) {
+function pointNearTool(element, data, coords) {
   const lineSegment = {
     start: cornerstone.pixelToCanvas(element, data.handles.start),
     end: cornerstone.pixelToCanvas(element, data.handles.end)
@@ -71,21 +79,21 @@ function pointNearTool (element, data, coords) {
 }
 
 // /////// BEGIN IMAGE RENDERING ///////
-function onImageRendered (e, eventData) {
+function onImageRendered(e, eventData) {
 
-    // If we have no toolData for this element, return immediately as there is nothing to do
+  // If we have no toolData for this element, return immediately as there is nothing to do
   const toolData = getToolState(e.currentTarget, toolType);
 
   if (toolData === undefined) {
     return;
   }
 
-    // We have tool data for this element - iterate over each one and draw it
+  // We have tool data for this element - iterate over each one and draw it
   const context = eventData.canvasContext.canvas.getContext('2d');
 
   context.setTransform(1, 0, 0, 1, 0, 0);
 
-    // Activation color
+  // Activation color
   let color;
   const lineWidth = toolStyle.getToolWidth();
   const font = textStyle.getFont();
@@ -94,7 +102,7 @@ function onImageRendered (e, eventData) {
   for (let i = 0; i < toolData.data.length; i++) {
     context.save();
 
-        // Configurable shadow
+    // Configurable shadow
     if (config && config.shadow) {
       context.shadowColor = config.shadowColor || '#000000';
       context.shadowOffsetX = config.shadowOffsetX || 1;
@@ -103,39 +111,44 @@ function onImageRendered (e, eventData) {
 
     const data = toolData.data[i];
 
-        // Differentiate the color of activation tool
+    // Differentiate the color of activation tool
     if (data.active) {
       color = toolColors.getActiveColor();
     } else {
       color = toolColors.getToolColor();
     }
 
-        // Draw the line
+    // Draw the line
     context.beginPath();
     context.strokeStyle = color;
     context.lineWidth = lineWidth;
 
-    let handleStartCanvas = cornerstone.pixelToCanvas(eventData.element, data.handles.start);
-    let handleEndCanvas = cornerstone.pixelToCanvas(eventData.element, data.handles.end);
+    const handleStartCanvas = cornerstone.pixelToCanvas(eventData.element, data.handles.start);
+    const handleEndCanvas = cornerstone.pixelToCanvas(eventData.element, data.handles.end);
 
     context.moveTo(handleStartCanvas.x, handleStartCanvas.y);
     context.lineTo(handleEndCanvas.x, handleEndCanvas.y);
 
-    handleStartCanvas = cornerstone.pixelToCanvas(eventData.element, data.handles.start2);
-    handleEndCanvas = cornerstone.pixelToCanvas(eventData.element, data.handles.end2);
+    const handleStart2Canvas = cornerstone.pixelToCanvas(eventData.element, data.handles.start2);
+    const handleEnd2Canvas = cornerstone.pixelToCanvas(eventData.element, data.handles.end2);
 
-    context.moveTo(handleStartCanvas.x, handleStartCanvas.y);
-    context.lineTo(handleEndCanvas.x, handleEndCanvas.y);
+    context.moveTo(handleStart2Canvas.x, handleStart2Canvas.y);
+    context.lineTo(handleEnd2Canvas.x, handleEnd2Canvas.y);
     context.stroke();
 
-        // Draw the handles
-    drawHandles(context, eventData, data.handles);
+    // Draw the handles
+    const handleOptions = {
+      drawHandlesIfActive: (config && config.drawHandlesOnHover),
+      hideHandlesIfMoved: (config && config.hideHandlesIfMoved)
+    };
 
-        // Draw the text
+    drawHandles(context, eventData, data.handles, color, handleOptions);
+
+    // Draw the text
     context.fillStyle = color;
 
-        // Need to work on correct angle to measure.  This is a cobb angle and we need to determine
-        // Where lines cross to measure angle. For now it will show smallest angle.
+    // Need to work on correct angle to measure.  This is a cobb angle and we need to determine
+    // Where lines cross to measure angle. For now it will show smallest angle.
     const dx1 = (Math.ceil(data.handles.start.x) - Math.ceil(data.handles.end.x)) * eventData.image.columnPixelSpacing;
     const dy1 = (Math.ceil(data.handles.start.y) - Math.ceil(data.handles.end.y)) * eventData.image.rowPixelSpacing;
     const dx2 = (Math.ceil(data.handles.start2.x) - Math.ceil(data.handles.end2.x)) * eventData.image.columnPixelSpacing;
@@ -149,11 +162,81 @@ function onImageRendered (e, eventData) {
     const str = '00B0'; // Degrees symbol
     const text = rAngle.toString() + String.fromCharCode(parseInt(str, 16));
 
-    const textX = (handleStartCanvas.x + handleEndCanvas.x) / 2;
-    const textY = (handleStartCanvas.y + handleEndCanvas.y) / 2;
+    if (!data.handles.textBox.hasMoved) {
+      const textX = (data.handles.start.x + data.handles.end.x) / 2;
+      const textY = (data.handles.start.y + data.handles.end.y) / 2;
+
+      data.handles.textBox.x = textX;
+      data.handles.textBox.y = textY;
+    }
+
+    const options = {
+      centering: {
+        x: false,
+        y: true
+      }
+    };
+
+    const textCoords = cornerstone.pixelToCanvas(eventData.element, data.handles.textBox);
 
     context.font = font;
-    drawTextBox(context, text, textX, textY, color);
+    const boundingBox = drawTextBox(context, text, textCoords.x, textCoords.y, color);
+    data.handles.textBox.boundingBox = boundingBox;
+
+    if (data.handles.textBox.hasMoved) {
+      // Draw dashed link line between ellipse and text
+      const link = {
+        start: {},
+        end: {}
+      };
+
+      const midpointCanvas = {
+        x: (handleStartCanvas.x + handleEndCanvas.x) / 2,
+        y: (handleStartCanvas.y + handleEndCanvas.y) / 2
+      };
+
+      const midpointCanvas2 = {
+        x: (handleStart2Canvas.x + handleEnd2Canvas.x) / 2,
+        y: (handleStart2Canvas.y + handleEnd2Canvas.y) / 2
+      };
+
+      const points = [handleStartCanvas, handleEndCanvas, midpointCanvas, handleStart2Canvas, handleEnd2Canvas, midpointCanvas2];
+
+      link.end.x = textCoords.x;
+      link.end.y = textCoords.y;
+
+      link.start = cornerstoneMath.point.findClosestPoint(points, link.end);
+
+      const boundingBoxPoints = [{
+        // Top middle point of bounding box
+        x: boundingBox.left + boundingBox.width / 2,
+        y: boundingBox.top
+      }, {
+        // Left middle point of bounding box
+        x: boundingBox.left,
+        y: boundingBox.top + boundingBox.height / 2
+      }, {
+        // Bottom middle point of bounding box
+        x: boundingBox.left + boundingBox.width / 2,
+        y: boundingBox.top + boundingBox.height
+      }, {
+        // Right middle point of bounding box
+        x: boundingBox.left + boundingBox.width,
+        y: boundingBox.top + boundingBox.height / 2
+      }
+      ];
+
+      link.end = cornerstoneMath.point.findClosestPoint(boundingBoxPoints, link.start);
+
+      context.beginPath();
+      context.strokeStyle = color;
+      context.lineWidth = lineWidth;
+      context.setLineDash([2, 3]);
+      context.moveTo(link.start.x, link.start.y);
+      context.lineTo(link.end.x, link.end.y);
+      context.stroke();
+    }
+
     context.restore();
   }
 }
