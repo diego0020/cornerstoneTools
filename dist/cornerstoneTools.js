@@ -1,4 +1,4 @@
-/*! cornerstone-tools - 0.9.0 - 2017-09-26 | (c) 2017 Chris Hafey | https://github.com/chafey/cornerstoneTools */
+/*! cornerstone-tools - 0.9.0 - 2018-01-31 | (c) 2017 Chris Hafey | https://github.com/chafey/cornerstoneTools */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("cornerstone-core"), require("cornerstone-math"), require("hammerjs"));
@@ -2807,7 +2807,7 @@ var maxNumRequests = {
 };
 
 var awake = false;
-var grabDelay = 20;
+var grabDelay = 100;
 
 function addRequest(element, imageId, type, preventCache, doneCallback, failCallback) {
   if (!requestPool.hasOwnProperty(type)) {
@@ -2949,8 +2949,15 @@ function sendRequest(requestDetails) {
 }
 
 function startGrabbing() {
+  var MaxRequestsIn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
   // Begin by grabbing X images
+
   var maxSimultaneousRequests = (0, _getMaxSimultaneousRequests.getMaxSimultaneousRequests)();
+
+  if (MaxRequestsIn !== null) {
+    maxSimultaneousRequests = MaxRequestsIn;
+  }
 
   maxNumRequests = {
     interaction: Math.max(maxSimultaneousRequests, 1),
@@ -4975,6 +4982,14 @@ function createNewMeasurement(mouseEventData) {
         y: mouseEventData.currentPoints.image.y + 20,
         highlight: true,
         active: false
+      },
+      textBox: {
+        active: false,
+        hasMoved: false,
+        movesIndependently: false,
+        drawnIndependently: true,
+        allowedOutsideImage: true,
+        hasBoundingBox: true
       }
     }
   };
@@ -5054,15 +5069,20 @@ function onImageRendered(e, eventData) {
     context.moveTo(handleStartCanvas.x, handleStartCanvas.y);
     context.lineTo(handleEndCanvas.x, handleEndCanvas.y);
 
-    handleStartCanvas = cornerstone.pixelToCanvas(eventData.element, data.handles.start2);
-    handleEndCanvas = cornerstone.pixelToCanvas(eventData.element, data.handles.end2);
+    var handleStart2Canvas = cornerstone.pixelToCanvas(eventData.element, data.handles.start2);
+    var handleEnd2Canvas = cornerstone.pixelToCanvas(eventData.element, data.handles.end2);
 
-    context.moveTo(handleStartCanvas.x, handleStartCanvas.y);
-    context.lineTo(handleEndCanvas.x, handleEndCanvas.y);
+    context.moveTo(handleStart2Canvas.x, handleStart2Canvas.y);
+    context.lineTo(handleEnd2Canvas.x, handleEnd2Canvas.y);
     context.stroke();
 
     // Draw the handles
-    (0, _drawHandles2.default)(context, eventData, data.handles);
+    var handleOptions = {
+      drawHandlesIfActive: config && config.drawHandlesOnHover,
+      hideHandlesIfMoved: config && config.hideHandlesIfMoved
+    };
+
+    (0, _drawHandles2.default)(context, eventData, data.handles, color, handleOptions);
 
     // Draw the text
     context.fillStyle = color;
@@ -5082,11 +5102,81 @@ function onImageRendered(e, eventData) {
     var str = '00B0'; // Degrees symbol
     var text = rAngle.toString() + String.fromCharCode(parseInt(str, 16));
 
-    var textX = (handleStartCanvas.x + handleEndCanvas.x) / 2;
-    var textY = (handleStartCanvas.y + handleEndCanvas.y) / 2;
+    if (!data.handles.textBox.hasMoved) {
+      var textX = (data.handles.start.x + data.handles.end.x) / 2;
+      var textY = (data.handles.start.y + data.handles.end.y) / 2;
+
+      data.handles.textBox.x = textX;
+      data.handles.textBox.y = textY;
+    }
+
+    var options = {
+      centering: {
+        x: false,
+        y: true
+      }
+    };
+
+    var textCoords = cornerstone.pixelToCanvas(eventData.element, data.handles.textBox);
 
     context.font = font;
-    (0, _drawTextBox2.default)(context, text, textX, textY, color);
+    var boundingBox = (0, _drawTextBox2.default)(context, text, textCoords.x, textCoords.y, color, options);
+
+    data.handles.textBox.boundingBox = boundingBox;
+
+    if (data.handles.textBox.hasMoved) {
+      // Draw dashed link line between ellipse and text
+      var link = {
+        start: {},
+        end: {}
+      };
+
+      var midpointCanvas = {
+        x: (handleStartCanvas.x + handleEndCanvas.x) / 2,
+        y: (handleStartCanvas.y + handleEndCanvas.y) / 2
+      };
+
+      var midpointCanvas2 = {
+        x: (handleStart2Canvas.x + handleEnd2Canvas.x) / 2,
+        y: (handleStart2Canvas.y + handleEnd2Canvas.y) / 2
+      };
+
+      var points = [handleStartCanvas, handleEndCanvas, midpointCanvas, handleStart2Canvas, handleEnd2Canvas, midpointCanvas2];
+
+      link.end.x = textCoords.x;
+      link.end.y = textCoords.y;
+
+      link.start = cornerstoneMath.point.findClosestPoint(points, link.end);
+
+      var boundingBoxPoints = [{
+        // Top middle point of bounding box
+        x: boundingBox.left + boundingBox.width / 2,
+        y: boundingBox.top
+      }, {
+        // Left middle point of bounding box
+        x: boundingBox.left,
+        y: boundingBox.top + boundingBox.height / 2
+      }, {
+        // Bottom middle point of bounding box
+        x: boundingBox.left + boundingBox.width / 2,
+        y: boundingBox.top + boundingBox.height
+      }, {
+        // Right middle point of bounding box
+        x: boundingBox.left + boundingBox.width,
+        y: boundingBox.top + boundingBox.height / 2
+      }];
+
+      link.end = cornerstoneMath.point.findClosestPoint(boundingBoxPoints, link.start);
+
+      context.beginPath();
+      context.strokeStyle = color;
+      context.lineWidth = lineWidth;
+      context.setLineDash([2, 3]);
+      context.moveTo(link.start.x, link.start.y);
+      context.lineTo(link.end.x, link.end.y);
+      context.stroke();
+    }
+
     context.restore();
   }
 }
@@ -5205,6 +5295,14 @@ function createNewMeasurement(mouseEventData) {
         y: mouseEventData.currentPoints.image.y + 20,
         highlight: true,
         active: false
+      },
+      textBox: {
+        active: false,
+        hasMoved: false,
+        movesIndependently: false,
+        drawnIndependently: true,
+        allowedOutsideImage: true,
+        hasBoundingBox: true
       }
     }
   };
@@ -5285,15 +5383,17 @@ function onImageRendered(e, eventData) {
     context.moveTo(handleStartCanvas.x, handleStartCanvas.y);
     context.lineTo(handleEndCanvas.x, handleEndCanvas.y);
 
-    handleStartCanvas = cornerstone.pixelToCanvas(eventData.element, data.handles.start2);
-    handleEndCanvas = cornerstone.pixelToCanvas(eventData.element, data.handles.end2);
+    var handleStart2Canvas = cornerstone.pixelToCanvas(eventData.element, data.handles.start2);
+    var handleEnd2Canvas = cornerstone.pixelToCanvas(eventData.element, data.handles.end2);
 
-    context.moveTo(handleStartCanvas.x, handleStartCanvas.y);
-    context.lineTo(handleEndCanvas.x, handleEndCanvas.y);
+    context.moveTo(handleStart2Canvas.x, handleStart2Canvas.y);
+    context.lineTo(handleEnd2Canvas.x, handleEnd2Canvas.y);
     context.stroke();
 
+    // Draw the handles
     var handleOptions = {
-      drawHandlesIfActive: config && config.drawHandlesOnHover
+      drawHandlesIfActive: config && config.drawHandlesOnHover,
+      hideHandlesIfMoved: config && config.hideHandlesIfMoved
     };
 
     // Draw the handles
@@ -5326,11 +5426,81 @@ function onImageRendered(e, eventData) {
     var str = '00B0'; // Degrees symbol
     var text = rAngle.toString() + String.fromCharCode(parseInt(str, 16)) + suffix;
 
-    var textX = (handleStartCanvas.x + handleEndCanvas.x) / 2;
-    var textY = (handleStartCanvas.y + handleEndCanvas.y) / 2;
+    if (!data.handles.textBox.hasMoved) {
+      var textX = (data.handles.start.x + data.handles.end.x) / 2;
+      var textY = (data.handles.start.y + data.handles.end.y) / 2 - 10;
+
+      data.handles.textBox.x = textX;
+      data.handles.textBox.y = textY;
+    }
+
+    var options = {
+      centering: {
+        x: false,
+        y: true
+      }
+    };
+
+    var textCoords = cornerstone.pixelToCanvas(eventData.element, data.handles.textBox);
 
     context.font = font;
-    (0, _drawTextBox2.default)(context, text, textX, textY, color);
+    var boundingBox = (0, _drawTextBox2.default)(context, text, textCoords.x, textCoords.y, color, options);
+
+    data.handles.textBox.boundingBox = boundingBox;
+
+    if (data.handles.textBox.hasMoved) {
+      // Draw dashed link line between ellipse and text
+      var link = {
+        start: {},
+        end: {}
+      };
+
+      var midpointCanvas = {
+        x: (handleStartCanvas.x + handleEndCanvas.x) / 2,
+        y: (handleStartCanvas.y + handleEndCanvas.y) / 2
+      };
+
+      var midpointCanvas2 = {
+        x: (handleStart2Canvas.x + handleEnd2Canvas.x) / 2,
+        y: (handleStart2Canvas.y + handleEnd2Canvas.y) / 2
+      };
+
+      var points = [handleStartCanvas, handleEndCanvas, midpointCanvas, handleStart2Canvas, handleEnd2Canvas, midpointCanvas2];
+
+      link.end.x = textCoords.x;
+      link.end.y = textCoords.y;
+
+      link.start = cornerstoneMath.point.findClosestPoint(points, link.end);
+
+      var boundingBoxPoints = [{
+        // Top middle point of bounding box
+        x: boundingBox.left + boundingBox.width / 2,
+        y: boundingBox.top
+      }, {
+        // Left middle point of bounding box
+        x: boundingBox.left,
+        y: boundingBox.top + boundingBox.height / 2
+      }, {
+        // Bottom middle point of bounding box
+        x: boundingBox.left + boundingBox.width / 2,
+        y: boundingBox.top + boundingBox.height
+      }, {
+        // Right middle point of bounding box
+        x: boundingBox.left + boundingBox.width,
+        y: boundingBox.top + boundingBox.height / 2
+      }];
+
+      link.end = cornerstoneMath.point.findClosestPoint(boundingBoxPoints, link.start);
+
+      context.beginPath();
+      context.strokeStyle = color;
+      context.lineWidth = lineWidth;
+      context.setLineDash([2, 3]);
+      context.moveTo(link.start.x, link.start.y);
+      context.lineTo(link.end.x, link.end.y);
+      context.stroke();
+    }
+
     context.restore();
   }
 }

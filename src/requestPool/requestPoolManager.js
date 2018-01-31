@@ -20,7 +20,7 @@ let maxNumRequests = {
 };
 
 let awake = false;
-const grabDelay = 20;
+const grabDelay = 100;
 
 function addRequest (element, imageId, type, preventCache, doneCallback, failCallback) {
   if (!requestPool.hasOwnProperty(type)) {
@@ -31,7 +31,7 @@ function addRequest (element, imageId, type, preventCache, doneCallback, failCal
     return;
   }
 
-      // Describe the request
+  // Describe the request
   const requestDetails = {
     type,
     imageId,
@@ -41,7 +41,7 @@ function addRequest (element, imageId, type, preventCache, doneCallback, failCal
     element
   };
 
-      // If this imageId is in the cache, resolve it immediately
+  // If this imageId is in the cache, resolve it immediately
   const imagePromise = cornerstone.imageCache.getImagePromise(imageId);
 
   if (imagePromise) {
@@ -54,7 +54,7 @@ function addRequest (element, imageId, type, preventCache, doneCallback, failCal
     return;
   }
 
-      // Add it to the end of the stack
+  // Add it to the end of the stack
   requestPool[type].push(requestDetails);
 }
 
@@ -89,7 +89,7 @@ function startAgain () {
 }
 
 function sendRequest (requestDetails) {
-      // Increment the number of current requests of this type
+  // Increment the number of current requests of this type
   const type = requestDetails.type;
 
   numRequests[type]++;
@@ -99,21 +99,21 @@ function sendRequest (requestDetails) {
   const doneCallback = requestDetails.doneCallback;
   const failCallback = requestDetails.failCallback;
 
-      // Check if we already have this image promise in the cache
+  // Check if we already have this image promise in the cache
   const imagePromise = cornerstone.imageCache.getImagePromise(imageId);
 
   if (imagePromise) {
-          // If we do, remove from list (when resolved, as we could have
-          // Pending prefetch requests) and stop processing this iteration
+    // If we do, remove from list (when resolved, as we could have
+    // Pending prefetch requests) and stop processing this iteration
     imagePromise.then(function (image) {
       numRequests[type]--;
-              // Console.log(numRequests);
+      // Console.log(numRequests);
 
       doneCallback(image);
       startAgain();
     }, function (error) {
       numRequests[type]--;
-              // Console.log(numRequests);
+      // Console.log(numRequests);
       failCallback(error);
       startAgain();
     });
@@ -147,23 +147,28 @@ function sendRequest (requestDetails) {
     });
   }
 
-      // Load and cache the image
+  // Load and cache the image
   loader.then(function (image) {
     numRequests[type]--;
-          // Console.log(numRequests);
+    // Console.log(numRequests);
     doneCallback(image);
     startAgain();
   }, function (error) {
     numRequests[type]--;
-          // Console.log(numRequests);
+    // Console.log(numRequests);
     failCallback(error);
     startAgain();
   });
 }
 
-function startGrabbing () {
-      // Begin by grabbing X images
-  const maxSimultaneousRequests = getMaxSimultaneousRequests();
+function startGrabbing (MaxRequestsIn = null) {
+  // Begin by grabbing X images
+
+  let maxSimultaneousRequests = getMaxSimultaneousRequests();
+
+  if (MaxRequestsIn !== null) {
+    maxSimultaneousRequests = MaxRequestsIn;
+  }
 
   maxNumRequests = {
     interaction: Math.max(maxSimultaneousRequests, 1),
@@ -172,8 +177,8 @@ function startGrabbing () {
   };
 
   const currentRequests = numRequests.interaction +
-          numRequests.thumbnail +
-          numRequests.prefetch;
+    numRequests.thumbnail +
+    numRequests.prefetch;
   const requestsToSend = maxSimultaneousRequests - currentRequests;
 
   for (let i = 0; i < requestsToSend; i++) {
@@ -188,7 +193,7 @@ function startGrabbing () {
 function getNextRequest () {
   const cacheInfo = cornerstone.imageCache.getCacheInfo();
 
-  if(cacheInfo.cacheSizeInBytes >= 0.9 * cacheInfo.maximumSizeInBytes) {
+  if (cacheInfo.cacheSizeInBytes >= 0.9 * cacheInfo.maximumSizeInBytes) {
     // Stop if cache is full
     return false;
   }
@@ -198,7 +203,7 @@ function getNextRequest () {
     return requestPool.interaction.shift();
   }
 
-  if(cacheInfo.cacheSizeInBytes >= 0.7 * cacheInfo.maximumSizeInBytes) {
+  if (cacheInfo.cacheSizeInBytes >= 0.7 * cacheInfo.maximumSizeInBytes) {
     // Stop if cache is full
     return false;
   }
@@ -213,8 +218,8 @@ function getNextRequest () {
   }
 
   if (!requestPool.interaction.length &&
-          !requestPool.thumbnail.length &&
-          !requestPool.prefetch.length) {
+    !requestPool.thumbnail.length &&
+    !requestPool.prefetch.length) {
     awake = false;
   }
 
