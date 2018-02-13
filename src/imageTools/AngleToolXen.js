@@ -391,13 +391,15 @@ function addNewMeasurement (mouseEventData) {
     const eventType = 'CornerstoneToolsMeasurementFinished';
 
     toMoveHandle.isMoving = false;
-    const endEventData = {
-      toolType,
-      element,
-      measurementData
-    };
+    if (measurementData.complete) {
+      const endEventData = {
+        toolType,
+        element,
+        measurementData
+      };
 
-    $(element).trigger(eventType, endEventData);
+      $(element).trigger(eventType, endEventData);
+    }
 
     cornerstone.updateImage(element);
   }, preventHandleOutsideImage);

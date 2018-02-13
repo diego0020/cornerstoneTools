@@ -10825,13 +10825,15 @@ function addNewMeasurement(mouseEventData) {
     var eventType = 'CornerstoneToolsMeasurementFinished';
 
     toMoveHandle.isMoving = false;
-    var endEventData = {
-      toolType: toolType,
-      element: element,
-      measurementData: measurementData
-    };
+    if (measurementData.complete) {
+      var endEventData = {
+        toolType: toolType,
+        element: element,
+        measurementData: measurementData
+      };
 
-    $(element).trigger(eventType, endEventData);
+      $(element).trigger(eventType, endEventData);
+    }
 
     cornerstone.updateImage(element);
   }, preventHandleOutsideImage);
