@@ -1,4 +1,4 @@
- // Functions to prevent ghost clicks following a touch
+// Functions to prevent ghost clicks following a touch
 // All credit to @kosich
 // https://gist.github.com/kosich/23188dd86633b6c2efb7
 

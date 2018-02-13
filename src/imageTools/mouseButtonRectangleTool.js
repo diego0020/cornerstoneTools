@@ -9,25 +9,25 @@ import isMouseButtonEnabled from '../util/isMouseButtonEnabled.js';
 import { addToolState, removeToolState, getToolState } from '../stateManagement/toolState.js';
 
 export default function (mouseToolInterface, preventHandleOutsideImage) {
-    // /////// BEGIN ACTIVE TOOL ///////
+  // /////// BEGIN ACTIVE TOOL ///////
   function addNewMeasurement (mouseEventData) {
     const measurementData = mouseToolInterface.createNewMeasurement(mouseEventData);
 
-        // Prevent adding new measurement if tool returns nill
+    // Prevent adding new measurement if tool returns nill
     if (!measurementData) {
       return;
     }
 
-        // Associate this data with this imageId so we can render it and manipulate it
+    // Associate this data with this imageId so we can render it and manipulate it
     addToolState(mouseEventData.element, mouseToolInterface.toolType, measurementData);
 
-        // Since we are dragging to another place to drop the end point, we can just activate
-        // The end point and let the moveHandle move it for us.
+    // Since we are dragging to another place to drop the end point, we can just activate
+    // The end point and let the moveHandle move it for us.
     $(mouseEventData.element).off('CornerstoneToolsMouseMove', mouseMoveCallback);
     moveHandle(mouseEventData, mouseToolInterface.toolType, measurementData, measurementData.handles.end, function () {
       measurementData.active = false;
       if (anyHandlesOutsideImage(mouseEventData, measurementData.handles)) {
-                // Delete the measurement
+        // Delete the measurement
         removeToolState(mouseEventData.element, mouseToolInterface.toolType, measurementData);
       }
 
@@ -42,31 +42,31 @@ export default function (mouseToolInterface, preventHandleOutsideImage) {
       return false; // False = cases jquery to preventDefault() and stopPropagation() this event
     }
   }
-    // /////// END ACTIVE TOOL ///////
+  // /////// END ACTIVE TOOL ///////
 
-    // /////// BEGIN DEACTIVE TOOL ///////
+  // /////// BEGIN DEACTIVE TOOL ///////
 
   function mouseMoveCallback (e, eventData) {
     toolCoordinates.setCoords(eventData);
-        // If a mouse button is down, do nothing
+    // If a mouse button is down, do nothing
     if (eventData.which !== 0) {
       return;
     }
 
-        // If we have no tool data for this element, do nothing
+    // If we have no tool data for this element, do nothing
     const toolData = getToolState(eventData.element, mouseToolInterface.toolType);
 
     if (toolData === undefined) {
       return;
     }
 
-        // We have tool data, search through all data
-        // And see if we can activate a handle
+    // We have tool data, search through all data
+    // And see if we can activate a handle
     let imageNeedsUpdate = false;
     const coords = eventData.currentPoints.canvas;
 
     for (let i = 0; i < toolData.data.length; i++) {
-            // Get the cursor position in image coordinates
+      // Get the cursor position in image coordinates
       const data = toolData.data[i];
 
       if (handleActivator(eventData.element, data.handles, coords) === true) {
@@ -79,7 +79,7 @@ export default function (mouseToolInterface, preventHandleOutsideImage) {
       }
     }
 
-        // Handle activation status changed, redraw the image
+    // Handle activation status changed, redraw the image
     if (imageNeedsUpdate === true) {
       cornerstone.updateImage(eventData.element);
     }
@@ -91,7 +91,7 @@ export default function (mouseToolInterface, preventHandleOutsideImage) {
     function handleDoneMove () {
       data.active = false;
       if (anyHandlesOutsideImage(eventData, data.handles)) {
-                // Delete the measurement
+        // Delete the measurement
         removeToolState(eventData.element, mouseToolInterface.toolType, data);
       }
 
@@ -105,7 +105,7 @@ export default function (mouseToolInterface, preventHandleOutsideImage) {
 
       let i;
 
-            // Now check to see if there is a handle we can move
+      // Now check to see if there is a handle we can move
       const distanceSq = 25;
 
       if (toolData !== undefined) {
@@ -124,8 +124,8 @@ export default function (mouseToolInterface, preventHandleOutsideImage) {
         }
       }
 
-            // Now check to see if there is a line we can move
-            // Now check to see if we have a tool that we can move
+      // Now check to see if there is a line we can move
+      // Now check to see if we have a tool that we can move
       const options = {
         deleteIfHandleOutsideImage: true,
         preventHandleOutsideImage
@@ -146,9 +146,9 @@ export default function (mouseToolInterface, preventHandleOutsideImage) {
       }
     }
   }
-    // /////// END DEACTIVE TOOL ///////
+  // /////// END DEACTIVE TOOL ///////
 
-    // Not visible, not interactive
+  // Not visible, not interactive
   function disable (element) {
     $(element).off('CornerstoneImageRendered', mouseToolInterface.onImageRendered);
     $(element).off('CornerstoneToolsMouseMove', mouseMoveCallback);
@@ -158,7 +158,7 @@ export default function (mouseToolInterface, preventHandleOutsideImage) {
     cornerstone.updateImage(element);
   }
 
-    // Visible but not interactive
+  // Visible but not interactive
   function enable (element) {
     $(element).off('CornerstoneImageRendered', mouseToolInterface.onImageRendered);
     $(element).off('CornerstoneToolsMouseMove', mouseMoveCallback);
@@ -170,7 +170,7 @@ export default function (mouseToolInterface, preventHandleOutsideImage) {
     cornerstone.updateImage(element);
   }
 
-    // Visible, interactive and can create
+  // Visible, interactive and can create
   function activate (element, mouseButtonMask) {
     const eventData = {
       mouseButtonMask
@@ -189,7 +189,7 @@ export default function (mouseToolInterface, preventHandleOutsideImage) {
     cornerstone.updateImage(element);
   }
 
-    // Visible, interactive
+  // Visible, interactive
   function deactivate (element, mouseButtonMask) {
     const eventData = {
       mouseButtonMask

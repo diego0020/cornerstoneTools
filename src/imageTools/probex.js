@@ -11,9 +11,9 @@ import { getToolState } from '../stateManagement/toolState.js';
 
 const toolType = 'probex';
 
-  // /////// BEGIN ACTIVE TOOL ///////
+// /////// BEGIN ACTIVE TOOL ///////
 function createNewMeasurement (mouseEventData) {
-      // Create the measurement data for this tool with the end handle activated
+  // Create the measurement data for this tool with the end handle activated
   const measurementData = {
     visible: true,
     active: true,
@@ -30,9 +30,9 @@ function createNewMeasurement (mouseEventData) {
 
   return measurementData;
 }
-  // /////// END ACTIVE TOOL ///////
+// /////// END ACTIVE TOOL ///////
 
-  // /////// BEGIN IMAGE RENDERING ///////
+// /////// BEGIN IMAGE RENDERING ///////
 function pointNearTool (element, data, coords) {
   const endCanvas = cornerstone.pixelToCanvas(element, data.handles.end);
 
@@ -71,14 +71,14 @@ function getValueStr (element, image, x, y) {
 }
 
 function onImageRendered (e, eventData) {
-      // If we have no toolData for this element, return immediately as there is nothing to do
+  // If we have no toolData for this element, return immediately as there is nothing to do
   const toolData = getToolState(e.currentTarget, toolType);
 
   if (!toolData) {
     return;
   }
 
-      // We have tool data for this element - iterate over each one and draw it
+  // We have tool data for this element - iterate over each one and draw it
   const context = eventData.canvasContext.canvas.getContext('2d');
 
   context.setTransform(1, 0, 0, 1, 0, 0);
@@ -108,7 +108,7 @@ function onImageRendered (e, eventData) {
       color = toolColors.getToolColor();
     }
 
-          // Draw the handles
+    // Draw the handles
     drawHandles(context, eventData, data.handles, color, {
       handleRadius
     });
@@ -135,7 +135,7 @@ function onImageRendered (e, eventData) {
     }
 
     const coords = {
-              // Translate the x/y away from the cursor
+      // Translate the x/y away from the cursor
       x: data.handles.end.x + 3,
       y: data.handles.end.y - 3
     };
@@ -145,13 +145,13 @@ function onImageRendered (e, eventData) {
     context.fillStyle = color;
 
     drawTextBox(context, str, textCoords.x, textCoords.y + fontHeight + 5, color);
-          // DrawTextBox(context, text, textCoords.x, textCoords.y, color);
+    // DrawTextBox(context, text, textCoords.x, textCoords.y, color);
     context.restore();
   }
 }
-  // /////// END IMAGE RENDERING ///////
+// /////// END IMAGE RENDERING ///////
 
-  // Module exports
+// Module exports
 const probex = mouseButtonTool({
   createNewMeasurement,
   onImageRendered,

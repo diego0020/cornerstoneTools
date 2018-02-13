@@ -8,7 +8,7 @@ export default function (context, eventData, targetElement, referenceElement) {
   const targetImage = cornerstone.getEnabledElement(targetElement).image;
   const referenceImage = cornerstone.getEnabledElement(referenceElement).image;
 
-    // Make sure the images are actually loaded for the target and reference
+  // Make sure the images are actually loaded for the target and reference
   if (!targetImage || !referenceImage) {
     return;
   }
@@ -16,7 +16,7 @@ export default function (context, eventData, targetElement, referenceElement) {
   const targetImagePlane = cornerstone.metaData.get('imagePlane', targetImage.imageId);
   const referenceImagePlane = cornerstone.metaData.get('imagePlane', referenceImage.imageId);
 
-    // Make sure the target and reference actually have image plane metadata
+  // Make sure the target and reference actually have image plane metadata
   if (!targetImagePlane ||
         !referenceImagePlane ||
         !targetImagePlane.rowCosines ||
@@ -28,12 +28,12 @@ export default function (context, eventData, targetElement, referenceElement) {
     return;
   }
 
-    // The image planes must be in the same frame of reference
+  // The image planes must be in the same frame of reference
   if (targetImagePlane.frameOfReferenceUID !== referenceImagePlane.frameOfReferenceUID) {
     return;
   }
 
-    // The image plane normals must be > 30 degrees apart
+  // The image plane normals must be > 30 degrees apart
   const targetNormal = targetImagePlane.rowCosines.clone().cross(targetImagePlane.columnCosines);
   const referenceNormal = referenceImagePlane.rowCosines.clone().cross(referenceImagePlane.columnCosines);
   let angleInRadians = targetNormal.angleTo(referenceNormal);
@@ -55,7 +55,7 @@ export default function (context, eventData, targetElement, referenceElement) {
   const color = toolColors.getSecondaryColor();
   const lineWidth = toolStyle.getToolWidth();
 
-    // Draw the referenceLines
+  // Draw the referenceLines
   context.setTransform(1, 0, 0, 1, 0, 0);
 
   context.save();

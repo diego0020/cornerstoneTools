@@ -35,7 +35,7 @@ export default function (touchEventData, data, toolData, toolType, deleteIfHandl
   $(element).on('CornerstoneToolsTouchDrag', touchDragCallback);
 
   function touchEndCallback (e, eventData) {
-        // Console.log('touchMoveAllHandles touchEndCallback: ' + e.type);
+    // Console.log('touchMoveAllHandles touchEndCallback: ' + e.type);
     data.active = false;
     data.invalidated = false;
 
@@ -46,7 +46,7 @@ export default function (touchEventData, data, toolData, toolType, deleteIfHandl
     $(element).off('CornerstoneToolsDragEnd', touchEndCallback);
     $(element).off('CornerstoneToolsTap', touchEndCallback);
 
-        // If any handle is outside the image, delete the tool data
+    // If any handle is outside the image, delete the tool data
     if (deleteIfHandleOutsideImage === true &&
             anyHandlesOutsideImage(eventData, data.handles)) {
       removeToolState(element, toolType, data);

@@ -12,26 +12,26 @@ function onImageRendered (e, eventData) {
     return;
   }
 
-    // Get the enabled elements associated with this synchronization context and draw them
+  // Get the enabled elements associated with this synchronization context and draw them
   const syncContext = toolData.data[0].synchronizationContext;
   const enabledElements = syncContext.getSourceElements();
 
   const renderer = toolData.data[0].renderer;
 
-    // Create the canvas context and reset it to the pixel coordinate system
+  // Create the canvas context and reset it to the pixel coordinate system
   const context = eventData.canvasContext.canvas.getContext('2d');
 
   cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, context);
 
-    // Iterate over each referenced element
+  // Iterate over each referenced element
   $.each(enabledElements, function (index, referenceEnabledElement) {
 
-        // Don't draw ourselves
+    // Don't draw ourselves
     if (referenceEnabledElement === e.currentTarget) {
       return;
     }
 
-        // Render it
+    // Render it
     renderer(context, eventData, e.currentTarget, referenceEnabledElement);
   });
 }

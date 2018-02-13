@@ -6,7 +6,7 @@ import loadHandlerManager from '../stateManagement/loadHandlerManager';
 // To the image in the source stack by image position
 export default function (synchronizer, sourceElement, targetElement) {
 
-    // Ignore the case where the source and target are the same enabled element
+  // Ignore the case where the source and target are the same enabled element
   if (targetElement === sourceElement) {
     return;
   }
@@ -25,7 +25,7 @@ export default function (synchronizer, sourceElement, targetElement) {
     const imagePlane = cornerstone.metaData.get('imagePlane', imageId);
     const imagePosition = imagePlane.imagePositionPatient;
     const distance = imagePosition.distanceToSquared(sourceImagePosition);
-        // Console.log(index + '=' + distance);
+    // Console.log(index + '=' + distance);
 
     if (distance < minDistance) {
       minDistance = distance;

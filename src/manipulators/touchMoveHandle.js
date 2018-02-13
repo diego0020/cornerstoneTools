@@ -1,6 +1,6 @@
 import * as cornerstone from 'cornerstone-core';
 
- /*
+/*
  * Define the runAnimation boolean as an object
  * so that it can be modified by reference
  */
@@ -16,16 +16,16 @@ const touchEndEvents = ['CornerstoneToolsTouchEnd',
 ].join(' ');
 
 function animate (lastTime, handle, runAnimation, enabledElement, targetLocation) {
-    // See http://www.html5canvastutorials.com/advanced/html5-canvas-start-and-stop-an-animation/
+  // See http://www.html5canvastutorials.com/advanced/html5-canvas-start-and-stop-an-animation/
   if (!runAnimation.value) {
     return;
   }
 
-    // Update
+  // Update
   const time = (new Date()).getTime();
-    // Var timeDiff = time - lastTime;
+  // Var timeDiff = time - lastTime;
 
-    // Pixels / second
+  // Pixels / second
   const distanceRemaining = Math.abs(handle.y - targetLocation.y);
   const linearDistEachFrame = distanceRemaining / 10;
 
@@ -43,17 +43,17 @@ function animate (lastTime, handle, runAnimation, enabledElement, targetLocation
     handle.y += linearDistEachFrame;
   }
 
-    // Update the image
+  // Update the image
   cornerstone.updateImage(enabledElement.element);
 
-    // Request a new frame
+  // Request a new frame
   cornerstone.requestAnimationFrame(function () {
     animate(time, handle, runAnimation, enabledElement, targetLocation);
   });
 }
 
 export default function (touchEventData, toolType, data, handle, doneMovingCallback) {
-    // Console.log('touchMoveHandle');
+  // Console.log('touchMoveHandle');
   runAnimation.value = true;
 
   const element = touchEventData.element;
@@ -61,8 +61,8 @@ export default function (touchEventData, toolType, data, handle, doneMovingCallb
 
   const time = (new Date()).getTime();
 
-    // Average pixel width of index finger is 45-57 pixels
-    // https://www.smashingmagazine.com/2012/02/finger-friendly-design-ideal-mobile-touchscreen-target-sizes/
+  // Average pixel width of index finger is 45-57 pixels
+  // https://www.smashingmagazine.com/2012/02/finger-friendly-design-ideal-mobile-touchscreen-target-sizes/
   const fingerDistance = -57;
 
   const aboveFinger = {
@@ -73,7 +73,7 @@ export default function (touchEventData, toolType, data, handle, doneMovingCallb
   let targetLocation = cornerstone.pageToPixel(element, aboveFinger.x, aboveFinger.y);
 
   function touchDragCallback (e, eventData) {
-        // Console.log('touchMoveHandle touchDragCallback: ' + e.type);
+    // Console.log('touchMoveHandle touchDragCallback: ' + e.type);
     runAnimation.value = false;
 
     if (handle.hasMoved === false) {
@@ -107,7 +107,7 @@ export default function (touchEventData, toolType, data, handle, doneMovingCallb
   $(element).on('CornerstoneToolsTouchDrag', touchDragCallback);
 
   function touchEndCallback (e, eventData) {
-        // Console.log('touchMoveHandle touchEndCallback: ' + e.type);
+    // Console.log('touchMoveHandle touchEndCallback: ' + e.type);
     runAnimation.value = false;
 
     handle.active = false;

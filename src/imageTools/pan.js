@@ -21,7 +21,7 @@ function mouseDownCallback (e, eventData) {
 
 function dragCallback (e, eventData) {
 
-    // FIXME: Copied from Cornerstone src/internal/calculateTransform.js, should be exposed from there.
+  // FIXME: Copied from Cornerstone src/internal/calculateTransform.js, should be exposed from there.
   let widthScale = eventData.viewport.scale;
   let heightScale = eventData.viewport.scale;
 

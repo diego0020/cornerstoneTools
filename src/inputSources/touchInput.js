@@ -35,7 +35,7 @@ function onTouch (e) {
     // Prevent mouse events from occurring alongside touch events
   e.preventDefault();
 
-    // If more than one finger is placed on the element, stop the press timeout
+  // If more than one finger is placed on the element, stop the press timeout
   if ((e.pointers && e.pointers.length > 1) ||
         (e.originalEvent && e.originalEvent.touches && e.originalEvent.touches.length > 1)) {
     isPress = false;
@@ -47,7 +47,7 @@ function onTouch (e) {
     isPress = false;
     clearTimeout(pressTimeout);
 
-            // Calculate our current points in page and image coordinates
+    // Calculate our current points in page and image coordinates
     currentPoints = {
       page: cornerstoneMath.point.pageToPoint(e.pointers[0]),
       image: cornerstone.pageToPixel(element, e.pointers[0].pageX, e.pointers[0].pageY),
@@ -77,7 +77,7 @@ function onTouch (e) {
     isPress = false;
     clearTimeout(pressTimeout);
 
-            // Calculate our current points in page and image coordinates
+    // Calculate our current points in page and image coordinates
     currentPoints = {
       page: cornerstoneMath.point.pageToPoint(e.pointers[0]),
       image: cornerstone.pageToPixel(element, e.pointers[0].pageX, e.pointers[0].pageY),
@@ -184,11 +184,11 @@ function onTouch (e) {
       $(element).trigger(event, eventData);
 
       if (event.isImmediatePropagationStopped() === false) {
-                    // IsPress = false;
-                    // ClearTimeout(pressTimeout);
+        // IsPress = false;
+        // ClearTimeout(pressTimeout);
 
-                    // No current tools responded to the drag action.
-                    // Create new tool measurement
+        // No current tools responded to the drag action.
+        // Create new tool measurement
         eventType = 'CornerstoneToolsTouchStartActive';
         if (e.originalEvent.touches.length > 1) {
           eventType = 'CornerstoneToolsMultiTouchStartActive';
@@ -198,7 +198,7 @@ function onTouch (e) {
         $(element).trigger(eventType, eventData);
       }
 
-                // Console.log(eventType);
+      // Console.log(eventType);
       lastPoints = copyPoints(startPoints);
     }, 50);
 
@@ -233,7 +233,7 @@ function onTouch (e) {
       event = $.Event(eventType, eventData);
       $(element).trigger(event, eventData);
 
-                // Console.log(eventType);
+      // Console.log(eventType);
     }, pressDelay);
     break;
 
@@ -273,10 +273,10 @@ function onTouch (e) {
     break;
 
   case 'panmove':
-            // Using the delta-value of HammerJS, because it takes all pointers into account
-            // This is very important when using panning in combination with pinch-zooming
-            // But HammerJS' delta is relative to the start of the pan event
-            // So it needs to be converted to a per-event-delta for CornerstoneTools
+    // Using the delta-value of HammerJS, because it takes all pointers into account
+    // This is very important when using panning in combination with pinch-zooming
+    // But HammerJS' delta is relative to the start of the pan event
+    // So it needs to be converted to a per-event-delta for CornerstoneTools
     delta = {
       x: e.deltaX - lastDelta.x,
       y: e.deltaY - lastDelta.y
@@ -287,7 +287,7 @@ function onTouch (e) {
       y: e.deltaY
     };
 
-            // Calculate our current points in page and image coordinates
+    // Calculate our current points in page and image coordinates
     currentPoints = {
       page: {
         x: lastPoints.page.x + delta.x,
@@ -301,7 +301,7 @@ function onTouch (e) {
     };
     currentPoints.canvas = cornerstone.pixelToCanvas(element, currentPoints.image);
 
-            // Calculate delta values in page and image coordinates
+    // Calculate delta values in page and image coordinates
     deltaPoints = {
       page: cornerstoneMath.point.subtract(currentPoints.page, lastPoints.page),
       image: cornerstoneMath.point.subtract(currentPoints.image, lastPoints.image),
@@ -310,9 +310,9 @@ function onTouch (e) {
     };
 
     pageDistanceMoved += Math.sqrt(deltaPoints.page.x * deltaPoints.page.x + deltaPoints.page.y * deltaPoints.page.y);
-            // Console.log("pageDistanceMoved: " + pageDistanceMoved);
+    // Console.log("pageDistanceMoved: " + pageDistanceMoved);
     if (pageDistanceMoved > pressMaxDistance) {
-                // Console.log('Press event aborted due to movement');
+      // Console.log('Press event aborted due to movement');
       isPress = false;
       clearTimeout(pressTimeout);
     }
@@ -363,8 +363,8 @@ function onTouch (e) {
     isPress = false;
     clearTimeout(pressTimeout);
 
-            // If lastPoints is not yet set, it means panend fired without panstart or pan,
-            // So we can ignore this event
+    // If lastPoints is not yet set, it means panend fired without panstart or pan,
+    // So we can ignore this event
     if (!lastPoints) {
       return false;
     }
@@ -379,7 +379,7 @@ function onTouch (e) {
     };
     currentPoints.canvas = cornerstone.pixelToCanvas(element, currentPoints.image);
 
-            // Calculate delta values in page and image coordinates
+    // Calculate delta values in page and image coordinates
     deltaPoints = {
       page: cornerstoneMath.point.subtract(currentPoints.page, lastPoints.page),
       image: cornerstoneMath.point.subtract(currentPoints.image, lastPoints.image),
@@ -435,7 +435,7 @@ function onTouch (e) {
     break;
   }
 
-    // Console.log(eventType);
+  // Console.log(eventType);
   return false;
 }
 
@@ -477,14 +477,14 @@ function enable (element) {
 
   doubleTap.recognizeWith(pan);
 
-    // Add to the Manager
+  // Add to the Manager
   mc.add([doubleTap, pan, rotate, pinch]);
   mc.on('tap doubletap panstart panmove panend pinchstart pinchmove rotatemove', onTouch);
 
   preventGhostClick.enable(element);
   $(element).on('touchstart touchend', onTouch);
   $(element).data('hammer', mc);
-    // Console.log('touchInput enabled');
+  // Console.log('touchInput enabled');
 }
 
 function disable (element) {
@@ -496,7 +496,7 @@ function disable (element) {
     mc.off('tap doubletap panstart panmove panend pinchmove rotatemove', onTouch);
   }
 
-    // Console.log('touchInput disabled');
+  // Console.log('touchInput disabled');
 }
 
 // Module exports

@@ -32,10 +32,10 @@ function deactivateAllToolInstances (toolData) {
 }
 
 function touchTool (touchToolInterface) {
-    // /////// BEGIN ACTIVE TOOL ///////
+  // /////// BEGIN ACTIVE TOOL ///////
 
   function addNewMeasurement (touchEventData) {
-        // Console.log('touchTool addNewMeasurement');
+    // Console.log('touchTool addNewMeasurement');
     const element = touchEventData.element;
 
     const measurementData = touchToolInterface.createNewMeasurement(touchEventData);
@@ -52,7 +52,7 @@ function touchTool (touchToolInterface) {
       measurementData.handles.end.highlight = false;
       measurementData.invalidated = true;
       if (anyHandlesOutsideImage(touchEventData, measurementData.handles)) {
-                // Delete the measurement
+        // Delete the measurement
         removeToolState(element, touchToolInterface.toolType, measurementData);
       }
 
@@ -70,7 +70,7 @@ function touchTool (touchToolInterface) {
       measurementData.active = false;
       measurementData.invalidated = true;
       if (anyHandlesOutsideImage(touchEventData, measurementData.handles)) {
-                // Delete the measurement
+        // Delete the measurement
         removeToolState(element, touchToolInterface.toolType, measurementData);
       }
 
@@ -82,7 +82,7 @@ function touchTool (touchToolInterface) {
   }
 
   function touchDownActivateCallback (e, eventData) {
-        // Console.log('touchTool touchDownActivateCallback');
+    // Console.log('touchTool touchDownActivateCallback');
     if (touchToolInterface.addNewMeasurement) {
       touchToolInterface.addNewMeasurement(eventData);
     } else {
@@ -91,25 +91,25 @@ function touchTool (touchToolInterface) {
 
     return false; // False = causes jquery to preventDefault() and stopPropagation() this event
   }
-    // /////// END ACTIVE TOOL ///////
+  // /////// END ACTIVE TOOL ///////
 
-    // /////// BEGIN INACTIVE TOOL ///////
+  // /////// BEGIN INACTIVE TOOL ///////
   function tapCallback (e, eventData) {
-        // Console.log('touchTool tapCallback');
+    // Console.log('touchTool tapCallback');
     const element = eventData.element;
     const coords = eventData.currentPoints.canvas;
     const toolData = getToolState(e.currentTarget, touchToolInterface.toolType);
     let data;
     let i;
 
-        // Deactivate everything
+    // Deactivate everything
     deactivateAllToolInstances(toolData);
 
     function doneMovingCallback () {
-            // Console.log('touchTool tapCallback doneMovingCallback');
+      // Console.log('touchTool tapCallback doneMovingCallback');
       deactivateAllToolInstances(toolData);
       if (anyHandlesOutsideImage(eventData, data.handles)) {
-                // Delete the measurement
+        // Delete the measurement
         removeToolState(element, touchToolInterface.toolType, data);
       }
 
@@ -118,7 +118,7 @@ function touchTool (touchToolInterface) {
       $(element).on('CornerstoneToolsTap', touchToolInterface.tapCallback || tapCallback);
     }
 
-        // Now check to see if there is a handle we can move
+    // Now check to see if there is a handle we can move
     if (toolData) {
       for (i = 0; i < toolData.data.length; i++) {
         data = toolData.data[i];
@@ -139,7 +139,7 @@ function touchTool (touchToolInterface) {
       }
     }
 
-        // Now check to see if we have a tool that we can move
+    // Now check to see if we have a tool that we can move
     if (toolData && touchToolInterface.pointNearTool) {
       for (i = 0; i < toolData.data.length; i++) {
         data = toolData.data[i];
@@ -156,8 +156,8 @@ function touchTool (touchToolInterface) {
       }
     }
 
-        // If there is nothing to move, add a new instance of the tool
-        // Need to check here to see if activation is allowed!
+    // If there is nothing to move, add a new instance of the tool
+    // Need to check here to see if activation is allowed!
     if (touchToolInterface.touchDownActivateCallback) {
       touchToolInterface.touchDownActivateCallback(e, eventData);
     } else {
@@ -168,7 +168,7 @@ function touchTool (touchToolInterface) {
   }
 
   function touchStartCallback (e, eventData) {
-        // Console.log('touchTool touchStartCallback');
+    // Console.log('touchTool touchStartCallback');
     const element = eventData.element;
     const coords = eventData.startPoints.canvas;
     let data;
@@ -176,11 +176,11 @@ function touchTool (touchToolInterface) {
     let i;
 
     function doneMovingCallback (lastEvent, lastEventData) {
-            // Console.log('touchTool touchStartCallback doneMovingCallback');
+      // Console.log('touchTool touchStartCallback doneMovingCallback');
       data.active = false;
       data.invalidated = true;
       if (anyHandlesOutsideImage(eventData, data.handles)) {
-                // Delete the measurement
+        // Delete the measurement
         removeToolState(eventData.element, touchToolInterface.toolType, data);
       }
 
@@ -199,10 +199,10 @@ function touchTool (touchToolInterface) {
       }
     }
 
-        // Now check to see if there is a handle we can move
+    // Now check to see if there is a handle we can move
 
-        // Average pixel width of index finger is 45-57 pixels
-        // https://www.smashingmagazine.com/2012/02/finger-friendly-design-ideal-mobile-touchscreen-target-sizes/
+    // Average pixel width of index finger is 45-57 pixels
+    // https://www.smashingmagazine.com/2012/02/finger-friendly-design-ideal-mobile-touchscreen-target-sizes/
     const distance = 28;
 
     if (!toolData) {
@@ -229,7 +229,7 @@ function touchTool (touchToolInterface) {
       }
     }
 
-        // Now check to see if we have a tool that we can move
+    // Now check to see if we have a tool that we can move
     if (!touchToolInterface.pointNearTool) {
       return;
     }
@@ -251,9 +251,9 @@ function touchTool (touchToolInterface) {
       }
     }
   }
-    // /////// END INACTIVE TOOL ///////
+  // /////// END INACTIVE TOOL ///////
 
-    // Not visible, not interactive
+  // Not visible, not interactive
   function disable (element) {
     $(element).off('CornerstoneImageRendered', touchToolInterface.onImageRendered);
     $(element).off('CornerstoneToolsTouchStart', touchToolInterface.touchStartCallback || touchStartCallback);
@@ -271,7 +271,7 @@ function touchTool (touchToolInterface) {
     cornerstone.updateImage(element);
   }
 
-    // Visible but not interactive
+  // Visible but not interactive
   function enable (element) {
     $(element).off('CornerstoneImageRendered', touchToolInterface.onImageRendered);
     $(element).off('CornerstoneToolsTouchStart', touchToolInterface.touchStartCallback || touchStartCallback);
@@ -291,9 +291,9 @@ function touchTool (touchToolInterface) {
     cornerstone.updateImage(element);
   }
 
-    // Visible, interactive and can create
+  // Visible, interactive and can create
   function activate (element) {
-        // Console.log('activate touchTool');
+    // Console.log('activate touchTool');
 
     $(element).off('CornerstoneImageRendered', touchToolInterface.onImageRendered);
     $(element).off('CornerstoneToolsTouchStart', touchToolInterface.touchStartCallback || touchStartCallback);
@@ -318,7 +318,7 @@ function touchTool (touchToolInterface) {
     cornerstone.updateImage(element);
   }
 
-    // Visible, interactive
+  // Visible, interactive
   function deactivate (element) {
     const eventType = 'CornerstoneToolsToolDeactivated';
     const statusChangeEventData = {
@@ -337,7 +337,7 @@ function touchTool (touchToolInterface) {
 
     $(element).on('CornerstoneImageRendered', touchToolInterface.onImageRendered);
     $(element).on('CornerstoneToolsTouchStart', touchToolInterface.touchStartCallback || touchStartCallback);
-        // $(element).on('CornerstoneToolsTap', touchToolInterface.tapCallback || tapCallback);
+    // $(element).on('CornerstoneToolsTap', touchToolInterface.tapCallback || tapCallback);
 
     if (touchToolInterface.doubleTapCallback) {
       $(element).off('CornerstoneToolsDoubleTap', touchToolInterface.doubleTapCallback);

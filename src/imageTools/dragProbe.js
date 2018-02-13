@@ -51,7 +51,7 @@ function defaultStrategy (eventData) {
     const mo = sp * eventData.image.slope + eventData.image.intercept;
     const suv = calculateSUV(eventData.image, sp);
 
-        // Draw text
+    // Draw text
     text = `${x}, ${y}`;
     str = `SP: ${sp} MO: ${parseFloat(mo.toFixed(3))}`;
     if (suv) {
@@ -59,9 +59,9 @@ function defaultStrategy (eventData) {
     }
   }
 
-    // Draw text
+  // Draw text
   const coords = {
-        // Translate the x/y away from the cursor
+    // Translate the x/y away from the cursor
     x: eventData.currentPoints.image.x + 3,
     y: eventData.currentPoints.image.y - 3
   };
@@ -107,10 +107,10 @@ function minimalStrategy (eventData) {
 
   if (eventData.isTouchEvent === true) {
     toolCoords = cornerstone.pageToPixel(element, eventData.currentPoints.page.x,
-            eventData.currentPoints.page.y - textStyle.getFontSize() * 4);
+      eventData.currentPoints.page.y - textStyle.getFontSize() * 4);
   } else {
     toolCoords = cornerstone.pageToPixel(element, eventData.currentPoints.page.x,
-            eventData.currentPoints.page.y - textStyle.getFontSize() / 2);
+      eventData.currentPoints.page.y - textStyle.getFontSize() / 2);
   }
 
   let storedPixels;
@@ -145,13 +145,13 @@ function minimalStrategy (eventData) {
     }
   }
 
-    // Prepare text
+  // Prepare text
   const textCoords = cornerstone.pixelToCanvas(element, toolCoords);
 
   context.font = font;
   context.fillStyle = color;
 
-    // Translate the x/y away from the cursor
+  // Translate the x/y away from the cursor
   let translation;
   const handleRadius = 6;
   const width = context.measureText(text).width;

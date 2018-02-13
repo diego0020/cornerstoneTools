@@ -46,7 +46,7 @@ function dragCallback (e, eventData) {
 
   const config = stackScroll.getConfiguration();
 
-    // The Math.max here makes it easier to mouseDrag-scroll small image stacks
+  // The Math.max here makes it easier to mouseDrag-scroll small image stacks
   let pixelsPerImage = $(element).height() / Math.max(stackData.imageIds.length, 8);
 
   if (config && config.stackScrollSpeed) {

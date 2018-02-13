@@ -18,7 +18,7 @@ function createNewMeasurement (mouseEventData) {
     return;
   }
 
-    // Create the measurement data for this tool with the end handle activated
+  // Create the measurement data for this tool with the end handle activated
   const measurementData = {
     visible: true,
     active: true,
@@ -48,7 +48,7 @@ function createNewMeasurement (mouseEventData) {
     return;
   }
 
-    // Update the current marker for the next marker
+  // Update the current marker for the next marker
   let currentIndex = config.markers.indexOf(config.current);
 
   if (config.ascending) {
@@ -91,14 +91,14 @@ function pointNearTool (element, data, coords) {
 }
 
 function onImageRendered (e, eventData) {
-    // If we have no toolData for this element, return immediately as there is nothing to do
+  // If we have no toolData for this element, return immediately as there is nothing to do
   const toolData = getToolState(eventData.element, toolType);
 
   if (!toolData) {
     return;
   }
 
-    // We have tool data for this element - iterate over each one and draw it
+  // We have tool data for this element - iterate over each one and draw it
   const context = eventData.canvasContext.canvas.getContext('2d');
 
   context.setTransform(1, 0, 0, 1, 0, 0);
@@ -122,7 +122,7 @@ function onImageRendered (e, eventData) {
       context.shadowOffsetY = config.shadowOffsetY || 1;
     }
 
-        // Draw text
+    // Draw text
     context.fillStyle = color;
     const measureText = context.measureText(data.text);
 
@@ -178,7 +178,7 @@ function doubleClickCallback (e, eventData) {
   const coords = eventData.currentPoints.canvas;
   const toolData = getToolState(element, toolType);
 
-    // Now check to see if there is a handle we can move
+  // Now check to see if there is a handle we can move
   if (!toolData) {
     return;
   }
@@ -193,7 +193,7 @@ function doubleClickCallback (e, eventData) {
       $(element).off('CornerstoneToolsMouseDown', textMarker.mouseDownCallback);
       $(element).off('CornerstoneToolsMouseDownActivate', textMarker.mouseDownActivateCallback);
       $(element).off('CornerstoneToolsMouseDoubleClick', textMarker.mouseDoubleClickCallback);
-            // Allow relabelling via a callback
+      // Allow relabelling via a callback
       config.changeTextCallback(data, eventData, doneChangingTextCallback);
 
       e.stopImmediatePropagation();
@@ -231,7 +231,7 @@ function touchPressCallback (e, eventData) {
   const coords = eventData.currentPoints.canvas;
   const toolData = getToolState(element, toolType);
 
-    // Now check to see if there is a handle we can move
+  // Now check to see if there is a handle we can move
   if (!toolData) {
     return false;
   }
@@ -246,7 +246,7 @@ function touchPressCallback (e, eventData) {
     $(element).off('CornerstoneToolsTap', textMarkerTouch.tapCallback);
     $(element).off('CornerstoneToolsTouchPress', textMarkerTouch.pressCallback);
 
-        // Allow relabelling via a callback
+    // Allow relabelling via a callback
     config.changeTextCallback(eventData.handlePressed, eventData, doneChangingTextCallback);
 
     e.stopImmediatePropagation();
@@ -265,7 +265,7 @@ function touchPressCallback (e, eventData) {
       $(element).off('CornerstoneToolsTouchStart', textMarkerTouch.touchStartCallback);
       $(element).off('CornerstoneToolsTap', textMarkerTouch.tapCallback);
       $(element).off('CornerstoneToolsTouchPress', textMarkerTouch.pressCallback);
-            // Allow relabelling via a callback
+      // Allow relabelling via a callback
       config.changeTextCallback(data, eventData, doneChangingTextCallback);
 
       e.stopImmediatePropagation();

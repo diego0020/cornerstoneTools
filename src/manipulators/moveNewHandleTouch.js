@@ -1,7 +1,7 @@
 import * as cornerstone from 'cornerstone-core';
 
 export default function (eventData, toolType, data, handle, doneMovingCallback, preventHandleOutsideImage) {
-    // Console.log('moveNewHandleTouch');
+  // Console.log('moveNewHandleTouch');
   const element = eventData.element;
   const imageCoords = cornerstone.pageToPixel(element, eventData.currentPoints.page.x, eventData.currentPoints.page.y + 50);
   const distanceFromTouch = {
@@ -73,9 +73,9 @@ export default function (eventData, toolType, data, handle, doneMovingCallback, 
   }
 
   function stopImmediatePropagation (e) {
-        // Stop the CornerstoneToolsTouchStart event from
-        // Become a CornerstoneToolsTouchStartActive event when
-        // MoveNewHandleTouch ends
+    // Stop the CornerstoneToolsTouchStart event from
+    // Become a CornerstoneToolsTouchStartActive event when
+    // MoveNewHandleTouch ends
     e.stopImmediatePropagation();
 
     return false;

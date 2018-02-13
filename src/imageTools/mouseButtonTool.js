@@ -12,7 +12,7 @@ import { addToolState, removeToolState, getToolState } from '../stateManagement/
 export default function (mouseToolInterface) {
   let configuration = {};
 
-    // /////// BEGIN ACTIVE TOOL ///////
+  // /////// BEGIN ACTIVE TOOL ///////
   function addNewMeasurement (mouseEventData) {
     const element = mouseEventData.element;
     // Hide the mouse cursor, so the user can see better
@@ -28,11 +28,11 @@ export default function (mouseToolInterface) {
       mouseButtonMask: mouseEventData.which
     };
 
-        // Associate this data with this imageId so we can render it and manipulate it
+    // Associate this data with this imageId so we can render it and manipulate it
     addToolState(mouseEventData.element, mouseToolInterface.toolType, measurementData);
 
-        // Since we are dragging to another place to drop the end point, we can just activate
-        // The end point and let the moveHandle move it for us.
+    // Since we are dragging to another place to drop the end point, we can just activate
+    // The end point and let the moveHandle move it for us.
     $(element).off('CornerstoneToolsMouseMove', mouseToolInterface.mouseMoveCallback || mouseMoveCallback);
     $(element).off('CornerstoneToolsMouseDown', mouseToolInterface.mouseDownCallback || mouseDownCallback);
     $(element).off('CornerstoneToolsMouseDownActivate', mouseToolInterface.mouseDownActivateCallback || mouseDownActivateCallback);
@@ -66,7 +66,7 @@ export default function (mouseToolInterface) {
       document.body.style.cursor = 'default';
       measurementData.invalidated = true;
       if (anyHandlesOutsideImage(mouseEventData, measurementData.handles)) {
-                // Delete the measurement
+        // Delete the measurement
         removeToolState(element, mouseToolInterface.toolType, measurementData);
       }
 
@@ -105,30 +105,30 @@ export default function (mouseToolInterface) {
     }
   }
 
-    // /////// END ACTIVE TOOL ///////
+  // /////// END ACTIVE TOOL ///////
 
-    // /////// BEGIN DEACTIVE TOOL ///////
+  // /////// BEGIN DEACTIVE TOOL ///////
 
   function mouseMoveCallback (e, eventData) {
     toolCoordinates.setCoords(eventData);
-        // If a mouse button is down, do nothing
+    // If a mouse button is down, do nothing
     if (eventData.which !== 0) {
       return;
     }
 
-        // If we have no tool data for this element, do nothing
+    // If we have no tool data for this element, do nothing
     const toolData = getToolState(eventData.element, mouseToolInterface.toolType);
 
     if (!toolData) {
       return;
     }
 
-        // We have tool data, search through all data
-        // And see if we can activate a handle
+    // We have tool data, search through all data
+    // And see if we can activate a handle
     let imageNeedsUpdate = false;
 
     for (let i = 0; i < toolData.data.length; i++) {
-            // Get the cursor position in canvas coordinates
+      // Get the cursor position in canvas coordinates
       const coords = eventData.currentPoints.canvas;
 
       const data = toolData.data[i];
@@ -143,7 +143,7 @@ export default function (mouseToolInterface) {
       }
     }
 
-        // Handle activation status changed, redraw the image
+    // Handle activation status changed, redraw the image
     if (imageNeedsUpdate === true) {
       cornerstone.updateImage(eventData.element);
     }
@@ -161,7 +161,7 @@ export default function (mouseToolInterface) {
       }
       data.invalidated = true;
       if (anyHandlesOutsideImage(eventData, data.handles)) {
-                // Delete the measurement
+        // Delete the measurement
         removeToolState(element, mouseToolInterface.toolType, data);
       }
 
@@ -182,7 +182,7 @@ export default function (mouseToolInterface) {
 
     let i;
 
-        // Now check to see if there is a handle we can move
+    // Now check to see if there is a handle we can move
 
     let preventHandleOutsideImage;
 
@@ -210,8 +210,8 @@ export default function (mouseToolInterface) {
       }
     }
 
-        // Now check to see if there is a line we can move
-        // Now check to see if we have a tool that we can move
+    // Now check to see if there is a line we can move
+    // Now check to see if we have a tool that we can move
     if (!mouseToolInterface.pointNearTool) {
       return;
     }
@@ -234,9 +234,9 @@ export default function (mouseToolInterface) {
       }
     }
   }
-    // /////// END DEACTIVE TOOL ///////
+  // /////// END DEACTIVE TOOL ///////
 
-    // Not visible, not interactive
+  // Not visible, not interactive
   function disable (element) {
     $(element).off('CornerstoneImageRendered', mouseToolInterface.onImageRendered);
     $(element).off('CornerstoneToolsMouseMove', mouseToolInterface.mouseMoveCallback || mouseMoveCallback);
@@ -250,7 +250,7 @@ export default function (mouseToolInterface) {
     cornerstone.updateImage(element);
   }
 
-    // Visible but not interactive
+  // Visible but not interactive
   function enable (element) {
     $(element).off('CornerstoneImageRendered', mouseToolInterface.onImageRendered);
     $(element).off('CornerstoneToolsMouseMove', mouseToolInterface.mouseMoveCallback || mouseMoveCallback);
@@ -266,7 +266,7 @@ export default function (mouseToolInterface) {
     cornerstone.updateImage(element);
   }
 
-    // Visible, interactive and can create
+  // Visible, interactive and can create
   function activate (element, mouseButtonMask) {
     const eventData = {
       mouseButtonMask
@@ -290,7 +290,7 @@ export default function (mouseToolInterface) {
     cornerstone.updateImage(element);
   }
 
-    // Visible, interactive
+  // Visible, interactive
   function deactivate (element, mouseButtonMask) {
     const eventData = {
       mouseButtonMask

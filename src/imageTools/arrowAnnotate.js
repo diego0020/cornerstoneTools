@@ -62,11 +62,11 @@ function addNewMeasurement (mouseEventData) {
     $(mouseEventData.element).on('CornerstoneToolsMouseDoubleClick', eventData, arrowAnnotate.mouseDoubleClickCallback);
   }
 
-    // Associate this data with this imageId so we can render it and manipulate it
+  // Associate this data with this imageId so we can render it and manipulate it
   addToolState(mouseEventData.element, toolType, measurementData);
 
-    // Since we are dragging to another place to drop the end point, we can just activate
-    // The end point and let the moveHandle move it for us.
+  // Since we are dragging to another place to drop the end point, we can just activate
+  // The end point and let the moveHandle move it for us.
   $(mouseEventData.element).off('CornerstoneToolsMouseMove', arrowAnnotate.mouseMoveCallback);
   $(mouseEventData.element).off('CornerstoneToolsMouseDown', arrowAnnotate.mouseDownCallback);
   $(mouseEventData.element).off('CornerstoneToolsMouseDownActivate', arrowAnnotate.mouseDownActivateCallback);
@@ -75,7 +75,7 @@ function addNewMeasurement (mouseEventData) {
   cornerstone.updateImage(mouseEventData.element);
   moveNewHandle(mouseEventData, toolType, measurementData, measurementData.handles.end, function () {
     if (anyHandlesOutsideImage(mouseEventData, measurementData.handles)) {
-            // Delete the measurement
+      // Delete the measurement
       removeToolState(mouseEventData.element, toolType, measurementData);
     }
 
@@ -90,7 +90,7 @@ function addNewMeasurement (mouseEventData) {
 }
 
 function createNewMeasurement (mouseEventData) {
-    // Create the measurement data for this tool with the end handle activated
+  // Create the measurement data for this tool with the end handle activated
   const measurementData = {
     visible: true,
     active: true,
@@ -136,7 +136,7 @@ function pointNearTool (element, data, coords) {
 
 // /////// BEGIN IMAGE RENDERING ///////
 function onImageRendered (e, eventData) {
-    // If we have no toolData for this element, return immediately as there is nothing to do
+  // If we have no toolData for this element, return immediately as there is nothing to do
   const toolData = getToolState(e.currentTarget, toolType);
 
   if (!toolData) {
@@ -145,7 +145,7 @@ function onImageRendered (e, eventData) {
 
   const enabledElement = eventData.enabledElement;
 
-    // We have tool data for this element - iterate over each one and draw it
+  // We have tool data for this element - iterate over each one and draw it
   const context = eventData.canvasContext.canvas.getContext('2d');
 
   context.setTransform(1, 0, 0, 1, 0, 0);
@@ -172,11 +172,11 @@ function onImageRendered (e, eventData) {
       color = toolColors.getToolColor();
     }
 
-        // Draw the arrow
+    // Draw the arrow
     const handleStartCanvas = cornerstone.pixelToCanvas(eventData.element, data.handles.start);
     const handleEndCanvas = cornerstone.pixelToCanvas(eventData.element, data.handles.end);
 
-        // Config.arrowFirst = false;
+    // Config.arrowFirst = false;
     if (config.arrowFirst) {
       drawArrow(context, handleEndCanvas, handleStartCanvas, color, lineWidth);
     } else {
@@ -191,11 +191,11 @@ function onImageRendered (e, eventData) {
       drawHandles(context, eventData, data.handles, color, handleOptions);
     }
 
-        // Draw the text
+    // Draw the text
     if (data.text && data.text !== '') {
       context.font = font;
 
-            // Calculate the text coordinates.
+      // Calculate the text coordinates.
       const textWidth = context.measureText(data.text).width + 10;
       const textHeight = textStyle.getFontSize() + 10;
 
@@ -214,8 +214,8 @@ function onImageRendered (e, eventData) {
             y: handleEndCanvas.y - textHeight / 2
           };
         } else {
-                    // If the arrow is at the End position, the text should
-                    // Be placed near the Start position
+          // If the arrow is at the End position, the text should
+          // Be placed near the Start position
           textCoords = {
             x: handleStartCanvas.x - textWidth / 2 - distance,
             y: handleStartCanvas.y - textHeight / 2
@@ -239,7 +239,7 @@ function onImageRendered (e, eventData) {
       data.handles.textBox.boundingBox = boundingBox;
 
       if (data.handles.textBox.hasMoved) {
-                // Draw dashed link line between tool and text
+        // Draw dashed link line between tool and text
         const link = {
           start: {},
           end: {}
@@ -258,19 +258,19 @@ function onImageRendered (e, eventData) {
         link.start = cornerstoneMath.point.findClosestPoint(points, link.end);
 
         const boundingBoxPoints = [{
-                    // Top middle point of bounding box
+          // Top middle point of bounding box
           x: boundingBox.left + boundingBox.width / 2,
           y: boundingBox.top
         }, {
-                    // Left middle point of bounding box
+          // Left middle point of bounding box
           x: boundingBox.left,
           y: boundingBox.top + boundingBox.height / 2
         }, {
-                    // Bottom middle point of bounding box
+          // Bottom middle point of bounding box
           x: boundingBox.left + boundingBox.width / 2,
           y: boundingBox.top + boundingBox.height
         }, {
-                    // Right middle point of bounding box
+          // Right middle point of bounding box
           x: boundingBox.left + boundingBox.width,
           y: boundingBox.top + boundingBox.height / 2
         }
@@ -323,7 +323,7 @@ function addNewMeasurementTouch (touchEventData) {
     cornerstone.updateImage(element);
 
     if (anyHandlesOutsideImage(touchEventData, measurementData.handles)) {
-            // Delete the measurement
+      // Delete the measurement
       removeToolState(element, toolType, measurementData);
     }
 
@@ -359,7 +359,7 @@ function doubleClickCallback (e, eventData) {
   const coords = eventData.currentPoints.canvas;
   const toolData = getToolState(element, toolType);
 
-    // Now check to see if there is a handle we can move
+  // Now check to see if there is a handle we can move
   if (!toolData) {
     return;
   }
@@ -370,7 +370,7 @@ function doubleClickCallback (e, eventData) {
             pointInsideBoundingBox(data.handles.textBox, coords)) {
       data.active = true;
       cornerstone.updateImage(element);
-            // Allow relabelling via a callback
+      // Allow relabelling via a callback
       config.changeTextCallback(data, eventData, doneChangingTextCallback);
 
       e.stopImmediatePropagation();
@@ -409,7 +409,7 @@ function pressCallback (e, eventData) {
   const coords = eventData.currentPoints.canvas;
   const toolData = getToolState(element, toolType);
 
-    // Now check to see if there is a handle we can move
+  // Now check to see if there is a handle we can move
   if (!toolData) {
     return;
   }
@@ -419,7 +419,7 @@ function pressCallback (e, eventData) {
     $(element).off('CornerstoneToolsTouchStartActive', arrowAnnotateTouch.touchDownActivateCallback);
     $(element).off('CornerstoneToolsTap', arrowAnnotateTouch.tapCallback);
 
-        // Allow relabelling via a callback
+    // Allow relabelling via a callback
     config.changeTextCallback(eventData.handlePressed, eventData, doneChangingTextCallback);
 
     e.stopImmediatePropagation();
@@ -438,7 +438,7 @@ function pressCallback (e, eventData) {
       $(element).off('CornerstoneToolsTouchStartActive', arrowAnnotateTouch.touchDownActivateCallback);
       $(element).off('CornerstoneToolsTap', arrowAnnotateTouch.tapCallback);
 
-            // Allow relabelling via a callback
+      // Allow relabelling via a callback
       config.changeTextCallback(data, eventData, doneChangingTextCallback);
 
       e.stopImmediatePropagation();

@@ -52,7 +52,7 @@ function clearCircle (context, coords, radius) {
   context.arc(coords.x, coords.y, radius, 0, 2 * Math.PI, true);
   context.clip();
   context.clearRect(coords.x - radius - 1, coords.y - radius - 1,
-                    radius * 2 + 2, radius * 2 + 2);
+    radius * 2 + 2, radius * 2 + 2);
   context.restore();
 }
 

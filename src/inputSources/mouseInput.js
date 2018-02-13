@@ -58,7 +58,7 @@ function mouseDown (e) {
   const element = e.currentTarget;
   const eventType = 'CornerstoneToolsMouseDown';
 
-    // Prevent CornerstoneToolsMouseMove while mouse is down
+  // Prevent CornerstoneToolsMouseMove while mouse is down
   $(element).off('mousemove', mouseMove);
 
   const startPoints = {
@@ -94,7 +94,7 @@ function mouseDown (e) {
   $(eventData.element).trigger(event, eventData);
 
   if (event.isImmediatePropagationStopped() === false) {
-        // No tools responded to this event, give the active tool a chance
+    // No tools responded to this event, give the active tool a chance
     if (activateMouseDown(eventData) === true) {
       return pauseEvent(e);
     }
@@ -103,7 +103,7 @@ function mouseDown (e) {
   const whichMouseButton = e.buttons;
 
   function onMouseMove (e) {
-        // Calculate our current points in page and image coordinates
+    // Calculate our current points in page and image coordinates
     const eventType = 'CornerstoneToolsMouseDrag';
     const currentPoints = {
       page: cornerstoneMath.point.pageToPoint(e),
@@ -116,7 +116,7 @@ function mouseDown (e) {
 
     currentPoints.canvas = cornerstone.pixelToCanvas(element, currentPoints.image);
 
-        // Calculate delta values in page and image coordinates
+    // Calculate delta values in page and image coordinates
     const deltaPoints = {
       page: cornerstoneMath.point.subtract(currentPoints.page, lastPoints.page),
       image: cornerstoneMath.point.subtract(currentPoints.image, lastPoints.image),
@@ -138,17 +138,17 @@ function mouseDown (e) {
 
     $(eventData.element).trigger(eventType, eventData);
 
-        // Update the last points
+    // Update the last points
     lastPoints = copyPoints(currentPoints);
 
-        // Prevent left click selection of DOM elements
+    // Prevent left click selection of DOM elements
     return pauseEvent(e);
   }
 
-    // Hook mouseup so we can unbind our event listeners
-    // When they stop dragging
+  // Hook mouseup so we can unbind our event listeners
+  // When they stop dragging
   function onMouseUp (e) {
-        // Cancel the timeout preventing the click event from triggering
+    // Cancel the timeout preventing the click event from triggering
     clearTimeout(preventClickTimeout);
 
     let eventType = 'CornerstoneToolsMouseUp';
@@ -157,7 +157,7 @@ function mouseDown (e) {
       eventType = 'CornerstoneToolsMouseClick';
     }
 
-        // Calculate our current points in page and image coordinates
+    // Calculate our current points in page and image coordinates
     const currentPoints = {
       page: cornerstoneMath.point.pageToPoint(e),
       image: cornerstone.pageToPixel(element, e.pageX, e.pageY),
@@ -169,7 +169,7 @@ function mouseDown (e) {
 
     currentPoints.canvas = cornerstone.pixelToCanvas(element, currentPoints.image);
 
-        // Calculate delta values in page and image coordinates
+    // Calculate delta values in page and image coordinates
     const deltaPoints = {
       page: cornerstoneMath.point.subtract(currentPoints.page, lastPoints.page),
       image: cornerstoneMath.point.subtract(currentPoints.image, lastPoints.image),
@@ -227,7 +227,7 @@ function mouseMove (e) {
 
   const whichMouseButton = e.buttons;
 
-    // Calculate our current points in page and image coordinates
+  // Calculate our current points in page and image coordinates
   const currentPoints = {
     page: cornerstoneMath.point.pageToPoint(e),
     image: cornerstone.pageToPixel(element, e.pageX, e.pageY),
@@ -239,7 +239,7 @@ function mouseMove (e) {
 
   currentPoints.canvas = cornerstone.pixelToCanvas(element, currentPoints.image);
 
-    // Calculate delta values in page and image coordinates
+  // Calculate delta values in page and image coordinates
   const deltaPoints = {
     page: cornerstoneMath.point.subtract(currentPoints.page, lastPoints.page),
     image: cornerstoneMath.point.subtract(currentPoints.image, lastPoints.image),
@@ -261,7 +261,7 @@ function mouseMove (e) {
 
   $(element).trigger(eventType, eventData);
 
-    // Update the last points
+  // Update the last points
   lastPoints = copyPoints(currentPoints);
 }
 
@@ -272,7 +272,7 @@ function disable (element) {
 }
 
 function enable (element) {
-    // Prevent handlers from being attached multiple times
+  // Prevent handlers from being attached multiple times
   disable(element);
 
   $(element).on('mousedown', mouseDown);

@@ -9,32 +9,32 @@ const toolType = 'crosshairs';
 function chooseLocation (e, eventData) {
   e.stopImmediatePropagation(); // Prevent CornerstoneToolsTouchStartActive from killing any press events
 
-    // If we have no toolData for this element, return immediately as there is nothing to do
+  // If we have no toolData for this element, return immediately as there is nothing to do
   const toolData = getToolState(e.currentTarget, toolType);
 
   if (!toolData) {
     return;
   }
 
-    // Get current element target information
+  // Get current element target information
   const sourceElement = e.currentTarget;
   const sourceEnabledElement = cornerstone.getEnabledElement(sourceElement);
   const sourceImageId = sourceEnabledElement.image.imageId;
   const sourceImagePlane = cornerstone.metaData.get('imagePlane', sourceImageId);
 
-    // Get currentPoints from mouse cursor on selected element
+  // Get currentPoints from mouse cursor on selected element
   const sourceImagePoint = eventData.currentPoints.image;
 
-    // Transfer this to a patientPoint given imagePlane metadata
+  // Transfer this to a patientPoint given imagePlane metadata
   const patientPoint = imagePointToPatientPoint(sourceImagePoint, sourceImagePlane);
 
-    // Get the enabled elements associated with this synchronization context
+  // Get the enabled elements associated with this synchronization context
   const syncContext = toolData.data[0].synchronizationContext;
   const enabledElements = syncContext.getSourceElements();
 
-    // Iterate over each synchronized element
+  // Iterate over each synchronized element
   enabledElements.forEach(function (targetElement) {
-        // Don't do anything if the target is the same as the source
+    // Don't do anything if the target is the same as the source
     if (targetElement === sourceElement) {
       return;
     }
@@ -50,7 +50,7 @@ function chooseLocation (e, eventData) {
 
     const stackData = stackToolDataSource.data[0];
 
-        // Find within the element's stack the closest image plane to selected location
+    // Find within the element's stack the closest image plane to selected location
     stackData.imageIds.forEach(function (imageId, index) {
       const imagePlane = cornerstone.metaData.get('imagePlane', imageId);
       const imagePosition = imagePlane.imagePositionPatient;
@@ -58,7 +58,7 @@ function chooseLocation (e, eventData) {
       const column = imagePlane.columnCosines.clone();
       const normal = column.clone().cross(row.clone());
       const distance = Math.abs(normal.clone().dot(imagePosition) - normal.clone().dot(patientPoint));
-            // Console.log(index + '=' + distance);
+      // Console.log(index + '=' + distance);
 
       if (distance < minDistance) {
         minDistance = distance;
@@ -70,7 +70,7 @@ function chooseLocation (e, eventData) {
       return;
     }
 
-        // Switch the loaded image to the required image
+    // Switch the loaded image to the required image
     if (newImageIdIndex !== -1 && stackData.imageIds[newImageIdIndex] !== undefined) {
       const startLoadingHandler = loadHandlerManager.getStartLoadHandler();
       const endLoadingHandler = loadHandlerManager.getEndLoadHandler();
@@ -178,7 +178,7 @@ function dragCallback (e, eventData) {
 }
 
 function enableTouch (element, synchronizationContext) {
-    // Clear any currently existing toolData
+  // Clear any currently existing toolData
   clearToolState(element, toolType);
 
   addToolState(element, toolType, {

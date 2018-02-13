@@ -16,23 +16,23 @@ function mouseUpCallback (e, eventData) {
   $(eventData.element).off('CornerstoneToolsMouseUp', mouseUpCallback);
   $(eventData.element).off('CornerstoneToolsMouseClick', mouseUpCallback);
   interactionEnd(e, eventData);
-        // Reactivate mouseDownCallbacks
+  // Reactivate mouseDownCallbacks
   interactingMode = false;
   lastSession = Date.now();
 }
 
 function mouseDownCallback (e, eventData) {
   if (isMouseButtonEnabled(eventData.which, e.data.mouseButtonMask)) {
-            // Disable further mouseDownCallbacks
+    // Disable further mouseDownCallbacks
     const ts = Date.now();
 
     if (interactingMode === true) {
-                // Sanity check, should not happen
+      // Sanity check, should not happen
       return;
     }
 
     if (lastSession !== null && (ts - lastSession < 100)) {
-                // Rate limit to one session per 1/10 of second
+      // Rate limit to one session per 1/10 of second
       return;
     }
 
@@ -63,10 +63,10 @@ function touchStartCallback (e, eventData) {
 }
 
 function defaultStrategy (eventData) {
-        // Here we normalize the ww/wc adjustments so the same number of on screen pixels
-        // Adjusts the same percentage of the dynamic range of the image.  This is needed to
-        // Provide consistency for the ww/wc tool regardless of the dynamic range (e.g. an 8 bit
-        // Image will feel the same as a 16 bit image would)
+  // Here we normalize the ww/wc adjustments so the same number of on screen pixels
+  // Adjusts the same percentage of the dynamic range of the image.  This is needed to
+  // Provide consistency for the ww/wc tool regardless of the dynamic range (e.g. an 8 bit
+  // Image will feel the same as a 16 bit image would)
   const maxVOI = eventData.image.maxPixelValue * eventData.image.slope + eventData.image.intercept;
   const minVOI = eventData.image.minPixelValue * eventData.image.slope + eventData.image.intercept;
   const imageDynamicRange = maxVOI - minVOI;
@@ -203,7 +203,7 @@ function interactionStart (e, eventData) {
   };
 
   let translation2;
-        // Translation is applied after rotation
+  // Translation is applied after rotation
 
   if (rotation === 0) {
     translation2 = {
@@ -227,7 +227,7 @@ function interactionStart (e, eventData) {
     };
   }
 
-        // Viewport.translation = {x: 0, y:0};
+  // Viewport.translation = {x: 0, y:0};
   viewport.translation = translation2;
   if (downImage.rowPixelSpacing * targetWidth > downImage.columnPixelSpacing * targetHeight) {
     viewport.scale *= ((bottomRight.x - topLeft.x) / (targetWidth));
@@ -324,7 +324,7 @@ function downsampleImage (image, targetWidth, targetHeight, topLeft, bottomRight
     windowCenter: image.windowCenter,
     windowWidth: image.windowWidth
   };
-        // Don´t use renderWebImage
+  // Don´t use renderWebImage
 
   if (image2.color === true) {
     image2.render = cornerstone.renderColorImage;
@@ -344,6 +344,6 @@ wwwclod.strategy = defaultStrategy;
 const wwwclodTouchDrag = touchDragTool(touchStartCallback);
 
 export {
-    wwwclod,
-    wwwclodTouchDrag
-  };
+  wwwclod,
+  wwwclodTouchDrag
+};

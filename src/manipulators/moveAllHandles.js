@@ -50,7 +50,7 @@ export default function (mouseEventData, data, toolData, toolType, options, done
     $(element).off('CornerstoneToolsMouseUp', mouseUpCallback);
     $(element).off('CornerstoneToolsMouseClick', mouseUpCallback);
 
-        // If any handle is outside the image, delete the tool data
+    // If any handle is outside the image, delete the tool data
     if (options.deleteIfHandleOutsideImage === true &&
             anyHandlesOutsideImage(eventData, data.handles)) {
       removeToolState(element, toolType, data);

@@ -2,11 +2,11 @@ import * as cornerstone from 'cornerstone-core';
 import { getToolState } from '../stateManagement/toolState';
 import loadHandlerManager from '../stateManagement/loadHandlerManager';
 
- // This function causes the image in the target stack to be set to the one closest
+// This function causes the image in the target stack to be set to the one closest
 // To the image in the source stack by image position
 export default function (synchronizer, sourceElement, targetElement) {
 
-    // Ignore the case where the source and target are the same enabled element
+  // Ignore the case where the source and target are the same enabled element
   if (targetElement === sourceElement) {
     return;
   }
@@ -18,10 +18,10 @@ export default function (synchronizer, sourceElement, targetElement) {
 
   let newImageIdIndex = sourceStackData.currentImageIdIndex;
 
-    // Clamp the index
+  // Clamp the index
   newImageIdIndex = Math.min(Math.max(newImageIdIndex, 0), targetStackData.imageIds.length - 1);
 
-    // Do nothing if the index has not changed
+  // Do nothing if the index has not changed
   if (newImageIdIndex === targetStackData.currentImageIdIndex) {
     return;
   }

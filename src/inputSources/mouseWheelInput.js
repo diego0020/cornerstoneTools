@@ -1,15 +1,15 @@
 import * as cornerstone from 'cornerstone-core';
 
 function mouseWheel (e) {
-    // !!!HACK/NOTE/WARNING!!!
-    // For some reason I am getting mousewheel and DOMMouseScroll events on my
-    // Mac os x mavericks system when middle mouse button dragging.
-    // I couldn't find any info about this so this might break other systems
-    // Webkit hack
+  // !!!HACK/NOTE/WARNING!!!
+  // For some reason I am getting mousewheel and DOMMouseScroll events on my
+  // Mac os x mavericks system when middle mouse button dragging.
+  // I couldn't find any info about this so this might break other systems
+  // Webkit hack
   if (e.originalEvent.type === 'mousewheel' && e.originalEvent.wheelDeltaY === 0) {
     return;
   }
-    // Firefox hack
+  // Firefox hack
   if (e.originalEvent.type === 'DOMMouseScroll' && e.originalEvent.axis === 1) {
     return;
   }
@@ -30,7 +30,7 @@ function mouseWheel (e) {
     x = e.originalEvent.pageX;
     y = e.originalEvent.pageY;
   } else {
-        // IE9 & IE10
+    // IE9 & IE10
     x = e.x;
     y = e.y;
   }
@@ -70,7 +70,7 @@ function mouseWheel (e) {
 const mouseWheelEvents = 'mousewheel DOMMouseScroll';
 
 function enable (element) {
-    // Prevent handlers from being attached multiple times
+  // Prevent handlers from being attached multiple times
   disable(element);
 
   $(element).on(mouseWheelEvents, mouseWheel);

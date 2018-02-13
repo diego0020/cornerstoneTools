@@ -20,10 +20,10 @@ function mouseDownCallback (e, eventData) {
 }
 
 function defaultStrategy (eventData) {
-    // Here we normalize the ww/wc adjustments so the same number of on screen pixels
-    // Adjusts the same percentage of the dynamic range of the image.  This is needed to
-    // Provide consistency for the ww/wc tool regardless of the dynamic range (e.g. an 8 bit
-    // Image will feel the same as a 16 bit image would)
+  // Here we normalize the ww/wc adjustments so the same number of on screen pixels
+  // Adjusts the same percentage of the dynamic range of the image.  This is needed to
+  // Provide consistency for the ww/wc tool regardless of the dynamic range (e.g. an 8 bit
+  // Image will feel the same as a 16 bit image would)
   const maxVOI = eventData.image.maxPixelValue * eventData.image.slope + eventData.image.intercept;
   const minVOI = eventData.image.minPixelValue * eventData.image.slope + eventData.image.intercept;
   const imageDynamicRange = maxVOI - minVOI;

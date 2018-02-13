@@ -42,7 +42,7 @@ function mouseMove (e) {
 const keyboardEvent = 'keydown keypress keyup';
 
 function enable (element) {
-    // Prevent handlers from being attached multiple times
+  // Prevent handlers from being attached multiple times
   disable(element);
 
   $(element).on(keyboardEvent, keyPress);
