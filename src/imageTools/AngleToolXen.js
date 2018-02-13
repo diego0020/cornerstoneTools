@@ -12,6 +12,9 @@ import handleActivator from '../manipulators/handleActivator';
 import moveHandle from '../manipulators/moveHandle';
 import moveNewHandle from '../manipulators/moveNewHandle';
 import moveAllHandles from '../manipulators/moveAllHandles';
+import touchMoveHandle from '../manipulators/touchMoveHandle.js';
+import moveNewHandleTouch from '../manipulators/moveNewHandleTouch.js';
+import touchMoveAllHandles from '../manipulators/touchMoveAllHandles.js';
 import anyHandlesOutsideImage from '../manipulators/anyHandlesOutsideImage.js';
 import isMouseButtonEnabled from '../util/isMouseButtonEnabled.js';
 import { addToolState, removeToolState, getToolState } from '../stateManagement/toolState.js';
@@ -21,7 +24,7 @@ const toolType = 'angleXen';
 
 const options = {};
 let configuration = {};
-
+let mouseButtonMask;
 
 // /////// BEGIN ACTIVE TOOL ///////
 function createNewMeasurement (mouseEventData) {
@@ -310,7 +313,7 @@ function addNewMeasurement (mouseEventData) {
   document.body.style.cursor = 'none';
 
   const eventData = {
-    mouseButtonMask: mouseEventData.which
+    mouseButtonMask
   };
 
   let measurementData;
@@ -356,10 +359,12 @@ function addNewMeasurement (mouseEventData) {
   $(element).off('CornerstoneToolsMouseMove', mouseMoveCallback);
   $(element).off('CornerstoneToolsMouseDown', mouseDownCallback);
   $(element).off('CornerstoneToolsMouseDownActivate', mouseDownActivateCallback);
+  $(element).off('CornerstoneToolsTouchStart', mouseDownCallback);
+  $(element).off('CornerstoneToolsTouchStartActive', mouseDownActivateCallback);
 
   cornerstone.updateImage(element);
 
-  const handleMover = moveNewHandle;
+  const handleMover = mouseEventData.isTouchEvent ? moveNewHandleTouch : moveNewHandle;
   const preventHandleOutsideImage = true;
 
   measurementData.handles.end.isMoving = false;
@@ -380,6 +385,9 @@ function addNewMeasurement (mouseEventData) {
     $(element).on('CornerstoneToolsMouseDown', eventData, mouseDownCallback);
     $(element).on('CornerstoneToolsMouseDownActivate', eventData, mouseDownActivateCallback);
 
+    $(element).on('CornerstoneToolsTouchStart', eventData, mouseDownCallback);
+    $(element).on('CornerstoneToolsTouchStartActive', eventData, mouseDownActivateCallback);
+
     const eventType = 'CornerstoneToolsMeasurementFinished';
 
     toMoveHandle.isMoving = false;
@@ -397,7 +405,7 @@ function addNewMeasurement (mouseEventData) {
 
 function mouseDownActivateCallback (e, eventData) {
 
-  if (isMouseButtonEnabled(eventData.which, e.data.mouseButtonMask)) {
+  if (eventData.isTouchEvent || isMouseButtonEnabled(eventData.which, e.data.mouseButtonMask)) {
     addNewMeasurement(eventData);
 
     return false; // False = causes jquery to preventDefault() and stopPropagation() this event
@@ -468,7 +476,7 @@ function mouseDownCallback (e, eventData) {
     $(element).on('CornerstoneToolsMouseMove', eventData, mouseMoveCallback);
   }
 
-  if (!isMouseButtonEnabled(eventData.which, e.data.mouseButtonMask)) {
+  if (!eventData.isTouchEvent && !isMouseButtonEnabled(eventData.which, e.data.mouseButtonMask)) {
     return;
   }
 
@@ -496,7 +504,10 @@ function mouseDownCallback (e, eventData) {
       document.body.style.cursor = 'none';
       $(element).off('CornerstoneToolsMouseMove', mouseMoveCallback);
       data.active = true;
-      moveHandle(eventData, toolType, data, handle, handleDoneMove, preventHandleOutsideImage);
+      const handleMover = eventData.isTouchEvent ? touchMoveHandle : moveHandle;
+
+      handleMover(eventData, toolType, data, handle, handleDoneMove, preventHandleOutsideImage);
+
       e.stopImmediatePropagation();
 
       return false;
@@ -510,7 +521,9 @@ function mouseDownCallback (e, eventData) {
     if (pointNearTool(element, data, coords)) {
       data.active = true;
       $(element).off('CornerstoneToolsMouseMove', mouseMoveCallback);
-      moveAllHandles(e, data, toolData, toolType, options, handleDoneMove);
+      const handlesMover = eventData.isTouchEvent ? touchMoveAllHandles : moveAllHandles;
+
+      handlesMover(e, data, toolData, toolType, options, handleDoneMove);
       e.stopImmediatePropagation();
 
       return false;
@@ -549,10 +562,12 @@ function enable (element) {
 }
 
 // Visible, interactive and can create
-function activate (element, mouseButtonMask) {
+function activate (element, mouseButtonMaskIn) {
   const eventData = {
-    mouseButtonMask
+    mouseButtonMask: mouseButtonMaskIn
   };
+
+  mouseButtonMask = mouseButtonMaskIn;
 
   $(element).off('CornerstoneImageRendered', onImageRendered);
   $(element).off('CornerstoneToolsMouseMove', mouseMoveCallback);
@@ -566,6 +581,7 @@ function activate (element, mouseButtonMask) {
 
   cornerstone.updateImage(element);
 }
+
 
 // Visible, interactive
 function deactivate (element, mouseButtonMask) {
@@ -602,6 +618,75 @@ function deactivate (element, mouseButtonMask) {
   cornerstone.updateImage(element);
 }
 
+function activateTouch (element) {
+  $(element).off('CornerstoneToolsTouchStart', mouseDownCallback);
+  $(element).off('CornerstoneToolsTouchStartActive', mouseDownActivateCallback);
+  $(element).off('CornerstoneImageRendered', onImageRendered);
+
+  $(element).on('CornerstoneImageRendered', onImageRendered);
+  $(element).on('CornerstoneToolsTouchStart', mouseDownCallback);
+  $(element).on('CornerstoneToolsTouchStartActive', mouseDownActivateCallback);
+
+  cornerstone.updateImage(element);
+}
+
+function deactivateTouch (element) {
+
+  const eventType = 'CornerstoneToolsToolDeactivated';
+  const statusChangeEventData = {
+    mouseButtonMask,
+    toolType,
+    type: eventType
+  };
+
+  const event = $.Event(eventType, statusChangeEventData);
+
+  $(element).trigger(event, statusChangeEventData);
+
+  $(element).off('CornerstoneToolsTouchStart', mouseDownCallback);
+  $(element).off('CornerstoneToolsTouchStartActive', mouseDownActivateCallback);
+  $(element).off('CornerstoneImageRendered', onImageRendered);
+
+  $(element).on('CornerstoneToolsTouchStart', mouseDownCallback);
+  $(element).on('CornerstoneImageRendered', onImageRendered);
+
+  const maybePending = getIncomplete(element);
+
+  if (maybePending) {
+    removeToolState(element, toolType, maybePending);
+  }
+
+  cornerstone.updateImage(element);
+}
+
+function disableTouch (element) {
+
+  $(element).off('CornerstoneToolsTouchStart', mouseDownCallback);
+  $(element).off('CornerstoneToolsTouchStartActive', mouseDownActivateCallback);
+  $(element).off('CornerstoneImageRendered', onImageRendered);
+
+  const maybePending = getIncomplete(element);
+
+  if (maybePending) {
+    removeToolState(element, toolType, maybePending);
+  }
+
+  cornerstone.updateImage(element);
+}
+
+// Visible but not interactive
+function enableTouch (element) {
+
+  $(element).off('CornerstoneToolsTouchStart', mouseDownCallback);
+  $(element).off('CornerstoneToolsTouchStartActive', mouseDownActivateCallback);
+  $(element).off('CornerstoneImageRendered', onImageRendered);
+
+  $(element).on('CornerstoneImageRendered', onImageRendered);
+
+  cornerstone.updateImage(element);
+}
+
+
 function getConfiguration () {
   return configuration;
 }
@@ -624,9 +709,20 @@ const toolInterface = {
   addNewMeasurement
 };
 
+const touchInterface = {
+  enable: enableTouch,
+  disable: disableTouch,
+  activate: activateTouch,
+  deactivate: deactivateTouch,
+  mouseDownCallback,
+  mouseDownActivateCallback,
+  tapCallback () { }
+};
 
 const angleXen = toolInterface;
+const angleXenTouch = touchInterface;
 
 export {
-  angleXen
+  angleXen,
+  angleXenTouch
 };

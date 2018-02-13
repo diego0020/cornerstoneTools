@@ -124,7 +124,7 @@ export { default as touchInput } from './inputSources/touchInput';
 
 
 export { angle, angleTouch } from './imageTools/angleTool';
-export { angleXen } from './imageTools/angleToolXen';
+export { angleXen, angleXenTouch } from './imageTools/angleToolXen';
 export { arrowAnnotate, arrowAnnotateTouch } from './imageTools/arrowAnnotate';
 export { crosshairs, crosshairsTouch } from './imageTools/crosshairs';
 export { default as displayTool } from './imageTools/displayTool';

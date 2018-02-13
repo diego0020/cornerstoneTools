@@ -77,7 +77,7 @@ is used by our example image loader-->
 
         // Enable all tools we want to use with this element
         cornerstoneTools.angleXen.activate(element, 1);
-        // cornerstoneTools.angleXenTouch.activate(element);
+        cornerstoneTools.angleXenTouch.activate(element);
         cornerstoneTools.pan.activate(element, 2);
         cornerstoneTools.zoom.activate(element, 4);
 
@@ -92,21 +92,25 @@ is used by our example image loader-->
         $('#disable').click(function () {
             activate("#disable");
             cornerstoneTools.angleXen.disable(element);
+            cornerstoneTools.angleXenTouch.disable(element);
             return false;
         });
         $('#enable').click(function () {
             activate("#enable");
             cornerstoneTools.angleXen.enable(element);
+            cornerstoneTools.angleXenTouch.enable(element);
             return false;
         });
         $('#activate').click(function () {
             activate("#activate");
             cornerstoneTools.angleXen.activate(element, 1);
+            cornerstoneTools.angleXenTouch.activate(element);
             return false;
         });
         $('#deactivate').click(function () {
             activate("#deactivate");
             cornerstoneTools.angleXen.deactivate(element, 1);
+            cornerstoneTools.angleXenTouch.deactivate(element);
             return false;
         });
     });
