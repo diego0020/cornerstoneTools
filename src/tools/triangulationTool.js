@@ -49,7 +49,7 @@ export default class extends baseTool {
     }
 
     // Save current image id
-    const stackDataSource = (0, _toolState.getToolState)(element, 'stack');
+    const stackDataSource = getToolState(element, 'stack');
     const imageIdsSource = stackDataSource.data[0].imageIds;
     const currentImageIdIndexSource = stackDataSource.data[0].currentImageIdIndex;
     imageIdSource = imageIdsSource[currentImageIdIndexSource];
@@ -87,13 +87,13 @@ export default class extends baseTool {
 
         targetElement.addEventListener(EVENTS.IMAGE_RENDERED, this.onTriangulationRendered);
 
-        const toolDataTriag = (0, _toolState.getToolState)(targetElement, this.name);
+        const toolDataTriag = getToolState(targetElement, this.name);
         if (toolDataTriag && toolDataTriag.data[0]) {
         toolDataTriag.data[0].measurementData = '';
         }
 
-        const minDistance = Number.MAX_VALUE;
-        const newImageIdIndex = -1;
+        let minDistance = Number.MAX_VALUE;
+        let newImageIdIndex = -1;
 
         const stackToolDataSource = getToolState(targetElement, 'stack');
 
@@ -138,7 +138,7 @@ export default class extends baseTool {
                 startLoadingHandler(targetElement);
             }
 
-            const loader = void 0;
+            let loader;
 
             if (stackData.preventCache === true) {
                 loader = external.cornerstone.loadImage(stackData.imageIds[newImageIdIndex]);
@@ -209,7 +209,7 @@ export default class extends baseTool {
     }
     
     // We have tool data for this element - iterate over each one and draw it
-    for (const i = 0; i < toolData.data.length; i++) {
+    for (let i = 0; i < toolData.data.length; i++) {
 
       const data = toolData.data[i].measurementData;
   
@@ -228,7 +228,7 @@ export default class extends baseTool {
   }
 
   onTriangulationRendered(e) {
-    var cornerstone = external.cornerstone;
+    const cornerstone = external.cornerstone;
     const eventData = e.detail;
     const image = eventData.image;
     const toolData = getToolState(sourceEl, this.name);
@@ -243,7 +243,7 @@ export default class extends baseTool {
 
   renderCursor(eventData, handles, color) {
     const context = getNewContext(eventData.canvasContext.canvas);
-    const handleCanvas = cornerstone.pixelToCanvas(eventData.element, handles);
+    const handleCanvas = external.cornerstone.pixelToCanvas(eventData.element, handles);
     const handleRadius = 1;
 
     const lineWidth = 2
