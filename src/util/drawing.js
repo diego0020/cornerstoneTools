@@ -92,12 +92,14 @@ export function path (context, options, fn) {
  * @param {String} options.shadowColor - Default value: #000000
  * @param {Number} options.shadowOffsetX - Default value: 1
  * @param {Number} options.shadowOffsetY - Default value: 1
+ * @param {Number} options.shadowBlur - Default value: 1
  */
 export function setShadow (context, options) {
   if (options.shadow) {
     context.shadowColor = options.shadowColor || '#000000';
     context.shadowOffsetX = options.shadowOffsetX || 1;
     context.shadowOffsetY = options.shadowOffsetY || 1;
+    context.shadowBlur = options.shadowBlur || 1;
   }
 }
 
