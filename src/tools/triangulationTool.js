@@ -299,4 +299,15 @@ export default class extends baseTool {
     });
   }
 
+  disabledCallback (element) {
+    const toolData = getToolState(element, this.name);
+    if (toolData && toolData.data[0]) {
+      const syncContext = toolData.data[0].synchronizationContext;
+      const enabledElements = syncContext.getSourceElements();
+      enabledElements.forEach(function (targetElement) { 
+        targetElement.removeEventListener(EVENTS.IMAGE_RENDERED, this.onTriangulationRendered);
+      }.bind(this));
+    }
+  }
+
 }
