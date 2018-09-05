@@ -11,7 +11,7 @@ function onImageRendered (e) {
   // If we have no toolData for this element, return immediately as there is nothing to do
   const toolData = getToolState(e.currentTarget, toolType);
 
-  if (toolData === undefined) {
+  if (toolData === undefined || toolData.data[0] === undefined) {
     return;
   }
 
