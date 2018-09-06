@@ -85,6 +85,37 @@ export default class extends baseAnnotationTool {
     return external.cornerstoneMath.point.distance(probeCoords, coords) < 5;
   }
 
+  getValueStr(element, image, x, y) {
+    let str,
+        storedPixels;
+    const seriesModule = external.cornerstone.metaData.get('generalSeriesModule', image.imageId);
+    let moSuffix = '';
+  
+    if (seriesModule && seriesModule.modality === 'CT') {
+      moSuffix = ' HU';
+    }
+  
+    if (image.color) {
+      storedPixels = getRGBPixels(element, x, y, 1, 1);
+  
+      const config = this.configuration;
+  
+      if (config.valuesmap) {
+        str = config.valuesmap(image.imageId, storedPixels) + moSuffix;
+      } else {
+        str = 'R: ' + storedPixels[0] + ' G: ' + storedPixels[1] + ' B: ' + storedPixels[2];
+      }
+    } else {
+      storedPixels = external.cornerstone.getStoredPixels(element, x, y, 1, 1);
+      let sp = storedPixels[0];
+      let mo = sp * image.slope + image.intercept;
+  
+      str = String(mo) + moSuffix;
+    }
+  
+    return str;
+  }
+
   /**
    *
    *
@@ -115,34 +146,28 @@ export default class extends baseAnnotationTool {
       draw(context, (context) => {
 
         const color = toolColors.getColorIfActive(data);
-
+        const config = this.configuration;
+        const handleRadius = config.handleRadius === undefined? 1.5 : config.handleRadius;
         // Draw the handles
-        drawHandles(context, eventData, data.handles, color);
+        drawHandles(context, eventData, data.handles, color, {handleRadius});
 
         const x = Math.round(data.handles.end.x);
         const y = Math.round(data.handles.end.y);
-        let storedPixels;
 
-        let text,
+        let cache = data.cache,
           str;
 
         if (x >= 0 && y >= 0 && x < image.columns && y < image.rows) {
-          text = `${x}, ${y}`;
 
-          if (image.color) {
-            storedPixels = getRGBPixels(eventData.element, x, y, 1, 1);
-            str = `R: ${storedPixels[0]} G: ${storedPixels[1]} B: ${storedPixels[2]}`;
+          if (cache === undefined || cache.x !== x || cache.y !== y) {
+            str = this.getValueStr(eventData.element, eventData.image, x, y);
+            data.cache = {
+              x: x,
+              y: y,
+              str: str
+            };
           } else {
-            storedPixels = external.cornerstone.getStoredPixels(eventData.element, x, y, 1, 1);
-            const sp = storedPixels[0];
-            const mo = sp * image.slope + image.intercept;
-            const suv = calculateSUV(image, sp);
-
-            // Draw text
-            str = `SP: ${sp} MO: ${parseFloat(mo.toFixed(3))}`;
-            if (suv) {
-              str += ` SUV: ${parseFloat(suv.toFixed(3))}`;
-            }
+            str = cache.str;
           }
 
           // Coords for text
@@ -157,7 +182,6 @@ export default class extends baseAnnotationTool {
           context.fillStyle = color;
 
           drawTextBox(context, str, textCoords.x, textCoords.y + fontHeight + 5, color);
-          drawTextBox(context, text, textCoords.x, textCoords.y, color);
         }
       });
     }
