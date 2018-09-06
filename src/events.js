@@ -39,6 +39,7 @@ const EVENTS = {
   MEASUREMENT_ADDED: 'cornerstonetoolsmeasurementadded',
   MEASUREMENT_MODIFIED: 'cornerstonetoolsmeasurementmodified',
   MEASUREMENT_REMOVED: 'cornerstonemeasurementremoved',
+  MEASUREMENT_FINISHED: 'cornerstonemeasurementfinished',
   TOOL_DEACTIVATED: 'cornerstonetoolstooldeactivated',
   CLIP_STOPPED: 'cornerstonetoolsclipstopped',
   STACK_SCROLL: 'cornerstonestackscroll', // Should be renamed

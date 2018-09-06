@@ -26,6 +26,8 @@ import {
 import drawLinkedTextBox from '../util/drawLinkedTextBox.js';
 import lineSegDistance from '../util/lineSegDistance.js';
 import roundToDecimal from '../util/roundToDecimal.js';
+import EVENTS from '../events.js';
+import triggerEvent from '../util/triggerEvent.js';
 
 export default class extends baseAnnotationTool {
   constructor (name = 'angle') {
@@ -337,6 +339,18 @@ export default class extends baseAnnotationTool {
               // Delete the measurement
               removeToolState(element, this.name, measurementData);
             }
+
+            const eventType = EVENTS.MEASUREMENT_FINISHED;
+
+            measurementData.handles.end.isMoving = false;
+            const endEventData = {
+              toolType: this.name,
+              element: element,
+              measurementData: measurementData
+            };
+      
+            triggerEvent(element, eventType, endEventData);
+
             this.preventNewMeasurement = false;
             external.cornerstone.updateImage(element);
           }

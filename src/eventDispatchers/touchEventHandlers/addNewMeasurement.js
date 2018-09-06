@@ -3,6 +3,7 @@ import external from '../../externalModules.js';
 import { mutations } from '../../store/index.js';
 import moveNewHandleTouch from '../../manipulators/moveNewHandleTouch.js';
 import { addToolState } from '../../stateManagement/toolState.js';
+import triggerEvent from '../../util/triggerEvent.js';
 
 
 export default function (evt, tool) {
@@ -59,6 +60,17 @@ export default function (evt, tool) {
       //     // Delete the measurement
       //     RemoveToolState(element, touchToolInterface.toolType, measurementData);
       //   }
+
+      const eventType = EVENTS.MEASUREMENT_FINISHED;
+
+      measurementData.handles.end.isMoving = false;
+      const endEventData = {
+        toolType: tool.name,
+        element: element,
+        measurementData: measurementData
+      };
+
+      triggerEvent(element, eventType, endEventData);
 
       mutations.SET_IS_TOOL_LOCKED(false);
       external.cornerstone.updateImage(element);

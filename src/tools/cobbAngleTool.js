@@ -27,6 +27,7 @@ import drawLinkedTextBox from '../util/drawLinkedTextBox.js';
 import lineSegDistance from '../util/lineSegDistance.js';
 import roundToDecimal from '../util/roundToDecimal.js';
 import EVENTS from './../events.js';
+import triggerEvent from '../util/triggerEvent.js';
 
 export default class extends baseAnnotationTool {
   constructor(name = 'cobbAngle') {
@@ -288,6 +289,19 @@ export default class extends baseAnnotationTool {
           // Delete the measurement
           removeToolState(element, this.name, measurementData);
         }
+        const eventType = EVENTS.MEASUREMENT_FINISHED;
+
+        toMoveHandle.isMoving = false;
+        if (measurementData.complete) {
+          const endEventData = {
+            toolType: this.name,
+            element: element,
+            measurementData: measurementData
+          };
+    
+          triggerEvent(element, eventType, endEventData);
+        }
+  
         external.cornerstone.updateImage(element);
       }
     );
