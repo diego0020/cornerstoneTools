@@ -298,10 +298,10 @@ export default class extends baseAnnotationTool {
             element: element,
             measurementData: measurementData
           };
-    
+
           triggerEvent(element, eventType, endEventData);
         }
-  
+
         external.cornerstone.updateImage(element);
       }
     );

@@ -96,11 +96,13 @@ export default function (evt) {
 
     console.log('moveableHandle: ', moveableHandle);
 
+    dataWithMoveableHandle.active = true;
+
     toolState.data.active = true;
     touchMoveHandle(
       evt,
       firstToolWithMoveableHandles.name,
-      toolState.data,
+      dataWithMoveableHandle,
       moveableHandle,
       () => {
         console.log('touchMoveHandle: DONE');
