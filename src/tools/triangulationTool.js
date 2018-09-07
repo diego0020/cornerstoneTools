@@ -25,9 +25,15 @@ export default class extends baseTool {
       supportedInteractionTypes: ['mouse', 'touch']
     });
 
+    // Mouse
     this.mouseDownCallback = this._chooseLocation.bind(this);
     this.mouseDragCallback = this._chooseLocation.bind(this);
     this.mouseClickCallback = this._chooseLocation.bind(this);
+
+    // Drag
+    this.touchDragCallback = this._chooseLocation.bind(this);
+    this.postTouchStartCallback = this._chooseLocation.bind(this);
+
     this.onTriangulationRendered = this.onTriangulationRendered.bind(this);
     this.clearMeasurements = this.clearMeasurements.bind(this);
     this.hasCursor = true;
