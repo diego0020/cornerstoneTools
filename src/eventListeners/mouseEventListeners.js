@@ -60,7 +60,7 @@ function mouseDoubleClick (e) {
 
   const lastPoints = copyPoints(startPoints);
 
-  console.log(`double-click: ${getEventButtons(e)}`);
+  // console.log(`double-click: ${getEventButtons(e)}`);
   const eventData = {
     event: e,
     buttons: getEventButtons(e),
@@ -111,7 +111,7 @@ function mouseDown (e) {
 
   let lastPoints = copyPoints(startPoints);
 
-  console.log(`mousedown: ${getEventButtons(e)}`);
+  // console.log(`mousedown: ${getEventButtons(e)}`);
   const eventData = {
     event: e,
     buttons: getEventButtons(e),
@@ -173,7 +173,7 @@ function mouseDown (e) {
       )
     };
 
-    console.log(`mousemove ${getEventButtons(e)}`);
+    // console.log(`mousemove ${getEventButtons(e)}`);
     const eventData = {
       buttons: getEventButtons(e),
       viewport: external.cornerstone.getViewport(element),
@@ -242,7 +242,7 @@ function mouseDown (e) {
       )
     };
 
-    console.log(`mouseup: ${getEventButtons(e)}`);
+    // console.log(`mouseup: ${getEventButtons(e)}`);
     const eventData = {
       event: e,
       buttons: getEventButtons(e),

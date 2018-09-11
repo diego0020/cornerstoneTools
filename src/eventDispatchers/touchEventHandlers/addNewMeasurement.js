@@ -7,7 +7,7 @@ import triggerEvent from '../../util/triggerEvent.js';
 
 
 export default function (evt, tool) {
-  console.log('touch: addNewMeasurement');
+  // console.log('touch: addNewMeasurement');
   //
   evt.preventDefault();
   evt.stopPropagation();
@@ -53,7 +53,7 @@ export default function (evt, tool) {
     measurementData,
     measurementData.handles.end,
     function () {
-      console.log('addNewMeasurement: touchUp');
+      // console.log('addNewMeasurement: touchUp');
       measurementData.active = false;
       measurementData.invalidated = true;
       //   If (anyHandlesOutsideImage(touchEventData, measurementData.handles)) {

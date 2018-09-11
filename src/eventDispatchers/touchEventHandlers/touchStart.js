@@ -14,7 +14,7 @@ import getToolsWithDataForElement from '../../store/getToolsWithDataForElement.j
 
 
 export default function (evt) {
-  console.log('touchStart');
+  // console.log('touchStart');
   if (state.isToolLocked) {
     return;
   }
@@ -69,7 +69,7 @@ export default function (evt) {
     return false;
   });
 
-  console.log('toolsWithMoveableHandles: ', annotationToolsWithMoveableHandles);
+  // console.log('toolsWithMoveableHandles: ', annotationToolsWithMoveableHandles);
 
   // TODO: More than one? Which one was moved most recently?
   // We'll just grab the first one we encounter for now
@@ -94,7 +94,7 @@ export default function (evt) {
       distanceFromHandle
     );
 
-    console.log('moveableHandle: ', moveableHandle);
+    // console.log('moveableHandle: ', moveableHandle);
 
     dataWithMoveableHandle.active = true;
 
@@ -105,7 +105,7 @@ export default function (evt) {
       dataWithMoveableHandle,
       moveableHandle,
       () => {
-        console.log('touchMoveHandle: DONE');
+        // console.log('touchMoveHandle: DONE');
       } // HandleDoneMove
     );
 

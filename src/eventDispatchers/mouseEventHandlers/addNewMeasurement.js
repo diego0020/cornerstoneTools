@@ -47,7 +47,7 @@ export default function (evt, tool) {
     measurementData.handles.end,
     // On mouse up
     function () {
-      console.log('addNewMeasurement: mouseUp');
+      // console.log('addNewMeasurement: mouseUp');
       measurementData.active = false;
       measurementData.invalidated = true;
       //   If (anyHandlesOutsideImage(mouseEventData, measurementData.handles)) {

@@ -17,7 +17,7 @@ export default function (evt) {
   if (state.isToolLocked) {
     return;
   }
-  console.log('tap');
+  // console.log('tap');
 
   let tools;
   const distanceFromHandle = 28;
