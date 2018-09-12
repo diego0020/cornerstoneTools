@@ -74,6 +74,16 @@ function clearRequestStack (type) {
   requestPool[type] = [];
 }
 
+function clearAll() {
+  let p;
+
+  for (p in requestPool) {
+    if (requestPool.hasOwnProperty(p)) {
+      requestPool[p] = [];
+    }
+  }
+}
+
 function startAgain () {
   if (!awake) {
     return;
@@ -212,5 +222,6 @@ export default {
   addRequest,
   clearRequestStack,
   startGrabbing,
-  getRequestPool
+  getRequestPool,
+  clearAll
 };
