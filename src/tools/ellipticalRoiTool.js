@@ -197,7 +197,7 @@ export default class extends baseAnnotationTool {
         drawHandles(context, eventData, data.handles, color, handleOptions);
 
         // Define variables for the area and mean/standard deviation
-        let area, meanStdDev, meanStdDevSUV;
+        let area, meanStdDev, meanStdDevSUV, dicom_info;
 
         // Perform a check to see if the tool has been invalidated. This is to prevent
         // Unnecessary re-calculation of the area, mean, and standard deviation if the
@@ -207,6 +207,7 @@ export default class extends baseAnnotationTool {
           meanStdDev = data.meanStdDev;
           meanStdDevSUV = data.meanStdDevSUV;
           area = data.area;
+          dicom_info = data.dicom_info;
         } else {
           // If the data has been invalidated, we need to calculate it again
 
@@ -266,6 +267,11 @@ export default class extends baseAnnotationTool {
             }
           }
 
+          if (config.valuesmap) {
+            dicom_info = config.valuesmap(image.imageId);
+            data.dicom_info = dicom_info;
+          } 
+
           // Calculate the image area from the ellipse dimensions and pixel spacing
           area =
             Math.PI *
@@ -312,7 +318,7 @@ export default class extends baseAnnotationTool {
     }
 
     function textBoxText (data) {
-      const { meanStdDev, meanStdDevSUV, area } = data;
+      const { meanStdDev, meanStdDevSUV, area, dicom_info } = data;
 
       // Define an array to store the rows of text for the textbox
       const textLines = [];
@@ -365,6 +371,10 @@ export default class extends baseAnnotationTool {
 
         // Add this text line to the array to be displayed in the textbox
         textLines.push(areaText);
+      }
+
+      if (dicom_info) {
+        textLines.push(dicom_info);
       }
 
       return textLines;
