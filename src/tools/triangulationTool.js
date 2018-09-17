@@ -86,36 +86,36 @@ export default class extends baseTool {
 
     // Iterate over each synchronized element
     enabledElements.forEach(function (targetElement, idx) {
-        // Don't do anything if the target is the same as the source
-        if (targetElement === sourceElement) {
+      // Don't do anything if the target is the same as the source
+      if (targetElement === sourceElement) {
         return;
-        }
+      }
 
-        targetElement.addEventListener(EVENTS.IMAGE_RENDERED, this.onTriangulationRendered);
+      targetElement.addEventListener(EVENTS.IMAGE_RENDERED, this.onTriangulationRendered);
 
-        const toolDataTriag = getToolState(targetElement, this.name);
-        if (toolDataTriag && toolDataTriag.data[0]) {
+      const toolDataTriag = getToolState(targetElement, this.name);
+      if (toolDataTriag && toolDataTriag.data[0]) {
         toolDataTriag.data[0].measurementData = '';
-        }
+      }
 
-        let minDistance = Number.MAX_VALUE;
-        let newImageIdIndex = -1;
+      let minDistance = Number.MAX_VALUE;
+      let newImageIdIndex = -1;
 
-        const stackToolDataSource = getToolState(targetElement, 'stack');
+      const stackToolDataSource = getToolState(targetElement, 'stack');
 
-        if (stackToolDataSource === undefined) {
+      if (stackToolDataSource === undefined) {
         return;
-        }
+      }
 
-        const stackData = stackToolDataSource.data[0];
+      const stackData = stackToolDataSource.data[0];
 
-        // Find within the element's stack the closest image plane to selected location
-        stackData.imageIds.forEach(function (imageId, index) {
+      // Find within the element's stack the closest image plane to selected location
+      stackData.imageIds.forEach(function (imageId, index) {
         const imagePlane = external.cornerstone.metaData.get('imagePlaneModule', imageId);
 
         // Skip if the image plane is not ready
         if (!imagePlane || !imagePlane.imagePositionPatient || !imagePlane.rowCosines || !imagePlane.columnCosines) {
-            return;
+          return;
         }
 
         const imagePosition = convertToVector3(imagePlane.imagePositionPatient);
@@ -125,50 +125,50 @@ export default class extends baseTool {
         const distance = Math.abs(normal.clone().dot(imagePosition) - normal.clone().dot(patientPoint));
 
         if (distance < minDistance) {
-            minDistance = distance;
-            newImageIdIndex = index;
+          minDistance = distance;
+          newImageIdIndex = index;
         }
-        });
+      });
 
-        if (newImageIdIndex === stackData.currentImageIdIndex) {
+      if (newImageIdIndex === stackData.currentImageIdIndex) {
         return;
+      }
+
+      // Switch the loaded image to the required image
+      if (newImageIdIndex !== -1 && stackData.imageIds[newImageIdIndex] !== undefined) {
+        const startLoadingHandler = loadHandlerManager.getStartLoadHandler();
+        const endLoadingHandler = loadHandlerManager.getEndLoadHandler();
+        const errorLoadingHandler = loadHandlerManager.getErrorLoadingHandler();
+
+        if (startLoadingHandler) {
+          startLoadingHandler(targetElement);
         }
 
-        // Switch the loaded image to the required image
-        if (newImageIdIndex !== -1 && stackData.imageIds[newImageIdIndex] !== undefined) {
-            const startLoadingHandler = loadHandlerManager.getStartLoadHandler();
-            const endLoadingHandler = loadHandlerManager.getEndLoadHandler();
-            const errorLoadingHandler = loadHandlerManager.getErrorLoadingHandler();
+        let loader;
 
-            if (startLoadingHandler) {
-                startLoadingHandler(targetElement);
-            }
-
-            let loader;
-
-            if (stackData.preventCache === true) {
-                loader = external.cornerstone.loadImage(stackData.imageIds[newImageIdIndex]);
-            } else {
-                loader = external.cornerstone.loadAndCacheImage(stackData.imageIds[newImageIdIndex]);
-            }
-
-            loader.then(function (image) {
-                imageIdsTarget[idx] = image.imageId;
-                const viewport = external.cornerstone.getViewport(targetElement);
-
-                stackData.currentImageIdIndex = newImageIdIndex;
-                external.cornerstone.displayImage(targetElement, image, viewport);
-                if (endLoadingHandler) {
-                endLoadingHandler(targetElement, image);
-                }
-            }, function (error) {
-                const imageId = stackData.imageIds[newImageIdIndex];
-
-                if (errorLoadingHandler) {
-                errorLoadingHandler(targetElement, imageId, error);
-                }
-            });
+        if (stackData.preventCache === true) {
+          loader = external.cornerstone.loadImage(stackData.imageIds[newImageIdIndex]);
+        } else {
+          loader = external.cornerstone.loadAndCacheImage(stackData.imageIds[newImageIdIndex]);
         }
+
+        loader.then(function (image) {
+          imageIdsTarget[idx] = image.imageId;
+          const viewport = external.cornerstone.getViewport(targetElement);
+
+          stackData.currentImageIdIndex = newImageIdIndex;
+          external.cornerstone.displayImage(targetElement, image, viewport);
+          if (endLoadingHandler) {
+            endLoadingHandler(targetElement, image);
+          }
+        }, function (error) {
+          const imageId = stackData.imageIds[newImageIdIndex];
+
+          if (errorLoadingHandler) {
+            errorLoadingHandler(targetElement, imageId, error);
+          }
+        });
+      }
     }.bind(this));
   }
 
@@ -177,7 +177,6 @@ export default class extends baseTool {
   
     if (!goodEventData) {
       console.error('required eventData not supplieed to tool ' + this.name + '\'s createNewMeasurement');
-
       return;
     }
 
