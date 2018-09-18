@@ -69,7 +69,7 @@ export default class extends baseTool {
     const sourceImagePlane = external.cornerstone.metaData.get('imagePlaneModule', sourceImageId);
 
     if (!sourceImagePlane) {
-        return;
+      return;
     }
 
     // Get currentPoints from mouse cursor on selected element
@@ -163,7 +163,6 @@ export default class extends baseTool {
           }
         }, function (error) {
           const imageId = stackData.imageIds[newImageIdIndex];
-
           if (errorLoadingHandler) {
             errorLoadingHandler(targetElement, imageId, error);
           }
@@ -314,5 +313,4 @@ export default class extends baseTool {
       }.bind(this));
     }
   }
-
 }
