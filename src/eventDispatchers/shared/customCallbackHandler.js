@@ -12,6 +12,13 @@ export default function (handlerType, customFunction, evt) {
   const element = evt.detail.element;
 
   tools = getActiveToolsForElement(element, tools);
+
+  if (handlerType === 'touch') {
+    tools = tools.filter(
+      (tool) => tool.options.mouseButtonMask === 1
+    );    
+  }
+
   tools = tools.filter((tool) => typeof tool[customFunction] === 'function');
 
   if (tools.length === 0) {
