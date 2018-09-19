@@ -173,3 +173,4 @@ export { default as touchMoveHandle } from './manipulators/touchMoveHandle.js';
 export { default as version } from './version.js';
 
 export { setToolOptions, getToolOptions } from './toolOptions.js';
+export { default as saveAs } from './saveAs/saveAs.js';
