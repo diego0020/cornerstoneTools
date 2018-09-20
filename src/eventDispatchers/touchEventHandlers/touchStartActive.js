@@ -13,7 +13,7 @@ export default function (evt) {
   let tools = getActiveToolsForElement(element, getters.touchTools());
 
   tools = tools.filter(
-    (tool) => tool.options.mouseButtonMask === 1
+    (tool) => tool.options.touchEnable || tool.options.touchEnable === undefined
   );
 
   if (tools.length === 0) {
