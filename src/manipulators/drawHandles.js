@@ -18,6 +18,10 @@ export default function (context, renderData, handles, color, options) {
       return;
     }
 
+    if (options && options.hideHandlesIfMoved === true && handle.isMoving) {
+      return;
+    }
+
     const lineWidth = handle.active ? toolStyle.getActiveWidth() : toolStyle.getToolWidth();
     const fillStyle = options && options.fill;
 

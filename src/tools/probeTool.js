@@ -82,7 +82,7 @@ export default class extends baseAnnotationTool {
 
     const probeCoords = external.cornerstone.pixelToCanvas(element, data.handles.end);
 
-    return external.cornerstoneMath.point.distance(probeCoords, coords) < 5;
+    return external.cornerstoneMath.point.distanceSquared(probeCoords, coords) < 25;
   }
 
   getValueStr(element, image, x, y) {

@@ -191,7 +191,8 @@ export default class extends baseAnnotationTool {
 
         // Draw the handles
         const handleOptions = {
-          drawHandlesIfActive: config && config.drawHandlesOnHover
+          drawHandlesIfActive: config && config.drawHandlesOnHover,
+          hideHandlesIfMoved: config && config.hideHandlesIfMoved
         };
 
         drawHandles(context, eventData, data.handles, color, handleOptions);

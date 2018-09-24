@@ -78,24 +78,28 @@ export default class extends baseAnnotationTool {
    * @returns
    */
   pointNearTool (element, data, coords) {
-    const hasStartAndEndHandles =
-      data && data.handles && data.handles.start && data.handles.end;
-    const validParameters = hasStartAndEndHandles;
+    // const hasStartAndEndHandles =
+    //   data && data.handles && data.handles.start && data.handles.end;
+    // const validParameters = hasStartAndEndHandles;
 
-    if (!validParameters) {
-      console.warn(
-        `invalid parameters supplieed to tool ${this.name}'s pointNearTool`
-      );
-    }
+    // if (!validParameters) {
+    //   console.warn(
+    //     `invalid parameters supplieed to tool ${this.name}'s pointNearTool`
+    //   );
+    // }
 
-    if (!validParameters || data.visible === false) {
-      return false;
-    }
+    // if (!validParameters || data.visible === false) {
+    //   return false;
+    // }
 
-    return (
-      lineSegDistance(element, data.handles.start, data.handles.end, coords) <
-      25
-    );
+    const dStart = external.cornerstoneMath.point.distanceSquared(external.cornerstone.pixelToCanvas(element, data.handles.start), coords);
+    const dEnd = external.cornerstoneMath.point.distanceSquared(external.cornerstone.pixelToCanvas(element, data.handles.end), coords);
+
+    return dStart < 25 || dEnd < 25;
+    // return (
+    //   lineSegDistance(element, data.handles.start, data.handles.end, coords) <
+    //   25
+    // );
   }
 
   /**
@@ -155,7 +159,8 @@ export default class extends baseAnnotationTool {
 
         // Draw the handles
         const handleOptions = {
-          drawHandlesIfActive: config && config.drawHandlesOnHover
+          drawHandlesIfActive: config && config.drawHandlesOnHover,
+          hideHandlesIfMoved: config && config.hideHandlesIfMoved
         };
 
         drawHandles(context, eventData, data.handles, color, handleOptions);

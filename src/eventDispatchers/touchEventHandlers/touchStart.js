@@ -26,8 +26,7 @@ export default function (evt) {
 
   let tools = getInteractiveToolsForElement(element, getters.touchTools());
   tools = tools.filter(
-    (tool) => {
-      return tool.options.touchEnable || tool.options.touchEnable === undefined}
+    (tool) => tool.options.touchEnable || tool.options.touchEnable === undefined
   );
   const activeTools = tools.filter((tool) => tool.mode === 'active');
 
