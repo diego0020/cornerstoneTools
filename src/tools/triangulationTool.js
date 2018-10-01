@@ -1,8 +1,8 @@
 /* eslint no-loop-func: 0 */ // --> OFF
 /* eslint no-underscore-dangle: 0 */
-import baseTool from './../base/baseTool.js';
+import BaseTool from './../base/BaseTool.js';
 import external from './../externalModules.js';
-import EVENTS from './../events.js';
+import EVENTS from '../events.js';
 
 import loadHandlerManager from '../stateManagement/loadHandlerManager.js';
 import { addToolState, getToolState, clearToolState } from '../stateManagement/toolState.js';
@@ -17,9 +17,9 @@ var sourceEl = '';
 var patientPoint = {x: 0, y: 0};
 var imageIdsTarget = [];
 
-export default class extends baseTool {
+export default class TriangulationTool extends BaseTool {
 
-  constructor (name = 'triangulation') {
+  constructor (name = 'Triangulation') {
     super({
       name,
       supportedInteractionTypes: ['mouse', 'touch']

@@ -1,10 +1,9 @@
 import EVENTS from '../../events.js';
 import external from '../../externalModules.js';
-import { mutations } from '../../store/index.js';
+import { state } from '../../store/index.js';
 import moveNewHandleTouch from '../../manipulators/moveNewHandleTouch.js';
 import { addToolState } from '../../stateManagement/toolState.js';
 import triggerEvent from '../../util/triggerEvent.js';
-
 
 export default function (evt, tool) {
   // console.log('touch: addNewMeasurement');
@@ -44,7 +43,7 @@ export default function (evt, tool) {
     return;
   }
 
-  mutations.SET_IS_TOOL_LOCKED(true);
+  state.isToolLocked = true;
   external.cornerstone.updateImage(element);
 
   moveNewHandleTouch(
@@ -72,7 +71,7 @@ export default function (evt, tool) {
 
       triggerEvent(element, eventType, endEventData);
 
-      mutations.SET_IS_TOOL_LOCKED(false);
+      state.isToolLocked = false;
       external.cornerstone.updateImage(element);
     }
   );
