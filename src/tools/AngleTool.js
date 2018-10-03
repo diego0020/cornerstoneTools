@@ -33,7 +33,7 @@ export default class AngleTool extends BaseAnnotationTool {
   constructor (name = 'Angle') {
     super({
       name,
-      supportedInteractionTypes: ['mouse', 'touch']
+      supportedInteractionTypes: ['Mouse', 'Touch']
     });
 
     this.preventNewMeasurement = false;
@@ -300,7 +300,7 @@ export default class AngleTool extends BaseAnnotationTool {
     // MoveHandle, moveNewHandle, moveHandleTouch, and moveNewHandleTouch
     // All take the same parameters, but register events differentlIy.
     const handleMover =
-      interactionType === 'mouse' ? moveNewHandle : moveNewHandleTouch;
+      interactionType === 'Mouse' ? moveNewHandle : moveNewHandleTouch;
 
     // Associate this data with this imageId so we can render it and manipulate it
     addToolState(element, this.name, measurementData);
