@@ -22,7 +22,7 @@ export default class TriangulationTool extends BaseTool {
   constructor (name = 'Triangulation') {
     super({
       name,
-      supportedInteractionTypes: ['mouse', 'touch']
+      supportedInteractionTypes: ['Mouse', 'Touch']
     });
 
     // Mouse
