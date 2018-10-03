@@ -1,7 +1,7 @@
 /* eslint no-loop-func: 0 */ // --> OFF
 /* eslint no-underscore-dangle: 0 */
-import BaseTool from './../base/BaseTool.js';
-import external from './../externalModules.js';
+import BaseTool from '../base/BaseTool.js';
+import external from '../externalModules.js';
 import EVENTS from '../events.js';
 
 import loadHandlerManager from '../stateManagement/loadHandlerManager.js';
