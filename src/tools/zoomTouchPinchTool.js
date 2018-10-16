@@ -7,7 +7,7 @@ export default class extends baseTool {
     super({
       name,
       // TODO: Do we need a better way to specify touchPinch?
-      supportedInteractionTypes: ['touch'],
+      supportedInteractionTypes: ['touchPinch'],
       configuration: {
         minScale: 0.25,
         maxScale: 20.0

@@ -7,7 +7,7 @@ export default class extends baseTool {
     super({
       name,
       // TODO: Do we need a better way to specify mouseWheel?
-      supportedInteractionTypes: ['mouse'],
+      supportedInteractionTypes: ['mouseWheel'],
       configuration: {
         minScale: 0.25,
         maxScale: 20.0

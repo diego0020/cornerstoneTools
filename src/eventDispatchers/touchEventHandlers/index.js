@@ -5,7 +5,7 @@ import touchStartActive from './touchStartActive.js';
 
 const doubleTap = customCallbackHandler.bind(
   null,
-  'touch',
+  'doubleTap',
   'doubleTapCallback'
 );
 // TODO: some touchDrag tools don't want to fire on touchStart
@@ -19,7 +19,7 @@ const touchDrag = customCallbackHandler.bind(
 const touchEnd = customCallbackHandler.bind(null, 'touch', 'touchEndCallback');
 const touchPinch = customCallbackHandler.bind(
   null,
-  'touch',
+  'touchPinch',
   'touchPinchCallback'
 );
 const touchPress = customCallbackHandler.bind(
@@ -29,7 +29,7 @@ const touchPress = customCallbackHandler.bind(
 );
 const multiTouchDrag = customCallbackHandler.bind(
   null,
-  'touch',
+  'multiTouch',
   'multiTouchDragCallback'
 );
 

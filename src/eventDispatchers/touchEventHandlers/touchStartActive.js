@@ -12,9 +12,7 @@ export default function (evt) {
   const element = evt.detail.element;
   let tools = getActiveToolsForElement(element, getters.touchTools());
 
-  tools = tools.filter(
-    (tool) => tool.options.touchEnable || tool.options.touchEnable === undefined
-  );
+  tools = tools.filter((tool) => tool.options.isTouchActive);
 
   if (tools.length === 0) {
     return;
