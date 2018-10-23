@@ -123,6 +123,10 @@ export default function (event, toolType, data, handle, doneMovingCallback) {
       element.removeEventListener(eventType, touchEndCallback);
     });
 
+    if (data.invalidated !== undefined) {
+      data.invalidated = true;
+    }
+
     external.cornerstone.updateImage(element);
 
     if (e.type === EVENTS.TOUCH_PRESS) {
