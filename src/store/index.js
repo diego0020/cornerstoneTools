@@ -1,5 +1,3 @@
-import brush from './brushStore.js';
-
 export const state = {
   isToolLocked: false,
   tools: [],
@@ -36,9 +34,6 @@ export const mutations = {
 };
 
 export default {
-  modules: {
-    brush
-  },
   state,
   getters,
   mutations
