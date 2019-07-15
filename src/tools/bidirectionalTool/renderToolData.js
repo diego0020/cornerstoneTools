@@ -1,18 +1,18 @@
 /* eslint no-loop-func: 0 */ // --> OFF
-import drawHandles from './../../../drawing/drawHandles.js';
+import drawHandles from './../../manipulators/drawHandles.js';
 import updatePerpendicularLineHandles from './utils/updatePerpendicularLineHandles.js';
 
-import toolStyle from './../../../stateManagement/toolStyle.js';
-import toolColors from './../../../stateManagement/toolColors.js';
-import { getToolState } from './../../../stateManagement/toolState.js';
+import toolStyle from './../../stateManagement/toolStyle.js';
+import toolColors from './../../stateManagement/toolColors.js';
+import { getToolState } from './../../stateManagement/toolState.js';
 import {
   getNewContext,
   draw,
   setShadow,
   drawLine,
-} from './../../../drawing/index.js';
-import drawLinkedTextBox from './../../../drawing/drawLinkedTextBox.js';
-import getPixelSpacing from '../../../util/getPixelSpacing';
+} from './../../util/drawing.js';;
+import drawLinkedTextBox from './../../util/drawLinkedTextBox.js';
+import getPixelSpacing from './../../util/getPixelSpacing';
 
 export default function(evt) {
   const eventData = evt.detail;

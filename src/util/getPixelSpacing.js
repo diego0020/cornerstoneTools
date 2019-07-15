@@ -1,4 +1,4 @@
-import external from '../externalModules';
+import external from './../externalModules';
 
 export default function getPixelSpacing(image) {
   const imagePlane = external.cornerstone.metaData.get(

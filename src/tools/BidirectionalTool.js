@@ -5,10 +5,9 @@ import pointNearTool from './bidirectionalTool/pointNearTool.js';
 import renderToolData from './bidirectionalTool/renderToolData.js';
 import addNewMeasurement from './bidirectionalTool/addNewMeasurement.js';
 import _moveCallback from './bidirectionalTool/mouseMoveCallback.js';
-import handleSelectedCallback from './bidirectionalTool/handleSelectedCallback.js';
-import handleSelectedMouseCallback from './bidirectionalTool/handleSelectedMouseCallback.js';
-import handleSelectedTouchCallback from './bidirectionalTool/handleSelectedTouchCallback.js';
-import { bidirectionalCursor } from '../cursors/index.js';
+// import handleSelectedCallback from './bidirectionalTool/handleSelectedCallback.js';
+// import handleSelectedMouseCallback from './bidirectionalTool/handleSelectedMouseCallback.js';
+// import handleSelectedTouchCallback from './bidirectionalTool/handleSelectedTouchCallback.js';
 import throttle from '../../util/throttle';
 import getPixelSpacing from '../../util/getPixelSpacing';
 import calculateLongestAndShortestDiameters from './bidirectionalTool/utils/calculateLongestAndShortestDiameters';
@@ -29,7 +28,6 @@ export default class BidirectionalTool extends baseAnnotationTool {
         drawHandlesOnHover: true,
         additionalData: [],
       },
-      svgCursor: bidirectionalCursor,
     };
 
     super(props, defaultProps);
@@ -42,9 +40,9 @@ export default class BidirectionalTool extends baseAnnotationTool {
     this.addNewMeasurement = addNewMeasurement.bind(this);
     this._moveCallback = _moveCallback.bind(this);
 
-    this.handleSelectedCallback = handleSelectedCallback.bind(this);
-    this.handleSelectedMouseCallback = handleSelectedMouseCallback.bind(this);
-    this.handleSelectedTouchCallback = handleSelectedTouchCallback.bind(this);
+    // this.handleSelectedCallback = handleSelectedCallback.bind(this);
+    // this.handleSelectedMouseCallback = handleSelectedMouseCallback.bind(this);
+    // this.handleSelectedTouchCallback = handleSelectedTouchCallback.bind(this);
   }
 
   updateCachedStats(image, element, data) {

@@ -1,14 +1,15 @@
-import external from './../../../externalModules.js';
-import EVENTS from './../../../events.js';
-import { moveNewHandle } from './../../../manipulators/index.js';
-import anyHandlesOutsideImage from './../../../manipulators/anyHandlesOutsideImage.js';
+import external from './../../externalModules.js';
+import EVENTS from './../../events.js';
+import moveNewHandle from './../../manipulators/moveNewHandle.js';
+// import { moveNewHandle } from './../../../manipulators/index.js';
+import anyHandlesOutsideImage from './../../manipulators/anyHandlesOutsideImage.js';
 import {
   addToolState,
   removeToolState,
-} from './../../../stateManagement/toolState.js';
-import triggerEvent from '../../../util/triggerEvent.js';
-import getActiveTool from '../../../util/getActiveTool';
-import baseAnnotationTool from '../../base/baseAnnotationTool';
+} from './../../stateManagement/toolState.js';
+import triggerEvent from './../../util/triggerEvent.js';
+import getActiveTool from './../../util/getActiveTool';
+import baseAnnotationTool from './../../base/baseAnnotationTool';
 
 export default function(evt, interactionType) {
   const eventData = evt.detail;

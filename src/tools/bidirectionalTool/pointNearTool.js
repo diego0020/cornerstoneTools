@@ -1,6 +1,6 @@
-import { state } from '../../../store/index.js';
-import external from './../../../externalModules.js';
-import pointInsideBoundingBox from './../../../util/pointInsideBoundingBox.js';
+import { state } from './../../store/index.js';
+import external from './../../externalModules.js';
+import pointInsideBoundingBox from './../../util/pointInsideBoundingBox.js';
 
 const pointNearPerpendicular = (
   element,
