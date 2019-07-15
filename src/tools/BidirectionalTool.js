@@ -8,8 +8,8 @@ import _moveCallback from './bidirectionalTool/mouseMoveCallback.js';
 // import handleSelectedCallback from './bidirectionalTool/handleSelectedCallback.js';
 // import handleSelectedMouseCallback from './bidirectionalTool/handleSelectedMouseCallback.js';
 // import handleSelectedTouchCallback from './bidirectionalTool/handleSelectedTouchCallback.js';
-import throttle from '../../util/throttle';
-import getPixelSpacing from '../../util/getPixelSpacing';
+import throttle from './../util/throttle';
+import getPixelSpacing from './../util/getPixelSpacing';
 import calculateLongestAndShortestDiameters from './bidirectionalTool/utils/calculateLongestAndShortestDiameters';
 
 const emptyLocationCallback = (measurementData, eventData, doneCallback) =>
