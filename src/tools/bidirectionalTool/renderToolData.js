@@ -10,7 +10,7 @@ import {
   draw,
   setShadow,
   drawLine,
-} from './../../util/drawing.js';;
+} from './../../util/drawing.js';
 import drawLinkedTextBox from './../../util/drawLinkedTextBox.js';
 import getPixelSpacing from './../../util/getPixelSpacing';
 
