@@ -1,4 +1,4 @@
-import BaseAnnotationTool from '../tools/base/BaseAnnotationTool.js';
+import baseAnnotationTool from './../base/baseAnnotationTool.js';
 /**
  * Filters an array of tools, returning only tools which are active or passive.
  * @export
