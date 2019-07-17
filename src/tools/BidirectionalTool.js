@@ -12,24 +12,26 @@ import throttle from './../util/throttle';
 import getPixelSpacing from './../util/getPixelSpacing';
 import calculateLongestAndShortestDiameters from './bidirectionalTool/utils/calculateLongestAndShortestDiameters';
 
-// const emptyLocationCallback = (measurementData, eventData, doneCallback) =>
-//   doneCallback();
+const emptyLocationCallback = (measurementData, eventData, doneCallback) =>
+  doneCallback();
 
 export default class extends baseAnnotationTool {
   constructor(name = 'Bidirectional') {
     const defaultProps = {
       name,
-      supportedInteractionTypes: ['mouse']
+      supportedInteractionTypes: ['mouse'], 
+      configuration: {
+        changeMeasurementLocationCallback: emptyLocationCallback,
+        getMeasurementLocationCallback: emptyLocationCallback,
+        textBox: '',
+        shadow: '',
+        drawHandlesOnHover: true,
+        additionalData: [],
+      },
+
     };
 
-    // configuration: {
-    //   changeMeasurementLocationCallback: emptyLocationCallback,
-    //   getMeasurementLocationCallback: emptyLocationCallback,
-    //   textBox: '',
-    //   shadow: '',
-    //   drawHandlesOnHover: true,
-    //   additionalData: [],
-    // },
+    
 
     super(defaultProps);
 
