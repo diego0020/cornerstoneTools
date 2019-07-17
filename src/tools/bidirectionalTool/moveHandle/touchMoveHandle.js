@@ -1,9 +1,9 @@
-import external from './../../../../externalModules.js';
-import { state } from '../../../../store/index.js';
-import EVENTS from './../../../../events.js';
+import external from './../../../externalModules.js';
+import { state } from './../../../store/index.js';
+import EVENTS from './../../../events.js';
 import setHandlesPosition from './setHandlesPosition.js';
-import getActiveTool from '../../../../util/getActiveTool';
-import baseAnnotationTool from '../base/baseAnnotationTool.js';
+import getActiveTool from './../../../util/getActiveTool';
+import baseAnnotationTool from './../../../base/baseAnnotationTool.js';
 
 const touchEndEvents = [
   EVENTS.TOUCH_END,

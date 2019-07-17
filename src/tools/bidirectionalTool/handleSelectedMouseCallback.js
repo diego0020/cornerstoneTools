@@ -1,17 +1,17 @@
 /* jshint -W083 */
-import external from './../../../externalModules.js';
-import { state } from '../../../store/index.js';
-import EVENTS from './../../../events.js';
+import external from './../../externalModules.js';
+import { state } from './../../store/index.js';
+import EVENTS from './../../events.js';
 import {
   removeToolState,
   getToolState,
-} from './../../../stateManagement/toolState.js';
-import anyHandlesOutsideImage from './../../../manipulators/anyHandlesOutsideImage.js';
-import getHandleNearImagePoint from './../../../manipulators/getHandleNearImagePoint.js';
-import { moveAllHandles } from './../../../manipulators/index.js';
+} from './../../stateManagement/toolState.js';
+import anyHandlesOutsideImage from './../../manipulators/anyHandlesOutsideImage.js';
+import getHandleNearImagePoint from './../../manipulators/getHandleNearImagePoint.js';
+import { moveAllHandles } from './../../manipulators/index.js';
 import moveHandle from './moveHandle/moveHandle.js';
 import invertHandles from './invertHandles.js';
-import { setToolCursor, hideToolCursor } from '../../../store/setToolCursor.js';
+// import { setToolCursor, hideToolCursor } from './../../store/setToolCursor.js';
 
 export default function(evt) {
   const eventData = evt.detail;
@@ -34,7 +34,7 @@ export default function(evt) {
       handle.selected = true;
     }
 
-    setToolCursor(this.element, this.svgCursor);
+    // setToolCursor(this.element, this.svgCursor);
 
     external.cornerstone.updateImage(element);
     element.addEventListener(EVENTS.MOUSE_MOVE, this._moveCallback);
@@ -69,9 +69,9 @@ export default function(evt) {
       /* Hide the cursor to improve precision while resizing the line or set to move
          if dragging text box
       */
-      if (!handle.hasBoundingBox) {
-        hideToolCursor(this.element);
-      }
+      // if (!handle.hasBoundingBox) {
+      //   hideToolCursor(this.element);
+      // }
 
       moveHandle(eventData, this.name, data, handle, () =>
         handleDoneMove(handle)
