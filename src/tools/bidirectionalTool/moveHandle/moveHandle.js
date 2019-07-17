@@ -80,7 +80,7 @@ export default function(
 
   // Bind the event listener for image rendering
   element.addEventListener(
-    external.cornerstone.EVENTS.IMAGE_RENDERED,
+    EVENTS.IMAGE_RENDERED,
     imageRenderedHandler
   );
 
@@ -89,7 +89,7 @@ export default function(
     state.isToolLocked = false;
 
     element.removeEventListener(
-      external.cornerstone.EVENTS.IMAGE_RENDERED,
+      EVENTS.IMAGE_RENDERED,
       imageRenderedHandler
     );
 
