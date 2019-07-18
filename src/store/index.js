@@ -36,9 +36,9 @@ export const mutations = {
 };
 
 export default {
-  modules: {
-    brush
-  },
+  modules: { 
+    brush 
+  }, 
   state,
   getters,
   mutations

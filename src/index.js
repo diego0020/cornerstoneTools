@@ -7,6 +7,7 @@ export { default as init } from './init.js';
 export { default as arrowAnnotateTool } from './tools/arrowAnnotateTool.js';
 export { default as angleTool } from './tools/angleTool.js';
 export { default as cobbAngleTool } from './tools/cobbAngleTool.js';
+export { default as BidirectionalTool } from './tools/BidirectionalTool.js';
 export { default as ellipticalRoiTool } from './tools/ellipticalRoiTool.js';
 export { default as eraserTool } from './tools/eraserTool.js';
 export { default as freehandMouseTool } from './tools/freehandMouseTool.js';
@@ -34,6 +35,7 @@ export { default as crosshairsTool } from './tools/crosshairsTool.js';
 export { default as triangulationTool } from './tools/triangulationTool.js';
 // export { default as brushTool } from './tools/brushTool.js';
 // export { default as brushEraserTool } from './tools/brushEraserTool.js';
+export { default as insallSalvatiTool } from './tools/insallSalvatiTool.js';
 
 // END V3 EXPORTS
 
