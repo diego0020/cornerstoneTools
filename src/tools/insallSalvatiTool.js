@@ -246,7 +246,7 @@ export default class extends baseAnnotationTool {
       // Define an array to store the rows of text for the textbox
       const textLines = [];
       if (ratio) {
-        textLines.push(`ratio A/B: ${ratio}`);
+        textLines.push(`ratio B/A: ${ratio}`);
       }
       if (lengthA) {
         textLines.push(`length A: ${lengthA} ${suffix}`);
