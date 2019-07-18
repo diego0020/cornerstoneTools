@@ -246,7 +246,7 @@ export default class extends baseAnnotationTool {
       // Define an array to store the rows of text for the textbox
       const textLines = [];
       if (ratio) {
-        textLines.push(`ratio: ${ratio}`);
+        textLines.push(`ratio A/B: ${ratio}`);
       }
       if (lengthA) {
         textLines.push(`length A: ${lengthA} ${suffix}`);
@@ -423,14 +423,14 @@ export default class extends baseAnnotationTool {
     // Store the length inside the tool for outside access
 
     if (length1 && !Number.isNaN(length1)) {
-      data.lengthA = roundToDecimal(length1,3);
+      data.lengthA = roundToDecimal(length1,2);
     }
     if (length2 && !Number.isNaN(length2) ) {
-      data.lengthB = roundToDecimal(length2,3);
+      data.lengthB = roundToDecimal(length2,2);
     }
     if (length1 && length2) {
       if (length2 !== 0) {
-        data.ratio = roundToDecimal(length1 / length2, 4);
+        data.ratio = roundToDecimal(length2 / length1, 4);
       }
     }
 
