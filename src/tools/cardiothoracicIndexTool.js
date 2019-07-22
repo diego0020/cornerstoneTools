@@ -1,22 +1,21 @@
 import baseAnnotationTool from '../base/baseAnnotationTool.js';
 
-import createNewMeasurement from './bidirectionalTool/createNewMeasurement.js';
-import pointNearTool from './bidirectionalTool/pointNearTool.js';
-import renderToolData from './bidirectionalTool/renderToolData.js';
-import addNewMeasurement from './bidirectionalTool/addNewMeasurement.js';
-import _moveCallback from './bidirectionalTool/mouseMoveCallback.js';
-import handleSelectedCallback from './bidirectionalTool/handleSelectedCallback.js';
-import handleSelectedMouseCallback from './bidirectionalTool/handleSelectedMouseCallback.js';
-// import handleSelectedTouchCallback from './bidirectionalTool/handleSelectedTouchCallback.js';
+import createNewMeasurement from './cardiothoracicIndexTool/createNewMeasurement.js';
+import pointNearTool from './cardiothoracicIndexTool/pointNearTool.js';
+import renderToolData from './cardiothoracicIndexTool/renderToolData.js';
+import addNewMeasurement from './cardiothoracicIndexTool/addNewMeasurement.js';
+import _moveCallback from './cardiothoracicIndexTool/mouseMoveCallback.js';
+import handleSelectedCallback from './cardiothoracicIndexTool/handleSelectedCallback.js';
+import handleSelectedMouseCallback from './cardiothoracicIndexTool/handleSelectedMouseCallback.js';
 import throttle from './../util/throttle';
 import getPixelSpacing from './../util/getPixelSpacing';
-import calculateLongestAndShortestDiameters from './bidirectionalTool/utils/calculateLongestAndShortestDiameters';
+import calculateLongestAndShortestDiameters from './cardiothoracicIndexTool/utils/calculateLongestAndShortestDiameters';
 
 const emptyLocationCallback = (measurementData, eventData, doneCallback) =>
   doneCallback();
 
 export default class extends baseAnnotationTool {
-  constructor(name = 'Bidirectional') {
+  constructor(name = 'cardiothoracicIndex') {
     const defaultProps = {
       name,
       supportedInteractionTypes: ['mouse'], 
@@ -40,7 +39,6 @@ export default class extends baseAnnotationTool {
     this.renderToolData = renderToolData.bind(this);
     this.addNewMeasurement = addNewMeasurement.bind(this);
     this._moveCallback = _moveCallback.bind(this);
-
     this.handleSelectedCallback = handleSelectedCallback.bind(this);
     this.handleSelectedMouseCallback = handleSelectedMouseCallback.bind(this);
     // this.handleSelectedTouchCallback = handleSelectedTouchCallback.bind(this);
