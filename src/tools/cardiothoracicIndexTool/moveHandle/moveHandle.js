@@ -24,13 +24,10 @@ export default function(
 
     handle.hasMoved = true;
 
-    console.log( 'xxxxxxxxxxxxxxxxxxxxxx drag callback ', handle);
     if (handle.index === undefined || handle.index === null) {
-      console.log( 'xxxxxxxxxxxxxxxxxxxxxx null index ');
       handle.x = eventData.currentPoints.image.x + distanceFromTool.x;
       handle.y = eventData.currentPoints.image.y + distanceFromTool.y;
     } else {
-      console.log( 'xxxxxxxxxxxxxxxxxxxxxx set handles position call: ', handle);
       setHandlesPosition(handle, eventData, data, distanceFromTool);
     }
 

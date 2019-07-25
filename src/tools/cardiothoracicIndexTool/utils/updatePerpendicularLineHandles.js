@@ -4,10 +4,9 @@ export default function(eventData, data) {
     return;
   }
 
-  console.log( 'xxxxxxxxxxxxxxxxxxxxxxxxxx update perpendicular handles! ');
-
   let startX, startY, endX, endY;
   let leftStartX, leftStartY, leftEndX, leftEndY;
+  let rightStartX, rightStartY, rightEndX, rightEndY;
 
   const { start, end } = data.handles;
 
@@ -20,6 +19,10 @@ export default function(eventData, data) {
     leftStartY = start.y;
     leftEndX = end.x;
     leftEndY = end.y;
+    rightStartX = start.x;
+    rightStartY = start.y;
+    rightEndX = end.x;
+    rightEndY = end.y;
   } else {
     // Mid point of long-axis line
     const mid = {
@@ -45,6 +48,11 @@ export default function(eventData, data) {
     leftStartY = mid.y - (perpendicularLineLength / 2) * vectorX;
     leftEndX = mid.x;
     leftEndY = mid.y;
+
+    rightStartX = mid.x - (perpendicularLineLength / 2) * vectorY;
+    rightStartY = mid.y + (perpendicularLineLength / 2) * vectorX;
+    rightEndX = mid.x;
+    rightEndY = mid.y;
   }
 
   // main perpendicular line
@@ -58,4 +66,10 @@ export default function(eventData, data) {
   data.handles.leftStart.y = leftStartY;
   data.handles.leftEnd.x = leftEndX;
   data.handles.leftEnd.y = leftEndY;
+
+  // left perpendicular
+  data.handles.rightStart.x = rightStartX;
+  data.handles.rightStart.y = rightStartY;
+  data.handles.rightEnd.x = rightEndX;
+  data.handles.rightEnd.y = rightEndY;
 }

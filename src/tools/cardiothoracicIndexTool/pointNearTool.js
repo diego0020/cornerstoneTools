@@ -44,6 +44,27 @@ const pointNearLeft = (
   return distanceToPoint < distanceThreshold;
 };
 
+const pointNearRight = (
+  element,
+  handles,
+  coords,
+  distanceThreshold
+) => {
+  const cornerstone = external.cornerstone;
+  const cornerstoneMath = external.cornerstoneMath;
+  const lineSegment = {
+    start: cornerstone.pixelToCanvas(element, handles.rightStart),
+    end: cornerstone.pixelToCanvas(element, handles.rightEnd),
+  };
+
+  const distanceToPoint = cornerstoneMath.lineSegment.distanceToPoint(
+    lineSegment,
+    coords
+  );
+
+  return distanceToPoint < distanceThreshold;
+};
+
 export default function(element, data, coords, interactionType = 'mouse') {
   const cornerstone = external.cornerstone;
   const cornerstoneMath = external.cornerstoneMath;
@@ -70,6 +91,10 @@ export default function(element, data, coords, interactionType = 'mouse') {
   }
 
   if (pointNearLeft(element, handles, coords, distanceThreshold)) {
+    return true;
+  }
+
+  if (pointNearRight(element, handles, coords, distanceThreshold)) {
     return true;
   }
 

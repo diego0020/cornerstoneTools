@@ -69,6 +69,8 @@ export default function(evt) {
         perpendicularEnd,
         leftStart,
         leftEnd,
+        rightStart,
+        rightEnd,
         textBox,
       } = data.handles;
 
@@ -90,15 +92,22 @@ export default function(evt) {
         strokeWidth,
       });
 
+      // Draw right line
+      drawLine(context, element, rightStart, rightEnd, {
+        color,
+        strokeWidth,
+      });
+
       // Draw the handles
       const handleOptions = {
-        color,
+        // color,
         handleRadius,
         drawHandlesIfActive: drawHandlesOnHover,
+        hideHandlesIfMoved: true
       };
 
       // Draw the handles
-      drawHandles(context, eventData, data.handles, handleOptions);
+      drawHandles(context, eventData, data.handles, color, handleOptions);
 
       // Draw the textbox
       // Move the textbox slightly to the right and upwards

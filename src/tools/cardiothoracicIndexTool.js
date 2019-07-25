@@ -41,7 +41,7 @@ export default class extends baseAnnotationTool {
     this._moveCallback = _moveCallback.bind(this);
     this.handleSelectedCallback = handleSelectedCallback.bind(this);
     this.handleSelectedMouseCallback = handleSelectedMouseCallback.bind(this);
-    // this.handleSelectedTouchCallback = handleSelectedTouchCallback.bind(this);
+    //this.handleSelectedTouchCallback = handleSelectedTouchCallback.bind(this);
   }
 
   updateCachedStats(image, element, data) {

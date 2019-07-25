@@ -27,6 +27,18 @@ export default function(movedPoint, data) {
   }
 
   const length = distance(start, end);
+  if (length === 0) {
+    return false;
+  }
+
+  const cross = new external.cornerstoneMath.Vector3();
+  const vecA = { x:end.x-start.x, y:end.y-start.y, z:0 };
+  const vecB = { x:movedPoint.x-start.x, y:movedPoint.y-start.y, z:0 };
+  cross.crossVectors(vecA,vecB);
+  if(cross.z >= 0) {
+    return false;
+  }
+ 
   const dx = (start.x - end.x) / length;
   const dy = (start.y - end.y) / length;
 
@@ -45,56 +57,6 @@ export default function(movedPoint, data) {
   perpendicularStart.y = perpendicularEnd.y - total * dx;
   perpendicularEnd.locked = false;
   perpendicularStart.locked = false;
-
-  /*
-  perpendicularStart.x = movedPoint.x + total * dy;
-  perpendicularStart.y = movedPoint.y - total * dx;
-  perpendicularEnd.x = movedPoint.x;
-  perpendicularEnd.y = movedPoint.y;
-  perpendicularEnd.locked = false;
-  perpendicularStart.locked = false;
-
-  const longLine = {
-    start: {
-      x: start.x,
-      y: start.y,
-    },
-    end: {
-      x: end.x,
-      y: end.y,
-    },
-  };
-
-  const perpendicularLine = {
-    start: {
-      x: perpendicularStart.x,
-      y: perpendicularStart.y,
-    },
-    end: {
-      x: perpendicularEnd.x,
-      y: perpendicularEnd.y,
-    },
-  };
-
-  const intersection = external.cornerstoneMath.lineSegment.intersectLine(
-    longLine,
-    perpendicularLine
-  );
-
-  if (!intersection) {
-    if (distance(movedPoint, start) > distance(movedPoint, end)) {
-      perpendicularEnd.x = adjustedLineP2.x - distanceFromMoved * dy;
-      perpendicularEnd.y = adjustedLineP2.y + distanceFromMoved * dx;
-      perpendicularStart.x = perpendicularEnd.x + total * dy;
-      perpendicularStart.y = perpendicularEnd.y - total * dx;
-    } else {
-      perpendicularEnd.x = adjustedLineP1.x - distanceFromMoved * dy;
-      perpendicularEnd.y = adjustedLineP1.y + distanceFromMoved * dx;
-      perpendicularStart.x = perpendicularEnd.x + total * dy;
-      perpendicularStart.y = perpendicularEnd.y - total * dx;
-    }
-  }
-  */
 
   return true;
 }
