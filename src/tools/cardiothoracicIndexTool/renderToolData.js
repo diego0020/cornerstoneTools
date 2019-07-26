@@ -1,4 +1,5 @@
 /* eslint no-loop-func: 0 */ // --> OFF
+import external from './../../externalModules.js';
 import drawHandles from './../../manipulators/drawHandles.js';
 import updatePerpendicularLineHandles from './utils/updatePerpendicularLineHandles.js';
 
@@ -13,6 +14,7 @@ import {
 } from './../../util/drawing.js';
 import drawLinkedTextBox from './../../util/drawLinkedTextBox.js';
 import getPixelSpacing from './../../util/getPixelSpacing';
+import roundToDecimal from '../../util/roundToDecimal.js';
 
 export default function(evt) {
   const eventData = evt.detail;
@@ -144,14 +146,23 @@ const getTextBoxText = (data, rowPixelSpacing, colPixelSpacing) => {
     suffix = ' pixels';
   }
 
-  const lengthText = ` L ${data.longestDiameter}${suffix}`;
-  const widthText = ` W ${data.shortestDiameter}${suffix}`;
+  const { distance } = external.cornerstoneMath.point;  
+  let a = distance( data.handles.leftStart, data.handles.leftEnd );
+  let b = distance( data.handles.rightStart, data.handles.rightEnd );
+  let c = distance( data.handles.perpendicularStart, data.handles.perpendicularEnd );
+  a = roundToDecimal(a, 3);
+  b = roundToDecimal(b, 3);
+  c = roundToDecimal(c, 3);
 
-  const { labels } = data;
-
-  if (labels && Array.isArray(labels)) {
-    return [...labels, lengthText, widthText];
+  let indexText = '';
+  if ( c !== 0 ) {
+    const ratio = roundToDecimal((a + b)*100.0/c,2);
+    indexText = ` index: ${ratio}`;
   }
 
-  return [lengthText, widthText];
+  const aText = ` A: ${a}${suffix}`;
+  const bText = ` B: ${b}${suffix}`;
+  const cText = ` C: ${c}${suffix}`;
+
+  return [aText, bText, cText, indexText];
 };

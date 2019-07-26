@@ -40,7 +40,6 @@ export default class extends baseAnnotationTool {
     this.renderToolData = renderToolData.bind(this);
     this.addNewMeasurement = addNewMeasurement.bind(this);
     this._moveCallback = _moveCallback.bind(this);
-
     this.handleSelectedCallback = handleSelectedCallback.bind(this);
     this.handleSelectedMouseCallback = handleSelectedMouseCallback.bind(this);
     // this.handleSelectedTouchCallback = handleSelectedTouchCallback.bind(this);

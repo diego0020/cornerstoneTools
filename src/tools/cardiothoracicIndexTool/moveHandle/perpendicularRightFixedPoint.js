@@ -28,10 +28,10 @@ export default function(movedPoint, data) {
   }
 
   const cross = new external.cornerstoneMath.Vector3();
-  const vecA = { x:end.x-start.x, y:end.y-start.y, z:0 };
-  const vecB = { x:movedPoint.x-start.x, y:movedPoint.y-start.y, z:0 };
+  const vecA = { x: end.x-start.x, y: end.y-start.y, z: 0 };
+  const vecB = { x: movedPoint.x-start.x, y: movedPoint.y-start.y, z: 0 };
   cross.crossVectors(vecA,vecB);
-  if(cross.z >= 0) {
+  if (cross.z >= 0) {
     return false;
   }
 

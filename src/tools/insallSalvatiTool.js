@@ -52,7 +52,8 @@ export default class extends baseAnnotationTool {
       active: true,
       color: undefined,
       complete: false,
-      ratio: undefined,
+      ratioAB: undefined,
+      ratioBA: undefined,
       lengthA: undefined,
       lengthB: undefined,
       rangle: undefined,
@@ -234,7 +235,7 @@ export default class extends baseAnnotationTool {
     }
 
     function textBoxText(data) {
-      const { lengthA, lengthB, ratio } = data;
+      const { lengthA, lengthB, ratioAB, ratioBA } = data;
 
       // Set the length text suffix depending on whether or not pixelSpacing is available
       let suffix = ' mm';
@@ -245,14 +246,17 @@ export default class extends baseAnnotationTool {
 
       // Define an array to store the rows of text for the textbox
       const textLines = [];
-      if (ratio) {
-        textLines.push(`ratio: ${ratio}`);
+      if (ratioAB) {
+        textLines.push(`ratio AB: ${ratioAB}`);
       }
       if (lengthA) {
         textLines.push(`length A: ${lengthA} ${suffix}`);
       }
       if (lengthB) {
         textLines.push(`length B: ${lengthB} ${suffix}`);        
+      }
+      if (ratioBA) {
+        textLines.push(`ratio BA: ${ratioBA}`);
       }
 
       return textLines;
@@ -430,7 +434,10 @@ export default class extends baseAnnotationTool {
     }
     if (length1 && length2) {
       if (length2 !== 0) {
-        data.ratio = roundToDecimal(length1 / length2, 4);
+        data.ratioAB = roundToDecimal(length1 / length2, 4);
+      }
+      if (length1 !== 0) {
+        data.ratioBA = roundToDecimal(length2 / length1, 4);
       }
     }
 

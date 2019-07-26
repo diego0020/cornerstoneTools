@@ -60,36 +60,6 @@ export default function(handle, eventData, data, distanceFromTool) {
       y: proposedPoint.y,
     };
 
-    intersection = external.cornerstoneMath.lineSegment.intersectLine(
-      longLine,
-      perpendicularLine
-    );
-    if (!intersection) {
-      
-      perpendicularLine.end = {
-        x: data.handles.perpendicularStart.x,
-        y: data.handles.perpendicularStart.y,
-      };
-
-      intersection = external.cornerstoneMath.lineSegment.intersectLine(
-        longLine,
-        perpendicularLine
-      );
-
-      d1 = external.cornerstoneMath.point.distance(
-        intersection,
-        data.handles.start
-      );
-      d2 = external.cornerstoneMath.point.distance(
-        intersection,
-        data.handles.end
-      );
-
-      if (!intersection || d1 < 3 || d2 < 3) {
-        outOfBounds = true;
-      }
-    }
-
     movedPoint = false;
 
     if (!outOfBounds) {
@@ -120,35 +90,6 @@ export default function(handle, eventData, data, distanceFromTool) {
       x: proposedPoint.x,
       y: proposedPoint.y,
     };
-
-    intersection = external.cornerstoneMath.lineSegment.intersectLine(
-      longLine,
-      perpendicularLine
-    );
-    if (!intersection) {
-      perpendicularLine.end = {
-        x: data.handles.perpendicularEnd.x,
-        y: data.handles.perpendicularEnd.y,
-      };
-
-      intersection = external.cornerstoneMath.lineSegment.intersectLine(
-        longLine,
-        perpendicularLine
-      );
-
-      d1 = external.cornerstoneMath.point.distance(
-        intersection,
-        data.handles.start
-      );
-      d2 = external.cornerstoneMath.point.distance(
-        intersection,
-        data.handles.end
-      );
-
-      if (!intersection || d1 < 3 || d2 < 3) {
-        outOfBounds = true;
-      }
-    }
 
     movedPoint = false;
 

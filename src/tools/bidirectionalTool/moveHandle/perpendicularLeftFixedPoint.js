@@ -18,7 +18,6 @@ export default function(movedPoint, data) {
   );
 
   const distanceBetweenPoints = distance(fixedPoint, movedPoint);
-
   const total = distanceFromFixed + distanceFromMoved;
 
   if (distanceBetweenPoints <= distanceFromFixed) {
@@ -26,8 +25,15 @@ export default function(movedPoint, data) {
   }
 
   const length = distance(start, end);
-
   if (length === 0) {
+    return false;
+  }
+
+  const cross = new external.cornerstoneMath.Vector3();
+  const vecA = { x: end.x-start.x, y: end.y-start.y, z: 0 };
+  const vecB = { x: movedPoint.x-start.x, y: movedPoint.y-start.y, z: 0 };
+  cross.crossVectors(vecA,vecB);
+  if (cross.z <= 0) {
     return false;
   }
 
@@ -47,6 +53,8 @@ export default function(movedPoint, data) {
   perpendicularStart.y = movedPoint.y;
   perpendicularEnd.x = movedPoint.x - total * dy;
   perpendicularEnd.y = movedPoint.y + total * dx;
+  perpendicularEnd.locked = false;
+  perpendicularStart.locked = false;
 
   const longLine = {
     start: {
