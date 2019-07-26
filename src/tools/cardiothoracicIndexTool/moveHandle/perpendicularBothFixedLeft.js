@@ -16,6 +16,7 @@ export default function(proposedPoint, data) {
     },
   };
 
+  // don't allow vertical lines wihtout working length 
   if (newLineLength <= 3) {
     return false;
   }
@@ -26,12 +27,13 @@ export default function(proposedPoint, data) {
   const dx = (end.x - proposedPoint.x) / newLineLength;
   const dy = (end.y - proposedPoint.y) / newLineLength;
 
-  // reposition of main perpendicular line
+  // reposition of main perpendicular line at end point of vertical line
   perpendicularStart.x = end.x - distanceFromPerpendicularP1 * dy;
   perpendicularStart.y = end.y + distanceFromPerpendicularP1 * dx;
   perpendicularEnd.x = end.x + distanceFromPerpendicularP2 * dy;
   perpendicularEnd.y = end.y - distanceFromPerpendicularP2 * dx;
 
+  // find new starting position for left perpendicular line
   const lineLength = distance(end, start);
   const lengthLeft = distance(end, leftEnd);
   let k = (lengthLeft / lineLength);
@@ -51,6 +53,7 @@ export default function(proposedPoint, data) {
   leftEnd.x = newIntersectionL.x;
   leftEnd.y = newIntersectionL.y;
 
+  // find new starting position for right perpendicular line
   const lengthRight = distance(end, rightEnd);
   k = (lengthRight / lineLength);
   const newIntersectionR = {

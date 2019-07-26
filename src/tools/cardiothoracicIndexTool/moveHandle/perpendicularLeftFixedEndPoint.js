@@ -29,6 +29,7 @@ export default function(movedPoint, data) {
     return false;
   }
 
+  // check that new point is on right side
   const cross = new external.cornerstoneMath.Vector3();
   const vecA = { x: end.x-start.x, y: end.y-start.y, z: 0 };
   const vecB = { x: movedPoint.x-start.x, y: movedPoint.y-start.y, z: 0 };
@@ -49,10 +50,13 @@ export default function(movedPoint, data) {
     y: end.y + fudgeFactor * dy,
   };
 
+  // set new position for perpendicular line
   perpendicularStart.x = adjustedLineP2.x + distanceFromMoved * dy;
   perpendicularStart.y = adjustedLineP2.y - distanceFromMoved * dx;
   perpendicularEnd.x = perpendicularStart.x - total * dy;
   perpendicularEnd.y = perpendicularStart.y + total * dx;
+
+  // mark that handle has been modified
   perpendicularEnd.locked = false;
   perpendicularStart.locked = false;
 

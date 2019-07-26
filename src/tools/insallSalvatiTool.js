@@ -266,6 +266,7 @@ export default class extends baseAnnotationTool {
       return [handles.start, handles.start2, handles.end, handles.end2];
     }
 
+    // find the point on line1 near to line 2
     function textBoxAnchorPointLine1(handles) {
       const distSS = Math.abs(handles.start.x - handles.start2.x) + Math.abs(handles.start.y - handles.start2.y);
       const distSE = Math.abs(handles.start.x - handles.end2.x) + Math.abs(handles.start.y - handles.end2.y);
@@ -280,6 +281,7 @@ export default class extends baseAnnotationTool {
       }
     }
 
+    // find the point on line2 near to line 1
     function textBoxAnchorPointLine2(handles) {
       const distSS = Math.abs(handles.start2.x - handles.start.x) + Math.abs(handles.start2.y - handles.start.y);
       const distSE = Math.abs(handles.start2.x - handles.end.x) + Math.abs(handles.start2.y - handles.end.y);
@@ -432,6 +434,8 @@ export default class extends baseAnnotationTool {
     if (length2 && !Number.isNaN(length2)) {
       data.lengthB = roundToDecimal(length2,2);
     }
+
+    // find ratios
     if (length1 && length2) {
       if (length2 !== 0) {
         data.ratioAB = roundToDecimal(length1 / length2, 4);
@@ -477,6 +481,7 @@ export default class extends baseAnnotationTool {
       }
     };
 
+    //  find middle point of line 1 and draw an identifier on that position
     let x = 0;
     let y = 0;
     const dx = handles.start.x - handles.end.x;
@@ -488,6 +493,7 @@ export default class extends baseAnnotationTool {
       const lineCoordsA = cornerstone.pixelToCanvas(element, posTextA);
       drawTextBox(context, 'A', lineCoordsA.x, lineCoordsA.y, color, options);
     }
+    //  find middle point of line 2 and draw an identifier on that position
     const dx2  = handles.start2.x - handles.end2.x;
     const dy2  = handles.start2.y - handles.end2.y;
     if (dx2 !== 0 || dy2 !== 0) {

@@ -20,6 +20,7 @@ export default function(proposedPoint, data) {
   const distanceFromPerpendicularP1 = distance(perpendicularStart, end);
   const distanceFromPerpendicularP2 = distance(perpendicularEnd, end);
 
+  // don't allow lines with length < 3
   if (newLineLength <= 3) {
     return false;
   }
@@ -27,7 +28,7 @@ export default function(proposedPoint, data) {
   const dx = (start.x - proposedPoint.x) / newLineLength;
   const dy = (start.y - proposedPoint.y) / newLineLength;
 
-  // reposition of main perpendicular line
+  // reposition of main perpendicular line on new proposed point
   perpendicularStart.x = proposedPoint.x + distanceFromPerpendicularP1 * dy;
   perpendicularStart.y = proposedPoint.y - distanceFromPerpendicularP1 * dx;
   perpendicularEnd.x = proposedPoint.x - distanceFromPerpendicularP2 * dy;
@@ -38,9 +39,9 @@ export default function(proposedPoint, data) {
     leftStart
   );
 
+  // find position to start left line based on proposed point
   const lineLength = distance(start, end);
   const lengthLeft = distance(start, leftEnd);
-
   let k = (lengthLeft / lineLength);
   const newIntersectionL = {
     x: start.x + (proposedPoint.x - start.x) * k,
@@ -53,14 +54,13 @@ export default function(proposedPoint, data) {
   leftEnd.x = newIntersectionL.x;
   leftEnd.y = newIntersectionL.y;
 
-
   const distanceFromRightStart = external.cornerstoneMath.lineSegment.distanceToPoint(
     data.handles,
     rightStart
   );
 
+  // find position to start right line based on proposed point
   const lengthRight = distance(start, rightEnd);
-
   k = (lengthRight / lineLength);
   const newIntersectionR = {
     x: start.x + (proposedPoint.x - start.x) * k,
