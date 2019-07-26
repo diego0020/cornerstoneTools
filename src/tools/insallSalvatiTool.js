@@ -454,7 +454,6 @@ export default class extends baseAnnotationTool {
 
   enabledCallback(element) {
     element.removeEventListener(EVENTS.MEASUREMENT_MODIFIED, this.onMeasureModified);
-
   }
 
   disabledCallback(element) {
