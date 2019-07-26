@@ -427,10 +427,10 @@ export default class extends baseAnnotationTool {
     // Store the length inside the tool for outside access
 
     if (length1 && !Number.isNaN(length1)) {
-      data.lengthA = roundToDecimal(length1,3);
+      data.lengthA = roundToDecimal(length1,2);
     }
-    if (length2 && !Number.isNaN(length2) ) {
-      data.lengthB = roundToDecimal(length2,3);
+    if (length2 && !Number.isNaN(length2)) {
+      data.lengthB = roundToDecimal(length2,2);
     }
     if (length1 && length2) {
       if (length2 !== 0) {
@@ -440,13 +440,6 @@ export default class extends baseAnnotationTool {
         data.ratioBA = roundToDecimal(length2 / length1, 4);
       }
     }
-
-    // let angle = Math.acos(Math.abs(((dx1 * dx2) + (dy1 * dy2)) / (Math.sqrt((dx1 * dx1) + (dy1 * dy1)) * Math.sqrt((dx2 * dx2) + (dy2 * dy2)))));
-    // angle *= (180 / Math.PI);
-    // const rAngle = roundToDecimal(angle, 2);
-    // if (!Number.isNaN(rAngle)) {
-    //   data.rAngle = rAngle;
-    // }
   }
 
   activeCallback(element) {
